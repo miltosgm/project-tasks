@@ -5,28 +5,32 @@
       "name": "Set up review collection workflow",
       "status": "todo",
       "priority": "high",
-      "date": ""
+      "date": "",
+      "agentStatus": null
     },
     {
       "id": 1738595640002,
       "name": "Design landing page mockup",
-      "status": "todo",
+      "status": "in-progress",
       "priority": "high",
-      "date": ""
+      "date": "",
+      "agentStatus": "working"
     },
     {
       "id": 1738595640003,
       "name": "Research competitor review platforms",
-      "status": "todo",
+      "status": "in-progress",
       "priority": "medium",
-      "date": ""
+      "date": "",
+      "agentStatus": "working"
     },
     {
       "id": 1738595640004,
       "name": "Define MVP features list",
       "status": "todo",
       "priority": "high",
-      "date": ""
+      "date": "",
+      "agentStatus": null
     }
   ],
   "backlinku": [
@@ -35,21 +39,24 @@
       "name": "Build backlink checker MVP",
       "status": "todo",
       "priority": "high",
-      "date": ""
+      "date": "",
+      "agentStatus": null
     },
     {
       "id": 1738595640006,
       "name": "Create competitor comparison page",
       "status": "todo",
       "priority": "medium",
-      "date": ""
+      "date": "",
+      "agentStatus": null
     },
     {
       "id": 1738595640007,
       "name": "Set up API for backlink data",
       "status": "todo",
       "priority": "high",
-      "date": ""
+      "date": "",
+      "agentStatus": null
     }
   ],
   "voice-ai": [
@@ -58,21 +65,24 @@
       "name": "Research voice AI platforms (ElevenLabs, etc)",
       "status": "todo",
       "priority": "high",
-      "date": ""
+      "date": "",
+      "agentStatus": null
     },
     {
       "id": 1738595640009,
       "name": "Build simple voice demo",
       "status": "todo",
       "priority": "high",
-      "date": ""
+      "date": "",
+      "agentStatus": null
     },
     {
       "id": 1738595640010,
       "name": "Define use cases and target market",
       "status": "todo",
       "priority": "medium",
-      "date": ""
+      "date": "",
+      "agentStatus": null
     }
   ],
   "growth-onomics": [
@@ -81,42 +91,48 @@
       "name": "Find 2-3 relevant Upwork jobs",
       "status": "todo",
       "priority": "high",
-      "date": "2026-02-04"
+      "date": "2026-02-04",
+      "agentStatus": null
     },
     {
       "id": 1738595640012,
       "name": "Draft Upwork proposals",
       "status": "todo",
       "priority": "high",
-      "date": "2026-02-04"
+      "date": "2026-02-04",
+      "agentStatus": null
     },
     {
       "id": 1738595640013,
       "name": "Check today's LinkedIn post went out",
       "status": "todo",
       "priority": "medium",
-      "date": "2026-02-03"
+      "date": "2026-02-03",
+      "agentStatus": null
     },
     {
       "id": 1738595640014,
       "name": "Prep tomorrow's LinkedIn post",
       "status": "todo",
       "priority": "medium",
-      "date": "2026-02-03"
+      "date": "2026-02-03",
+      "agentStatus": null
     },
     {
       "id": 1738595640015,
       "name": "Create new lead magnet",
       "status": "todo",
       "priority": "medium",
-      "date": ""
+      "date": "",
+      "agentStatus": null
     },
     {
       "id": 1738595640016,
       "name": "Build ROI calculator tool",
       "status": "todo",
       "priority": "high",
-      "date": ""
+      "date": "",
+      "agentStatus": null
     }
   ]
 }
