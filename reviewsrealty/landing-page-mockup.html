@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReviewsRealty - Honest Real Estate Reviews</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2563eb;
+        }
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+        .cta-btn {
+            background: #2563eb;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .cta-btn:hover {
+            background: #1d4ed8;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            background: white;
+            color: #2563eb;
+            padding: 16px 40px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            transition: transform 0.2s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            padding: 16px 40px;
+            border: 2px solid white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 80px 20px;
+            background: #f9fafb;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .section-header h2 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+        .section-header p {
+            font-size: 18px;
+            color: #666;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+            text-align: center;
+        }
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        .feature-card p {
+            color: #666;
+            line-height: 1.7;
+        }
+        
+        /* How It Works */
+        .how-it-works {
+            padding: 80px 20px;
+            background: white;
+        }
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .step {
+            text-align: center;
+        }
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: #2563eb;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+        .step h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .step p {
+            color: #666;
+        }
+        
+        /* Trust Section */
+        .trust {
+            padding: 80px 20px;
+            background: #f9fafb;
+            text-align: center;
+        }
+        .trust-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+        .stat-label {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        /* CTA Section */
+        .final-cta {
+            padding: 80px 20px;
+            background: #2563eb;
+            color: white;
+            text-align: center;
+        }
+        .final-cta h2 {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+        .final-cta p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+        
+        /* Footer */
+        footer {
+            background: #1e293b;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+        }
+        .footer-links a:hover {
+            opacity: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+            .hero p {
+                font-size: 16px;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="nav-container">
+            <div class="logo">🏡 ReviewsRealty</div>
+            <nav class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#about">About</a>
+            </nav>
+            <a href="#" class="cta-btn">Get Started</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Honest Reviews from Real Home Buyers</h1>
+            <p>Find the best real estate agents, neighborhoods, and properties with verified reviews from people who've been there.</p>
+            <div class="hero-cta">
+                <a href="#" class="btn-primary">Search Reviews</a>
+                <a href="#" class="btn-secondary">Write a Review</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why ReviewsRealty?</h2>
+                <p>The most trusted platform for real estate reviews</p>
+            </div>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">✅</div>
+                    <h3>Verified Reviews Only</h3>
+                    <p>Every review is tied to a real transaction. No fake reviews, no paid promotions.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📸</div>
+                    <h3>Photos & Videos</h3>
+                    <p>See real properties and neighborhoods through the eyes of actual buyers and renters.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Privacy First</h3>
+                    <p>Browse anonymously. Contact agents when you're ready, not when they want to sell.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📍</div>
+                    <h3>Hyperlocal Insights</h3>
+                    <p>Read reviews by neighborhood, school district, and even specific streets.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⭐</div>
+                    <h3>Agent Ratings</h3>
+                    <p>Compare agents side-by-side with detailed performance metrics and real client feedback.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Property History</h3>
+                    <p>See the full review history of any property before you buy or rent.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>How It Works</h2>
+                <p>Get started in three simple steps</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Search</h3>
+                    <p>Enter an address, agent name, or neighborhood to find reviews.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Read Reviews</h3>
+                    <p>Browse verified reviews with photos, ratings, and detailed feedback.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Make Informed Decisions</h3>
+                    <p>Choose the right agent, property, or neighborhood with confidence.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Section -->
+    <section class="trust">
+        <div class="container">
+            <h2>Trusted by Home Buyers Everywhere</h2>
+            <div class="trust-stats">
+                <div class="stat">
+                    <div class="stat-number">10,000+</div>
+                    <div class="stat-label">Verified Reviews</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">2,500+</div>
+                    <div class="stat-label">Rated Agents</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Verified Transactions</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <div class="container">
+            <h2>Ready to Find Your Perfect Home?</h2>
+            <p>Join thousands of home buyers making smarter decisions with verified reviews.</p>
+            <a href="#" class="btn-primary">Get Started Free</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="#">About Us</a>
+            <a href="#">How It Works</a>
+            <a href="#">For Agents</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact</a>
+        </div>
+        <p>© 2026 ReviewsRealty. All rights reserved.</p>
+    </footer>
+</body>
+</html>
