@@ -529,7 +529,14 @@
             if (task.deliverables && task.deliverables.length > 0) {
                 const items = task.deliverables.map(d => {
                     const icon = d.type === 'file' ? '📄' : d.type === 'link' ? '🔗' : '📝';
-                    const nameHtml = d.name ? `<div class="deliverable-name">${d.name}</div>` : '';
+                    let nameHtml = '';
+                    if (d.name) {
+                        if (d.url) {
+                            nameHtml = `<div class="deliverable-name"><a href="${d.url}" target="_blank" style="color: #0c4a6e; text-decoration: underline;">${d.name}</a></div>`;
+                        } else {
+                            nameHtml = `<div class="deliverable-name">${d.name}</div>`;
+                        }
+                    }
                     const descHtml = d.description ? `<div class="deliverable-desc">${d.description}</div>` : '';
                     return `
                         <div class="deliverable-item">

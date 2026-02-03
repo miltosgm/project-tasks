@@ -20,6 +20,7 @@
         {
           "type": "file",
           "name": "landing-page-mockup.html",
+          "url": "https://github.com/miltosgm/project-tasks/blob/main/reviewsrealty/landing-page-mockup.html",
           "description": "Full HTML landing page with hero, features, how-it-works sections"
         },
         {
@@ -39,6 +40,7 @@
         {
           "type": "file",
           "name": "competitor-research.md",
+          "url": "https://github.com/miltosgm/project-tasks/blob/main/reviewsrealty/competitor-research.md",
           "description": "Analysis of Trustpilot, G2, Capterra with MVP recommendations"
         },
         {
