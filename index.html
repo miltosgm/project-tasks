@@ -276,12 +276,37 @@
     </div>
 
     <script>
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || {
-            'reviewsrealty': [],
-            'backlinku': [],
-            'voice-ai': [],
-            'growth-onomics': []
-        };
+        // Load tasks from localStorage or fetch from tasks.json
+        let tasks = JSON.parse(localStorage.getItem('tasks'));
+        
+        if (!tasks || Object.values(tasks).every(arr => arr.length === 0)) {
+            // First time load - fetch initial tasks
+            fetch('tasks.json')
+                .then(res => res.json())
+                .then(data => {
+                    tasks = data;
+                    saveTasks();
+                    Object.keys(tasks).forEach(renderBoard);
+                })
+                .catch(() => {
+                    // Fallback if tasks.json doesn't exist
+                    tasks = {
+                        'reviewsrealty': [],
+                        'backlinku': [],
+                        'voice-ai': [],
+                        'growth-onomics': []
+                    };
+                });
+        }
+        
+        if (!tasks) {
+            tasks = {
+                'reviewsrealty': [],
+                'backlinku': [],
+                'voice-ai': [],
+                'growth-onomics': []
+            };
+        }
 
         function switchProject(project) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
