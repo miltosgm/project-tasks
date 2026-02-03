@@ -453,16 +453,27 @@
         // Periodically fetch agent status from GitHub
         async function fetchAgentStatus() {
             try {
-                const response = await fetch('https://raw.githubusercontent.com/miltosgm/project-tasks/main/tasks.json');
+                const response = await fetch('https://raw.githubusercontent.com/miltosgm/project-tasks/main/tasks.json?t=' + Date.now());
                 if (response.ok) {
                     const remoteTasks = await response.json();
                     
-                    // Merge agent status from remote
+                    // Merge tasks from remote - add new tasks and update existing ones
                     Object.keys(remoteTasks).forEach(project => {
+                        if (!tasks[project]) tasks[project] = [];
+                        
                         remoteTasks[project].forEach(remoteTask => {
-                            const localTask = tasks[project]?.find(t => t.id === remoteTask.id);
-                            if (localTask && remoteTask.agentStatus) {
-                                localTask.agentStatus = remoteTask.agentStatus;
+                            const localTask = tasks[project].find(t => t.id === remoteTask.id);
+                            if (localTask) {
+                                // Update existing task - keep local status unless remote has agent changes
+                                if (remoteTask.agentStatus) {
+                                    localTask.agentStatus = remoteTask.agentStatus;
+                                }
+                                if (remoteTask.deliverables) {
+                                    localTask.deliverables = remoteTask.deliverables;
+                                }
+                            } else {
+                                // Add new task from remote
+                                tasks[project].push(remoteTask);
                             }
                         });
                     });
@@ -474,6 +485,7 @@
                         const project = activeTab.textContent.toLowerCase().replace(/\s/g, '-').replace('voice-ai-agent', 'voice-ai').replace('growth-onomics', 'growth-onomics').replace('reviewsrealty', 'reviewsrealty').replace('backlinku', 'backlinku');
                         if (tasks[project]) renderBoard(project);
                     }
+                    updateSyncStatus('synced', '✓ Synced');
                 }
             } catch (error) {
                 // Silent fail - not critical
