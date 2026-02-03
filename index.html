@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - Project Boards</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-bottom: 10px; }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 12px 24px;
+            background: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .tab:hover { background: #f0f0f0; }
+        .tab.active { background: #2563eb; color: white; }
+        .project-board {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .project-board.active { display: block; }
+        .add-task-form {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+        input, select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .btn {
+            padding: 10px 20px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn:hover { background: #1d4ed8; }
+        .tasks {
+            display: grid;
+            gap: 10px;
+        }
+        .task {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 10px;
+            padding: 15px;
+            background: #fafafa;
+            border-radius: 6px;
+            align-items: center;
+            border-left: 4px solid #ddd;
+        }
+        .task.priority-high { border-left-color: #ef4444; }
+        .task.priority-medium { border-left-color: #f59e0b; }
+        .task.priority-low { border-left-color: #10b981; }
+        .task-name { font-weight: 500; color: #333; }
+        .task-status, .task-priority, .task-date { 
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            text-align: center;
+        }
+        .task-status.todo { background: #e5e7eb; color: #374151; }
+        .task-status.in-progress { background: #dbeafe; color: #1e40af; }
+        .task-status.done { background: #d1fae5; color: #065f46; }
+        .delete-btn {
+            padding: 6px 12px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .delete-btn:hover { background: #dc2626; }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📋 Task Manager</h1>
+        <p>Manage tasks across all projects</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" onclick="switchProject('reviewsrealty')">Reviewsrealty</button>
+        <button class="tab" onclick="switchProject('backlinku')">Backlinku</button>
+        <button class="tab" onclick="switchProject('voice-ai')">Voice AI Agent</button>
+        <button class="tab" onclick="switchProject('growth-onomics')">Growth-onomics</button>
+    </div>
+
+    <div id="reviewsrealty" class="project-board active">
+        <h2>Reviewsrealty Tasks</h2>
+        <div class="add-task-form">
+            <div class="form-row">
+                <input type="text" id="task-reviewsrealty" placeholder="Task name...">
+                <select id="status-reviewsrealty">
+                    <option value="todo">Todo</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="done">Done</option>
+                </select>
+                <select id="priority-reviewsrealty">
+                    <option value="high">High</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="low">Low</option>
+                </select>
+                <input type="date" id="date-reviewsrealty">
+                <button class="btn" onclick="addTask('reviewsrealty')">Add Task</button>
+            </div>
+        </div>
+        <div id="tasks-reviewsrealty" class="tasks"></div>
+    </div>
+
+    <div id="backlinku" class="project-board">
+        <h2>Backlinku Tasks</h2>
+        <div class="add-task-form">
+            <div class="form-row">
+                <input type="text" id="task-backlinku" placeholder="Task name...">
+                <select id="status-backlinku">
+                    <option value="todo">Todo</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="done">Done</option>
+                </select>
+                <select id="priority-backlinku">
+                    <option value="high">High</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="low">Low</option>
+                </select>
+                <input type="date" id="date-backlinku">
+                <button class="btn" onclick="addTask('backlinku')">Add Task</button>
+            </div>
+        </div>
+        <div id="tasks-backlinku" class="tasks"></div>
+    </div>
+
+    <div id="voice-ai" class="project-board">
+        <h2>Voice AI Agent Tasks</h2>
+        <div class="add-task-form">
+            <div class="form-row">
+                <input type="text" id="task-voice-ai" placeholder="Task name...">
+                <select id="status-voice-ai">
+                    <option value="todo">Todo</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="done">Done</option>
+                </select>
+                <select id="priority-voice-ai">
+                    <option value="high">High</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="low">Low</option>
+                </select>
+                <input type="date" id="date-voice-ai">
+                <button class="btn" onclick="addTask('voice-ai')">Add Task</button>
+            </div>
+        </div>
+        <div id="tasks-voice-ai" class="tasks"></div>
+    </div>
+
+    <div id="growth-onomics" class="project-board">
+        <h2>Growth-onomics Tasks</h2>
+        <div class="add-task-form">
+            <div class="form-row">
+                <input type="text" id="task-growth-onomics" placeholder="Task name...">
+                <select id="status-growth-onomics">
+                    <option value="todo">Todo</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="done">Done</option>
+                </select>
+                <select id="priority-growth-onomics">
+                    <option value="high">High</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="low">Low</option>
+                </select>
+                <input type="date" id="date-growth-onomics">
+                <button class="btn" onclick="addTask('growth-onomics')">Add Task</button>
+            </div>
+        </div>
+        <div id="tasks-growth-onomics" class="tasks"></div>
+    </div>
+
+    <script>
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || {
+            'reviewsrealty': [],
+            'backlinku': [],
+            'voice-ai': [],
+            'growth-onomics': []
+        };
+
+        function switchProject(project) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.project-board').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(project).classList.add('active');
+        }
+
+        function addTask(project) {
+            const name = document.getElementById(`task-${project}`).value.trim();
+            if (!name) return;
+
+            const task = {
+                id: Date.now(),
+                name: name,
+                status: document.getElementById(`status-${project}`).value,
+                priority: document.getElementById(`priority-${project}`).value,
+                date: document.getElementById(`date-${project}`).value || ''
+            };
+
+            tasks[project].push(task);
+            saveTasks();
+            renderTasks(project);
+
+            document.getElementById(`task-${project}`).value = '';
+            document.getElementById(`date-${project}`).value = '';
+        }
+
+        function deleteTask(project, id) {
+            tasks[project] = tasks[project].filter(t => t.id !== id);
+            saveTasks();
+            renderTasks(project);
+        }
+
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function renderTasks(project) {
+            const container = document.getElementById(`tasks-${project}`);
+            const projectTasks = tasks[project];
+
+            if (projectTasks.length === 0) {
+                container.innerHTML = '<div class="empty-state">No tasks yet. Add one above!</div>';
+                return;
+            }
+
+            container.innerHTML = projectTasks.map(task => `
+                <div class="task priority-${task.priority}">
+                    <div class="task-name">${task.name}</div>
+                    <div class="task-status ${task.status}">${task.status.replace('-', ' ').toUpperCase()}</div>
+                    <div class="task-priority">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}</div>
+                    <div class="task-date">${task.date || 'No date'}</div>
+                    <button class="delete-btn" onclick="deleteTask('${project}', ${task.id})">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        // Initial render
+        Object.keys(tasks).forEach(renderTasks);
+    </script>
+</body>
+</html>
