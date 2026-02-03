@@ -3,123 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Manager - Project Boards</title>
+    <title>Task Manager - Kanban Board</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: #f5f5f5;
-            padding: 20px;
+            padding: 15px;
         }
         .header {
             background: white;
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        h1 { color: #333; margin-bottom: 10px; }
+        h1 { color: #333; margin-bottom: 5px; font-size: 1.5rem; }
+        .header p { font-size: 0.9rem; color: #666; }
+        
         .tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            padding-bottom: 5px;
         }
         .tab {
-            padding: 12px 24px;
+            padding: 10px 20px;
             background: white;
             border: none;
             border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
+            white-space: nowrap;
             transition: all 0.2s;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         .tab:hover { background: #f0f0f0; }
         .tab.active { background: #2563eb; color: white; }
-        .project-board {
-            display: none;
+        
+        .project-board { display: none; }
+        .project-board.active { display: block; }
+        
+        .add-task-section {
             background: white;
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
+            margin-bottom: 15px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        .project-board.active { display: block; }
-        .add-task-form {
-            background: #f9fafb;
-            padding: 20px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-        .form-row {
+        .add-task-section h3 { margin-bottom: 10px; font-size: 1rem; }
+        .form-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr auto;
             gap: 10px;
-            align-items: end;
+            margin-bottom: 10px;
         }
         input, select {
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 14px;
+            width: 100%;
         }
         .btn {
-            padding: 10px 20px;
+            padding: 12px;
             background: #2563eb;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
+            width: 100%;
+            font-weight: 500;
         }
         .btn:hover { background: #1d4ed8; }
-        .tasks {
+        
+        .kanban-board {
             display: grid;
-            gap: 10px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
         }
-        .task {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr auto;
-            gap: 10px;
+        
+        @media (max-width: 768px) {
+            .kanban-board {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .kanban-column {
+            background: white;
+            border-radius: 8px;
             padding: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            min-height: 200px;
+        }
+        .column-header {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .column-header.todo { border-bottom-color: #6b7280; }
+        .column-header.in-progress { border-bottom-color: #3b82f6; }
+        .column-header.done { border-bottom-color: #10b981; }
+        
+        .task-count {
+            background: #f3f4f6;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .task-card {
             background: #fafafa;
             border-radius: 6px;
-            align-items: center;
+            padding: 12px;
+            margin-bottom: 10px;
             border-left: 4px solid #ddd;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .task.priority-high { border-left-color: #ef4444; }
-        .task.priority-medium { border-left-color: #f59e0b; }
-        .task.priority-low { border-left-color: #10b981; }
-        .task-name { font-weight: 500; color: #333; }
-        .task-status, .task-priority, .task-date { 
-            padding: 6px 12px;
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .task-card.priority-high { border-left-color: #ef4444; }
+        .task-card.priority-medium { border-left-color: #f59e0b; }
+        .task-card.priority-low { border-left-color: #10b981; }
+        
+        .task-name {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        .task-meta {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .task-priority, .task-date {
+            padding: 4px 8px;
             border-radius: 4px;
-            font-size: 13px;
-            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 500;
         }
-        .task-status.todo { background: #e5e7eb; color: #374151; }
-        .task-status.in-progress { background: #dbeafe; color: #1e40af; }
-        .task-status.done { background: #d1fae5; color: #065f46; }
-        .delete-btn {
-            padding: 6px 12px;
-            background: #ef4444;
-            color: white;
+        .task-priority.high { background: #fee2e2; color: #991b1b; }
+        .task-priority.medium { background: #fef3c7; color: #92400e; }
+        .task-priority.low { background: #d1fae5; color: #065f46; }
+        .task-date { background: #e5e7eb; color: #374151; }
+        
+        .task-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+        }
+        .task-btn {
+            padding: 5px 10px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 0.75rem;
+            flex: 1;
         }
-        .delete-btn:hover { background: #dc2626; }
+        .move-btn {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .move-btn:hover { background: #bfdbfe; }
+        .delete-btn {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .delete-btn:hover { background: #fecaca; }
+        
         .empty-state {
             text-align: center;
-            padding: 40px;
-            color: #999;
+            padding: 30px 10px;
+            color: #9ca3af;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>📋 Task Manager</h1>
-        <p>Manage tasks across all projects</p>
+        <p>Kanban boards for all projects</p>
     </div>
 
     <div class="tabs">
@@ -130,91 +208,71 @@
     </div>
 
     <div id="reviewsrealty" class="project-board active">
-        <h2>Reviewsrealty Tasks</h2>
-        <div class="add-task-form">
-            <div class="form-row">
+        <div class="add-task-section">
+            <h3>Add New Task</h3>
+            <div class="form-grid">
                 <input type="text" id="task-reviewsrealty" placeholder="Task name...">
-                <select id="status-reviewsrealty">
-                    <option value="todo">Todo</option>
-                    <option value="in-progress">In Progress</option>
-                    <option value="done">Done</option>
-                </select>
                 <select id="priority-reviewsrealty">
-                    <option value="high">High</option>
-                    <option value="medium" selected>Medium</option>
-                    <option value="low">Low</option>
+                    <option value="high">🔴 High Priority</option>
+                    <option value="medium" selected>🟡 Medium Priority</option>
+                    <option value="low">🟢 Low Priority</option>
                 </select>
                 <input type="date" id="date-reviewsrealty">
-                <button class="btn" onclick="addTask('reviewsrealty')">Add Task</button>
+                <button class="btn" onclick="addTask('reviewsrealty')">+ Add Task</button>
             </div>
         </div>
-        <div id="tasks-reviewsrealty" class="tasks"></div>
+        <div class="kanban-board" id="board-reviewsrealty"></div>
     </div>
 
     <div id="backlinku" class="project-board">
-        <h2>Backlinku Tasks</h2>
-        <div class="add-task-form">
-            <div class="form-row">
+        <div class="add-task-section">
+            <h3>Add New Task</h3>
+            <div class="form-grid">
                 <input type="text" id="task-backlinku" placeholder="Task name...">
-                <select id="status-backlinku">
-                    <option value="todo">Todo</option>
-                    <option value="in-progress">In Progress</option>
-                    <option value="done">Done</option>
-                </select>
                 <select id="priority-backlinku">
-                    <option value="high">High</option>
-                    <option value="medium" selected>Medium</option>
-                    <option value="low">Low</option>
+                    <option value="high">🔴 High Priority</option>
+                    <option value="medium" selected>🟡 Medium Priority</option>
+                    <option value="low">🟢 Low Priority</option>
                 </select>
                 <input type="date" id="date-backlinku">
-                <button class="btn" onclick="addTask('backlinku')">Add Task</button>
+                <button class="btn" onclick="addTask('backlinku')">+ Add Task</button>
             </div>
         </div>
-        <div id="tasks-backlinku" class="tasks"></div>
+        <div class="kanban-board" id="board-backlinku"></div>
     </div>
 
     <div id="voice-ai" class="project-board">
-        <h2>Voice AI Agent Tasks</h2>
-        <div class="add-task-form">
-            <div class="form-row">
+        <div class="add-task-section">
+            <h3>Add New Task</h3>
+            <div class="form-grid">
                 <input type="text" id="task-voice-ai" placeholder="Task name...">
-                <select id="status-voice-ai">
-                    <option value="todo">Todo</option>
-                    <option value="in-progress">In Progress</option>
-                    <option value="done">Done</option>
-                </select>
                 <select id="priority-voice-ai">
-                    <option value="high">High</option>
-                    <option value="medium" selected>Medium</option>
-                    <option value="low">Low</option>
+                    <option value="high">🔴 High Priority</option>
+                    <option value="medium" selected>🟡 Medium Priority</option>
+                    <option value="low">🟢 Low Priority</option>
                 </select>
                 <input type="date" id="date-voice-ai">
-                <button class="btn" onclick="addTask('voice-ai')">Add Task</button>
+                <button class="btn" onclick="addTask('voice-ai')">+ Add Task</button>
             </div>
         </div>
-        <div id="tasks-voice-ai" class="tasks"></div>
+        <div class="kanban-board" id="board-voice-ai"></div>
     </div>
 
     <div id="growth-onomics" class="project-board">
-        <h2>Growth-onomics Tasks</h2>
-        <div class="add-task-form">
-            <div class="form-row">
+        <div class="add-task-section">
+            <h3>Add New Task</h3>
+            <div class="form-grid">
                 <input type="text" id="task-growth-onomics" placeholder="Task name...">
-                <select id="status-growth-onomics">
-                    <option value="todo">Todo</option>
-                    <option value="in-progress">In Progress</option>
-                    <option value="done">Done</option>
-                </select>
                 <select id="priority-growth-onomics">
-                    <option value="high">High</option>
-                    <option value="medium" selected>Medium</option>
-                    <option value="low">Low</option>
+                    <option value="high">🔴 High Priority</option>
+                    <option value="medium" selected>🟡 Medium Priority</option>
+                    <option value="low">🟢 Low Priority</option>
                 </select>
                 <input type="date" id="date-growth-onomics">
-                <button class="btn" onclick="addTask('growth-onomics')">Add Task</button>
+                <button class="btn" onclick="addTask('growth-onomics')">+ Add Task</button>
             </div>
         </div>
-        <div id="tasks-growth-onomics" class="tasks"></div>
+        <div class="kanban-board" id="board-growth-onomics"></div>
     </div>
 
     <script>
@@ -239,51 +297,99 @@
             const task = {
                 id: Date.now(),
                 name: name,
-                status: document.getElementById(`status-${project}`).value,
+                status: 'todo',
                 priority: document.getElementById(`priority-${project}`).value,
                 date: document.getElementById(`date-${project}`).value || ''
             };
 
             tasks[project].push(task);
             saveTasks();
-            renderTasks(project);
+            renderBoard(project);
 
             document.getElementById(`task-${project}`).value = '';
             document.getElementById(`date-${project}`).value = '';
         }
 
+        function moveTask(project, id, newStatus) {
+            const task = tasks[project].find(t => t.id === id);
+            if (task) {
+                task.status = newStatus;
+                saveTasks();
+                renderBoard(project);
+            }
+        }
+
         function deleteTask(project, id) {
-            tasks[project] = tasks[project].filter(t => t.id !== id);
-            saveTasks();
-            renderTasks(project);
+            if (confirm('Delete this task?')) {
+                tasks[project] = tasks[project].filter(t => t.id !== id);
+                saveTasks();
+                renderBoard(project);
+            }
         }
 
         function saveTasks() {
             localStorage.setItem('tasks', JSON.stringify(tasks));
         }
 
-        function renderTasks(project) {
-            const container = document.getElementById(`tasks-${project}`);
-            const projectTasks = tasks[project];
+        function renderBoard(project) {
+            const board = document.getElementById(`board-${project}`);
+            const projectTasks = tasks[project] || [];
+            
+            const todoTasks = projectTasks.filter(t => t.status === 'todo');
+            const inProgressTasks = projectTasks.filter(t => t.status === 'in-progress');
+            const doneTasks = projectTasks.filter(t => t.status === 'done');
 
-            if (projectTasks.length === 0) {
-                container.innerHTML = '<div class="empty-state">No tasks yet. Add one above!</div>';
-                return;
-            }
-
-            container.innerHTML = projectTasks.map(task => `
-                <div class="task priority-${task.priority}">
-                    <div class="task-name">${task.name}</div>
-                    <div class="task-status ${task.status}">${task.status.replace('-', ' ').toUpperCase()}</div>
-                    <div class="task-priority">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}</div>
-                    <div class="task-date">${task.date || 'No date'}</div>
-                    <button class="delete-btn" onclick="deleteTask('${project}', ${task.id})">Delete</button>
+            board.innerHTML = `
+                <div class="kanban-column">
+                    <div class="column-header todo">
+                        <span>📋 To Do</span>
+                        <span class="task-count">${todoTasks.length}</span>
+                    </div>
+                    ${todoTasks.length === 0 ? '<div class="empty-state">No tasks</div>' : 
+                        todoTasks.map(task => renderTaskCard(project, task, 'in-progress')).join('')}
                 </div>
-            `).join('');
+                <div class="kanban-column">
+                    <div class="column-header in-progress">
+                        <span>🚀 In Progress</span>
+                        <span class="task-count">${inProgressTasks.length}</span>
+                    </div>
+                    ${inProgressTasks.length === 0 ? '<div class="empty-state">No tasks</div>' : 
+                        inProgressTasks.map(task => renderTaskCard(project, task, 'done')).join('')}
+                </div>
+                <div class="kanban-column">
+                    <div class="column-header done">
+                        <span>✅ Done</span>
+                        <span class="task-count">${doneTasks.length}</span>
+                    </div>
+                    ${doneTasks.length === 0 ? '<div class="empty-state">No tasks</div>' : 
+                        doneTasks.map(task => renderTaskCard(project, task, null)).join('')}
+                </div>
+            `;
+        }
+
+        function renderTaskCard(project, task, nextStatus) {
+            const moveButton = nextStatus ? 
+                `<button class="task-btn move-btn" onclick="moveTask('${project}', ${task.id}, '${nextStatus}')">
+                    ${nextStatus === 'in-progress' ? 'Start ▶' : 'Complete ✓'}
+                </button>` : '';
+            
+            return `
+                <div class="task-card priority-${task.priority}">
+                    <div class="task-name">${task.name}</div>
+                    <div class="task-meta">
+                        <span class="task-priority ${task.priority}">${task.priority}</span>
+                        ${task.date ? `<span class="task-date">📅 ${task.date}</span>` : ''}
+                    </div>
+                    <div class="task-actions">
+                        ${moveButton}
+                        <button class="task-btn delete-btn" onclick="deleteTask('${project}', ${task.id})">Delete</button>
+                    </div>
+                </div>
+            `;
         }
 
         // Initial render
-        Object.keys(tasks).forEach(renderTasks);
+        Object.keys(tasks).forEach(renderBoard);
     </script>
 </body>
 </html>
