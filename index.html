@@ -186,6 +186,42 @@
             gap: 5px;
             margin-top: 8px;
         }
+        .task-deliverables {
+            background: #f0f9ff;
+            border-left: 3px solid #0ea5e9;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        .task-deliverables-header {
+            font-weight: 600;
+            color: #0369a1;
+            font-size: 0.75rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        .deliverable-item {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            align-items: flex-start;
+        }
+        .deliverable-icon {
+            color: #0ea5e9;
+            flex-shrink: 0;
+        }
+        .deliverable-content {
+            flex: 1;
+        }
+        .deliverable-name {
+            font-weight: 500;
+            color: #0c4a6e;
+        }
+        .deliverable-desc {
+            color: #64748b;
+            font-size: 0.8rem;
+        }
         .task-btn {
             padding: 5px 10px;
             border: none;
@@ -489,6 +525,31 @@
             const agentStatusBadge = task.agentStatus ? 
                 `<span class="agent-status ${task.agentStatus === 'working' ? 'working' : ''}">🤖 ${task.agentStatus === 'working' ? 'Working on it...' : task.agentStatus}</span>` : '';
             
+            let deliverablesHtml = '';
+            if (task.deliverables && task.deliverables.length > 0) {
+                const items = task.deliverables.map(d => {
+                    const icon = d.type === 'file' ? '📄' : d.type === 'link' ? '🔗' : '📝';
+                    const nameHtml = d.name ? `<div class="deliverable-name">${d.name}</div>` : '';
+                    const descHtml = d.description ? `<div class="deliverable-desc">${d.description}</div>` : '';
+                    return `
+                        <div class="deliverable-item">
+                            <span class="deliverable-icon">${icon}</span>
+                            <div class="deliverable-content">
+                                ${nameHtml}
+                                ${descHtml}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                deliverablesHtml = `
+                    <div class="task-deliverables">
+                        <div class="task-deliverables-header">✅ Delivered</div>
+                        ${items}
+                    </div>
+                `;
+            }
+            
             return `
                 <div class="task-card priority-${task.priority}">
                     <div class="task-name">${task.name}</div>
@@ -497,6 +558,7 @@
                         ${task.date ? `<span class="task-date">📅 ${task.date}</span>` : ''}
                         ${agentStatusBadge}
                     </div>
+                    ${deliverablesHtml}
                     <div class="task-actions">
                         ${moveButton}
                         <button class="task-btn delete-btn" onclick="deleteTask('${project}', ${task.id})">Delete</button>
