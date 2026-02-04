@@ -156,11 +156,22 @@
     {
       "id": 1738595640009,
       "name": "Build simple voice demo",
-      "status": "todo",
+      "status": "done",
       "priority": "high",
-      "date": "",
-      "agentStatus": null,
-      "deliverables": null
+      "date": "2026-02-04",
+      "agentStatus": "completed",
+      "deliverables": [
+        {
+          "type": "file",
+          "name": "voice-ai-demo.html",
+          "url": "https://github.com/miltosgm/project-tasks/blob/main/voice-ai/voice-ai-demo.html",
+          "description": "Interactive voice AI demo showing dental appointment reminder workflow - input fields for appointment details, real-time processing log, generated voice message, voice playback, 6-step workflow visualization"
+        },
+        {
+          "type": "note",
+          "description": "Full working demo: enter patient/appointment details → generates personalized reminder message → play voice using browser TTS → shows API workflow (validate → format → call ElevenLabs → generate audio → ready). Ready for user testing with practices."
+        }
+      ]
     },
     {
       "id": 1738595640010,
