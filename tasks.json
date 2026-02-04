@@ -141,20 +141,38 @@
     {
       "id": 1738595640011,
       "name": "Find 2-3 relevant Upwork jobs",
-      "status": "todo",
+      "status": "done",
       "priority": "high",
       "date": "2026-02-04",
-      "agentStatus": null,
-      "deliverables": null
+      "agentStatus": "completed",
+      "deliverables": [
+        {
+          "type": "file",
+          "name": "upwork-jobs-2026-02-04.md",
+          "url": "https://github.com/miltosgm/project-tasks/blob/main/growth-onomics/upwork-jobs-2026-02-04.md",
+          "description": "3 high-quality Google Ads jobs with full details and drafted proposals"
+        },
+        {
+          "type": "note",
+          "description": "Jobs: Google Ads Account Manager (Fixed $400-2k), Landing Page + Lead Gen ($15-30/hr), Ecommerce PPC ($10-12/hr)"
+        }
+      ]
     },
     {
       "id": 1738595640012,
       "name": "Draft Upwork proposals",
-      "status": "todo",
+      "status": "done",
       "priority": "high",
       "date": "2026-02-04",
-      "agentStatus": null,
-      "deliverables": null
+      "agentStatus": "completed",
+      "deliverables": [
+        {
+          "type": "file",
+          "name": "upwork-jobs-2026-02-04.md",
+          "url": "https://github.com/miltosgm/project-tasks/blob/main/growth-onomics/upwork-jobs-2026-02-04.md",
+          "description": "Customized proposals for each job in Miltos's voice, ready to submit"
+        }
+      ]
     },
     {
       "id": 1738595640013,
