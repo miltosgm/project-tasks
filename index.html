@@ -253,6 +253,10 @@
     <div class="header">
         <h1>📋 Task Manager<span id="syncStatus" class="sync-status synced">✓ Synced</span></h1>
         <p>Kanban boards for all projects • Clawdy will message you when working on tasks</p>
+        <div id="syncSetupBanner" style="margin-top: 10px; padding: 10px; background: #fef3c7; border-radius: 6px; display: none;">
+            <strong>⚡ Enable Auto-Sync:</strong> Tasks will automatically update GitHub when you move them to "In Progress"
+            <a href="sync-setup.html" style="margin-left: 10px; color: #2563eb; font-weight: 600;">Setup now →</a>
+        </div>
     </div>
 
     <div class="tabs">
@@ -412,6 +416,10 @@
 
         function saveTasks() {
             localStorage.setItem('tasks', JSON.stringify(tasks));
+            // Auto-sync to GitHub if enabled
+            if (localStorage.getItem('github_sync_enabled') === 'true') {
+                syncToGitHub();
+            }
         }
 
         function updateSyncStatus(status, message) {
@@ -421,6 +429,12 @@
         }
 
         async function syncToGitHub() {
+            const token = localStorage.getItem('github_token');
+            if (!token) {
+                // No sync configured - just save locally
+                return;
+            }
+
             updateSyncStatus('syncing', '⟳ Syncing...');
             
             try {
@@ -435,18 +449,53 @@
                 
                 const message = inProgressTasks.length > 0 
                     ? `Task update - ${inProgressTasks.length} in progress: ${inProgressTasks[0]}`
-                    : 'Task update';
+                    : 'Task update from browser';
 
-                // Note: GitHub API write requires auth token
-                // For now, just save locally and sync will happen via Clawdy during heartbeats
+                // Get current file SHA
+                const getResponse = await fetch('https://api.github.com/repos/miltosgm/project-tasks/contents/tasks.json', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (!getResponse.ok) {
+                    throw new Error('Failed to fetch current tasks.json');
+                }
+
+                const data = await getResponse.json();
+                const sha = data.sha;
                 
-                updateSyncStatus('synced', '✓ Saved locally');
+                // Update the file
+                const updateResponse = await fetch('https://api.github.com/repos/miltosgm/project-tasks/contents/tasks.json', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        content: btoa(unescape(encodeURIComponent(JSON.stringify(tasks, null, 2)))),
+                        sha: sha
+                    })
+                });
+
+                if (updateResponse.ok) {
+                    updateSyncStatus('synced', '✓ Synced to GitHub');
+                    setTimeout(() => {
+                        updateSyncStatus('synced', '✓ Synced to GitHub');
+                    }, 2000);
+                } else {
+                    throw new Error('Failed to update tasks.json');
+                }
+            } catch (error) {
+                console.error('Sync error:', error);
+                updateSyncStatus('error', '⚠️ Sync failed');
                 setTimeout(() => {
                     updateSyncStatus('synced', '✓ Saved locally');
-                }, 2000);
-            } catch (error) {
-                console.log('Sync info:', error);
-                updateSyncStatus('synced', '✓ Saved locally');
+                }, 3000);
             }
         }
 
@@ -594,6 +643,11 @@
         
         // Initial fetch after 2 seconds
         setTimeout(fetchAgentStatus, 2000);
+        
+        // Show setup banner if GitHub sync not configured
+        if (localStorage.getItem('github_sync_enabled') !== 'true') {
+            document.getElementById('syncSetupBanner').style.display = 'block';
+        }
     </script>
 </body>
 </html>
