@@ -218,11 +218,22 @@
     {
       "id": 1738595640015,
       "name": "Create new lead magnet",
-      "status": "todo",
+      "status": "done",
       "priority": "medium",
-      "date": "",
-      "agentStatus": null,
-      "deliverables": null
+      "date": "2026-02-04",
+      "agentStatus": "completed",
+      "deliverables": [
+        {
+          "type": "file",
+          "name": "performance-marketing-audit-checklist.html",
+          "url": "https://github.com/miltosgm/project-tasks/blob/main/growth-onomics/performance-marketing-audit-checklist.html",
+          "description": "47-point performance marketing audit checklist landing page - lead magnet with form capture, social proof, category breakdown"
+        },
+        {
+          "type": "note",
+          "description": "SEO-optimized for lead generation. Includes PDF preview, testimonials, responsive design. Ready to connect to email service (ConvertKit/Mailchimp)"
+        }
+      ]
     },
     {
       "id": 1738595640016,
