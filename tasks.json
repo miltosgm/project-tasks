@@ -177,20 +177,32 @@
     {
       "id": 1738595640013,
       "name": "Check today's LinkedIn post went out",
-      "status": "todo",
+      "status": "done",
       "priority": "medium",
       "date": "2026-02-03",
-      "agentStatus": null,
-      "deliverables": null
+      "agentStatus": "completed",
+      "deliverables": [
+        {
+          "type": "note",
+          "description": "Checked recent activity - most recent post is 1 week old, no post on Feb 3rd or 4th"
+        }
+      ]
     },
     {
       "id": 1738595640014,
       "name": "Prep tomorrow's LinkedIn post",
-      "status": "todo",
+      "status": "done",
       "priority": "medium",
       "date": "2026-02-03",
-      "agentStatus": null,
-      "deliverables": null
+      "agentStatus": "completed",
+      "deliverables": [
+        {
+          "type": "file",
+          "name": "linkedin-post-2026-02-04.md",
+          "url": "https://github.com/miltosgm/project-tasks/blob/main/growth-onomics/linkedin-post-2026-02-04.md",
+          "description": "3 LinkedIn post options in Miltos's voice - Performance Marketing Reality Check (recommended), LinkedIn Outreach, ROI Calculator"
+        }
+      ]
     },
     {
       "id": 1738595640015,
@@ -204,11 +216,22 @@
     {
       "id": 1738595640016,
       "name": "Build ROI calculator tool",
-      "status": "todo",
+      "status": "done",
       "priority": "high",
       "date": "",
-      "agentStatus": null,
-      "deliverables": null
+      "agentStatus": "completed",
+      "deliverables": [
+        {
+          "type": "file",
+          "name": "roi-calculator.html",
+          "url": "https://github.com/miltosgm/project-tasks/blob/main/growth-onomics/roi-calculator.html",
+          "description": "Fully functional Customer Acquisition ROI Calculator - clean design, real-time calculations, CTA integration"
+        },
+        {
+          "type": "note",
+          "description": "Pure HTML/JS, no backend needed. Shows current vs optimized metrics, 12-month savings projection, responsive mobile design"
+        }
+      ]
     }
   ]
 }
