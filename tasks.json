@@ -72,11 +72,22 @@
     {
       "id": 1738595640006,
       "name": "Create competitor comparison page",
-      "status": "todo",
+      "status": "done",
       "priority": "medium",
-      "date": "",
-      "agentStatus": null,
-      "deliverables": null
+      "date": "2026-02-04",
+      "agentStatus": "completed",
+      "deliverables": [
+        {
+          "type": "file",
+          "name": "backlinku-vs-ahrefs.html",
+          "url": "https://github.com/miltosgm/project-tasks/blob/main/backlinku/backlinku-vs-ahrefs.html",
+          "description": "Complete BacklinkU vs Ahrefs comparison page - feature table, pricing breakdown, decision guide, FAQ, mobile-responsive"
+        },
+        {
+          "type": "note",
+          "description": "SEO-optimized for 'ahrefs alternative', 'cheap backlink checker'. Ready to deploy, highlights 87% cost savings ($19/mo vs $129/mo)"
+        }
+      ]
     },
     {
       "id": 1738595640007,
