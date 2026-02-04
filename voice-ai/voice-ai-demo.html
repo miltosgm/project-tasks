@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice AI Demo - Dental Appointment Reminder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #1a202c;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #4a5568;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .output-section {
+            background: #edf2f7;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #2d3748;
+            font-family: 'Courier New', monospace;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #cbd5e0;
+        }
+
+        .output-section.empty {
+            color: #a0aec0;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .log-entry {
+            padding: 8px 0;
+            border-bottom: 1px solid #cbd5e0;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-time {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .log-action {
+            color: #48bb78;
+        }
+
+        .log-error {
+            color: #f56565;
+        }
+
+        .voice-output {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .voice-output-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .voice-message {
+            background: #edf2f7;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #2d3748;
+            border-left: 3px solid #667eea;
+        }
+
+        .voice-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .voice-btn {
+            flex: 1;
+            padding: 10px;
+            font-size: 12px;
+            background: #667eea;
+        }
+
+        .voice-btn:hover {
+            background: #5a67d8;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #c3dafe;
+            color: #3c366b;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        .status-badge.success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-badge.pending {
+            background: #fef3c7;
+            color: #78350f;
+        }
+
+        .workflow-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .workflow-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 20px;
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .step {
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+
+        .step-num {
+            font-size: 12px;
+            font-weight: 700;
+            color: #667eea;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .step-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .step-desc {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .workflow-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🎤 Voice AI Demo</div>
+            <h1>Dental Appointment Reminder</h1>
+            <p class="tagline">See how voice AI generates personalized appointment reminders in real-time</p>
+        </div>
+
+        <div class="demo-grid">
+            <!-- Input Section -->
+            <div>
+                <div class="section">
+                    <div class="section-title">Appointment Details</div>
+                    
+                    <div class="form-group">
+                        <label>Patient Name</label>
+                        <input type="text" id="patient-name" value="Sarah Johnson" placeholder="Enter patient name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Patient Phone</label>
+                        <input type="tel" id="patient-phone" value="+1 (305) 555-0147" placeholder="Enter phone number">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Dentist Name</label>
+                        <input type="text" id="dentist-name" value="Dr. Michael Chen" placeholder="Enter dentist name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Practice Name</label>
+                        <input type="text" id="practice-name" value="Miami Dental Care" placeholder="Enter practice name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Appointment Time</label>
+                        <input type="text" id="appointment-time" value="2:30 PM on Tuesday, February 5th" placeholder="e.g., 2:30 PM">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Appointment Type</label>
+                        <select id="appointment-type">
+                            <option>Regular Checkup & Cleaning</option>
+                            <option>Root Canal Treatment</option>
+                            <option>Crown Placement</option>
+                            <option>Teeth Whitening</option>
+                            <option>Emergency Visit</option>
+                        </select>
+                    </div>
+
+                    <button onclick="generateReminder()">Generate Voice Reminder</button>
+                </div>
+            </div>
+
+            <!-- Output Section -->
+            <div>
+                <div class="section">
+                    <div class="section-title">Processing Log</div>
+                    <div class="output-section empty" id="log">
+                        Click "Generate Voice Reminder" to see the process...
+                    </div>
+                    <div class="status-badge" id="status-badge">Ready</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voice Output -->
+        <div class="voice-output">
+            <div class="voice-output-title">Generated Voice Message</div>
+            <div class="voice-message" id="voice-message">
+                Your reminder will appear here...
+            </div>
+            <div class="voice-controls">
+                <button class="voice-btn" onclick="playVoice()">🔊 Play Voice</button>
+                <button class="voice-btn" onclick="copyMessage()">📋 Copy Text</button>
+            </div>
+        </div>
+
+        <!-- Workflow -->
+        <div class="workflow-section">
+            <div class="workflow-title">How It Works</div>
+            <div class="workflow-steps">
+                <div class="step">
+                    <div class="step-num">Step 1</div>
+                    <div class="step-title">Schedule Sync</div>
+                    <div class="step-desc">Appointment scheduled in practice management system</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">Step 2</div>
+                    <div class="step-title">24h Trigger</div>
+                    <div class="step-desc">Automated job runs 24 hours before appointment</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">Step 3</div>
+                    <div class="step-title">Voice Generation</div>
+                    <div class="step-desc">ElevenLabs API creates personalized message</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">Step 4</div>
+                    <div class="step-title">Phone Call</div>
+                    <div class="step-desc">Twilio sends voice call to patient phone</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">Step 5</div>
+                    <div class="step-title">IVR Response</div>
+                    <div class="step-desc">Patient can confirm, reschedule, or decline</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">Step 6</div>
+                    <div class="step-title">Log & Report</div>
+                    <div class="step-desc">Result recorded in practice dashboard</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let lastMessage = '';
+
+        function addLog(action, details, isError = false) {
+            const log = document.getElementById('log');
+            const logClass = isError ? 'log-error' : 'log-action';
+            const time = new Date().toLocaleTimeString();
+            
+            if (log.classList.contains('empty')) {
+                log.innerHTML = '';
+                log.classList.remove('empty');
+            }
+
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<span class="log-time">${time}</span> → <span class="${logClass}">${action}</span>: ${details}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function generateReminder() {
+            const patientName = document.getElementById('patient-name').value;
+            const dentistName = document.getElementById('dentist-name').value;
+            const practiceName = document.getElementById('practice-name').value;
+            const appointmentTime = document.getElementById('appointment-time').value;
+            const appointmentType = document.getElementById('appointment-type').value;
+
+            // Reset log
+            document.getElementById('log').innerHTML = '';
+            document.getElementById('log').classList.remove('empty');
+
+            // Simulate workflow
+            addLog('VALIDATE', 'Checking input fields...');
+            setTimeout(() => {
+                addLog('PARSE', `Patient: ${patientName}, Dentist: ${dentistName}`);
+            }, 300);
+
+            setTimeout(() => {
+                addLog('SYNC', 'Querying practice management database...');
+            }, 600);
+
+            setTimeout(() => {
+                addLog('FORMAT', 'Building voice message template...');
+            }, 900);
+
+            setTimeout(() => {
+                addLog('API_CALL', 'Calling ElevenLabs Text-to-Speech API...');
+            }, 1200);
+
+            setTimeout(() => {
+                addLog('VOICE_GEN', 'Generating audio with custom voice clone...');
+            }, 1800);
+
+            setTimeout(() => {
+                addLog('QUALITY', 'Audio quality: Excellent (22kHz, 16-bit)');
+            }, 2400);
+
+            setTimeout(() => {
+                addLog('READY', 'Message ready to transmit via Twilio...');
+                updateStatusBadge('success', 'Message Ready');
+                generateMessage(patientName, dentistName, practiceName, appointmentTime, appointmentType);
+            }, 3000);
+        }
+
+        function generateMessage(patientName, dentistName, practiceName, appointmentTime, appointmentType) {
+            const message = `Hi ${patientName}, this is a reminder call from ${practiceName}. You have an appointment with ${dentistName} for ${appointmentType.toLowerCase()} scheduled for ${appointmentTime}. Please press 1 to confirm, 2 to reschedule, or 3 to cancel. Thank you!`;
+            
+            lastMessage = message;
+            document.getElementById('voice-message').textContent = message;
+        }
+
+        function playVoice() {
+            if (!lastMessage) {
+                alert('Please generate a message first');
+                return;
+            }
+
+            addLog('AUDIO', 'Playing voice message...');
+            
+            // Simulate speech synthesis
+            const utterance = new SpeechSynthesisUtterance(lastMessage);
+            utterance.rate = 0.95;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            
+            utterance.onstart = () => {
+                addLog('PLAY', 'Voice message playing...');
+            };
+            
+            utterance.onend = () => {
+                addLog('COMPLETE', 'Voice message finished');
+                updateStatusBadge('success', 'Playback Complete');
+            };
+            
+            utterance.onerror = (event) => {
+                addLog('ERROR', `Audio playback failed: ${event.error}`, true);
+            };
+
+            speechSynthesis.speak(utterance);
+        }
+
+        function copyMessage() {
+            if (!lastMessage) {
+                alert('Please generate a message first');
+                return;
+            }
+            navigator.clipboard.writeText(lastMessage);
+            addLog('COPY', 'Message copied to clipboard');
+        }
+
+        function updateStatusBadge(type, text) {
+            const badge = document.getElementById('status-badge');
+            badge.className = 'status-badge ' + type;
+            badge.textContent = text;
+        }
+
+        // Pre-populate with example on load
+        window.addEventListener('load', () => {
+            addLog('INIT', 'Voice AI Demo initialized');
+            addLog('INFO', 'Ready to generate appointment reminders');
+        });
+    </script>
+</body>
+</html>
