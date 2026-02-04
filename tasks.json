@@ -3,11 +3,22 @@
     {
       "id": 1738595640001,
       "name": "Set up review collection workflow",
-      "status": "todo",
+      "status": "done",
       "priority": "high",
-      "date": "",
-      "agentStatus": null,
-      "deliverables": null
+      "date": "2026-02-04",
+      "agentStatus": "completed",
+      "deliverables": [
+        {
+          "type": "file",
+          "name": "review-collection-workflow.md",
+          "url": "https://github.com/miltosgm/project-tasks/blob/main/reviewsrealty/review-collection-workflow.md",
+          "description": "Complete review collection workflow spec - 9 phases covering submission, verification, admin review, publication, moderation. Includes UX flows, validation rules, SLAs, security & compliance (GDPR/CCPA), implementation checklist."
+        },
+        {
+          "type": "note",
+          "description": "Ready for frontend/backend development. Covers form design, document verification, spam detection, email workflows, admin dashboard, rating aggregation, edge cases, error handling."
+        }
+      ]
     },
     {
       "id": 1738595640002,
