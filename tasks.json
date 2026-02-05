@@ -3,9 +3,9 @@
     {
       "id": 1738595640001,
       "name": "Set up review collection workflow",
-      "status": "done",
+      "status": "todo",
       "priority": "high",
-      "date": "2026-02-04",
+      "date": "",
       "agentStatus": "completed",
       "deliverables": [
         {
@@ -23,7 +23,7 @@
     {
       "id": 1738595640002,
       "name": "Design landing page mockup",
-      "status": "done",
+      "status": "in-progress",
       "priority": "high",
       "date": "",
       "agentStatus": "completed",
@@ -43,7 +43,7 @@
     {
       "id": 1738595640003,
       "name": "Research competitor review platforms",
-      "status": "done",
+      "status": "in-progress",
       "priority": "medium",
       "date": "",
       "agentStatus": "completed",
@@ -63,9 +63,9 @@
     {
       "id": 1738595640004,
       "name": "Define MVP features list",
-      "status": "done",
+      "status": "todo",
       "priority": "high",
-      "date": "2026-02-04",
+      "date": "",
       "agentStatus": "completed",
       "deliverables": [
         {
@@ -85,9 +85,9 @@
     {
       "id": 1738595640005,
       "name": "Build backlink checker MVP",
-      "status": "done",
+      "status": "todo",
       "priority": "high",
-      "date": "2026-02-04",
+      "date": "",
       "agentStatus": "completed",
       "deliverables": [
         {
@@ -105,9 +105,9 @@
     {
       "id": 1738595640006,
       "name": "Create competitor comparison page",
-      "status": "done",
+      "status": "todo",
       "priority": "medium",
-      "date": "2026-02-04",
+      "date": "",
       "agentStatus": "completed",
       "deliverables": [
         {
@@ -125,9 +125,9 @@
     {
       "id": 1738595640007,
       "name": "Set up API for backlink data",
-      "status": "done",
+      "status": "todo",
       "priority": "high",
-      "date": "2026-02-05",
+      "date": "",
       "agentStatus": "completed",
       "deliverables": [
         {
@@ -147,9 +147,9 @@
     {
       "id": 1738595640008,
       "name": "Research voice AI platforms (ElevenLabs, etc)",
-      "status": "done",
+      "status": "todo",
       "priority": "high",
-      "date": "2026-02-04",
+      "date": "",
       "agentStatus": "completed",
       "deliverables": [
         {
@@ -167,9 +167,9 @@
     {
       "id": 1738595640009,
       "name": "Build simple voice demo",
-      "status": "done",
+      "status": "todo",
       "priority": "high",
-      "date": "2026-02-04",
+      "date": "",
       "agentStatus": "completed",
       "deliverables": [
         {
@@ -187,7 +187,7 @@
     {
       "id": 1738595640010,
       "name": "Define use cases and target market",
-      "status": "done",
+      "status": "in-progress",
       "priority": "medium",
       "date": "",
       "agentStatus": "completed",
@@ -218,7 +218,7 @@
     {
       "id": 1738595640011,
       "name": "Find 2-3 relevant Upwork jobs",
-      "status": "done",
+      "status": "todo",
       "priority": "high",
       "date": "2026-02-04",
       "agentStatus": "completed",
@@ -238,7 +238,7 @@
     {
       "id": 1738595640012,
       "name": "Draft Upwork proposals",
-      "status": "done",
+      "status": "todo",
       "priority": "high",
       "date": "2026-02-04",
       "agentStatus": "completed",
@@ -254,7 +254,7 @@
     {
       "id": 1738595640013,
       "name": "Check today's LinkedIn post went out",
-      "status": "done",
+      "status": "todo",
       "priority": "medium",
       "date": "2026-02-03",
       "agentStatus": "completed",
@@ -268,7 +268,7 @@
     {
       "id": 1738595640014,
       "name": "Prep tomorrow's LinkedIn post",
-      "status": "done",
+      "status": "todo",
       "priority": "medium",
       "date": "2026-02-03",
       "agentStatus": "completed",
@@ -284,9 +284,9 @@
     {
       "id": 1738595640015,
       "name": "Create new lead magnet",
-      "status": "done",
+      "status": "todo",
       "priority": "medium",
-      "date": "2026-02-04",
+      "date": "",
       "agentStatus": "completed",
       "deliverables": [
         {
@@ -304,7 +304,7 @@
     {
       "id": 1738595640016,
       "name": "Build ROI calculator tool",
-      "status": "done",
+      "status": "todo",
       "priority": "high",
       "date": "",
       "agentStatus": "completed",
