@@ -264,6 +264,7 @@
         <button class="tab" onclick="switchProject('backlinku')">Backlinku</button>
         <button class="tab" onclick="switchProject('voice-ai')">Voice AI Agent</button>
         <button class="tab" onclick="switchProject('growth-onomics')">Growth-onomics</button>
+        <button class="tab" onclick="switchProject('kicklab-ai')">⚡ Kick Lab AI</button>
     </div>
 
     <div id="reviewsrealty" class="project-board active">
@@ -334,6 +335,23 @@
         <div class="kanban-board" id="board-growth-onomics"></div>
     </div>
 
+    <div id="kicklab-ai" class="project-board">
+        <div class="add-task-section">
+            <h3>Add New Task</h3>
+            <div class="form-grid">
+                <input type="text" id="task-kicklab-ai" placeholder="Task name...">
+                <select id="priority-kicklab-ai">
+                    <option value="high">🔴 High Priority</option>
+                    <option value="medium" selected>🟡 Medium Priority</option>
+                    <option value="low">🟢 Low Priority</option>
+                </select>
+                <input type="date" id="date-kicklab-ai">
+                <button class="btn" onclick="addTask('kicklab-ai')">+ Add Task</button>
+            </div>
+        </div>
+        <div class="kanban-board" id="board-kicklab-ai"></div>
+    </div>
+
     <script>
         // Load tasks from localStorage or fetch from tasks.json
         let tasks = JSON.parse(localStorage.getItem('tasks'));
@@ -352,7 +370,8 @@
                         'reviewsrealty': [],
                         'backlinku': [],
                         'voice-ai': [],
-                        'growth-onomics': []
+                        'growth-onomics': [],
+                        'kicklab-ai': []
                     };
                 });
         }
@@ -362,7 +381,8 @@
                 'reviewsrealty': [],
                 'backlinku': [],
                 'voice-ai': [],
-                'growth-onomics': []
+                'growth-onomics': [],
+                'kicklab-ai': []
             };
         }
 
