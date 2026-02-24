@@ -160,7 +160,7 @@
         },
         {
           "type": "note",
-          "description": "Recommendation: ElevenLabs for Voice AI business targeting dental practices. $82/month cost per practice, $60M TAM. Includes 90-day action plan (research \u2192 MVP \u2192 go-to-market), technical architecture, competitive analysis, HIPAA compliance strategy, risk mitigation."
+          "description": "Recommendation: ElevenLabs for Voice AI business targeting dental practices. $82/month cost per practice, $60M TAM. Includes 90-day action plan (research → MVP → go-to-market), technical architecture, competitive analysis, HIPAA compliance strategy, risk mitigation."
         }
       ]
     },
@@ -180,7 +180,7 @@
         },
         {
           "type": "note",
-          "description": "Full working demo: enter patient/appointment details \u2192 generates personalized reminder message \u2192 play voice using browser TTS \u2192 shows API workflow (validate \u2192 format \u2192 call ElevenLabs \u2192 generate audio \u2192 ready). Ready for user testing with practices."
+          "description": "Full working demo: enter patient/appointment details → generates personalized reminder message → play voice using browser TTS → shows API workflow (validate → format → call ElevenLabs → generate audio → ready). Ready for user testing with practices."
         }
       ]
     },
@@ -320,98 +320,6 @@
           "description": "Pure HTML/JS, no backend needed. Shows current vs optimized metrics, 12-month savings projection, responsive mobile design"
         }
       ]
-    }
-  ],
-  "kicklab-ai": [
-    {
-      "id": 1771960899716,
-      "name": "Wire generate_results_json.py into cron_results.sh",
-      "status": "todo",
-      "priority": "high",
-      "date": "2026-02-25",
-      "agentStatus": "",
-      "deliverables": []
-    },
-    {
-      "id": 1771960899717,
-      "name": "Fix blog.html \u2014 still fully in Greek",
-      "status": "todo",
-      "priority": "high",
-      "date": "2026-02-25",
-      "agentStatus": "",
-      "deliverables": []
-    },
-    {
-      "id": 1771960899718,
-      "name": "Get Stripe payment link \u2014 replace placeholder in pricing.html",
-      "status": "todo",
-      "priority": "high",
-      "date": "",
-      "agentStatus": "",
-      "deliverables": []
-    },
-    {
-      "id": 1771960899719,
-      "name": "Dashboard V2 \u2014 fix team name truncation + edge filter threshold",
-      "status": "todo",
-      "priority": "medium",
-      "date": "",
-      "agentStatus": "",
-      "deliverables": []
-    },
-    {
-      "id": 1771960899720,
-      "name": "Add bookmaker affiliate links to pick cards (bet365/Unibet)",
-      "status": "todo",
-      "priority": "medium",
-      "date": "2026-02-26",
-      "agentStatus": "",
-      "deliverables": []
-    },
-    {
-      "id": 1771960899721,
-      "name": "Wire email form to SendGrid \u2014 daily picks digest at 9AM",
-      "status": "todo",
-      "priority": "medium",
-      "date": "",
-      "agentStatus": "",
-      "deliverables": []
-    },
-    {
-      "id": 1771960899722,
-      "name": "CLV / line movement widget \u2014 show odds shift since 9AM",
-      "status": "todo",
-      "priority": "low",
-      "date": "",
-      "agentStatus": "",
-      "deliverables": []
-    },
-    {
-      "id": 1771960899723,
-      "name": "Multi-league expansion \u2014 LaLiga, Bundesliga, Serie A",
-      "status": "todo",
-      "priority": "low",
-      "date": "",
-      "agentStatus": "",
-      "deliverables": []
-    },
-    {
-      "id": 1771960899724,
-      "name": "Retrain ML model \u2014 fix 100% test accuracy overfitting",
-      "status": "todo",
-      "priority": "low",
-      "date": "",
-      "agentStatus": "",
-      "deliverables": []
-    },
-    {
-      "id": 1771960899725,
-      "name": "Live odds integration \u2014 The Odds API (free tier) for real bookmaker odds",
-      "status": "in-progress",
-      "priority": "high",
-      "date": "",
-      "agentStatus": "",
-      "deliverables": []
     }
   ]
 }
