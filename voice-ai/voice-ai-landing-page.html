@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoiceDesk — AI Appointment Reminders for Dental Practices</title>
+  <meta name="description" content="Stop losing patients to missed appointments. VoiceDesk's AI voice system calls your patients automatically — 24/7, personalized, sounds just like your front desk." />
+  <style>
+    /* ============================
+       RESET & BASE
+    ============================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0f;
+      --bg-card: #111118;
+      --bg-hover: #1a1a28;
+      --border: #2a2a3a;
+      --accent: #6c63ff;
+      --accent-light: #8b85ff;
+      --accent-glow: rgba(108,99,255,0.25);
+      --green: #22c55e;
+      --red: #ef4444;
+      --text: #f0f0f8;
+      --text-muted: #888899;
+      --text-subtle: #555568;
+      --radius: 12px;
+      --radius-lg: 20px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: var(--accent-light); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ============================
+       LAYOUT HELPERS
+    ============================ */
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .section { padding: 80px 0; }
+    .section-sm { padding: 50px 0; }
+    .text-center { text-align: center; }
+    .mt-4 { margin-top: 1rem; }
+    .mt-8 { margin-top: 2rem; }
+
+    /* ============================
+       TYPOGRAPHY
+    ============================ */
+    h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
+    h2 { font-size: clamp(1.6rem, 3.5vw, 2.5rem); font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+    h3 { font-size: 1.25rem; font-weight: 700; }
+    p { color: var(--text-muted); }
+    .label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      background: rgba(108,99,255,0.12);
+      border: 1px solid rgba(108,99,255,0.3);
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 16px;
+    }
+
+    /* ============================
+       BUTTONS
+    ============================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 30px var(--accent-glow);
+    }
+    .btn-primary:hover {
+      background: var(--accent-light);
+      box-shadow: 0 0 50px var(--accent-glow);
+      transform: translateY(-1px);
+      text-decoration: none;
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover {
+      background: var(--bg-hover);
+      border-color: var(--accent);
+      text-decoration: none;
+    }
+    .btn-lg { padding: 18px 36px; font-size: 1.1rem; border-radius: 12px; }
+
+    /* ============================
+       NAV
+    ============================ */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .nav-logo {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+    .nav-cta { display: none; }
+    @media (min-width: 640px) { .nav-cta { display: inline-flex; } }
+
+    /* ============================
+       HERO
+    ============================ */
+    .hero {
+      padding: 100px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(108,99,255,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow { margin-bottom: 20px; }
+    .hero h1 {
+      max-width: 780px;
+      margin: 0 auto 20px;
+    }
+    .hero h1 .highlight {
+      background: linear-gradient(135deg, var(--accent-light), #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+      margin-bottom: 60px;
+    }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .stat-box {
+      background: var(--bg-card);
+      padding: 20px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+    }
+    .stat-number.green { color: var(--green); }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ============================
+       SOCIAL PROOF BAR
+    ============================ */
+    .proof-bar {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+    }
+    .proof-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 32px;
+    }
+    .proof-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    .proof-icon { font-size: 1.1rem; }
+
+    /* ============================
+       PROBLEM SECTION
+    ============================ */
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-top: 48px;
+    }
+    @media (min-width: 640px) {
+      .problem-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 900px) {
+      .problem-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .problem-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: border-color 0.2s;
+    }
+    .problem-card:hover { border-color: #ef444440; }
+    .problem-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+    .problem-card h3 { color: var(--text); margin-bottom: 8px; }
+    .problem-card p { font-size: 0.9rem; }
+    .cost-tag {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #ef4444;
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.2);
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+
+    /* ============================
+       SOLUTION SECTION
+    ============================ */
+    .solution-wrap {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 48px;
+      align-items: center;
+      margin-top: 48px;
+    }
+    @media (min-width: 768px) {
+      .solution-wrap { grid-template-columns: 1fr 1fr; }
+    }
+    .solution-features { list-style: none; }
+    .solution-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.95rem;
+    }
+    .solution-features li:last-child { border-bottom: none; }
+    .check {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      background: rgba(34,197,94,0.15);
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: var(--green);
+      margin-top: 2px;
+    }
+    .solution-features li strong { color: var(--text); display: block; }
+    .solution-features li span { color: var(--text-muted); font-size: 0.875rem; }
+    .voice-demo-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .voice-demo-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), #a78bfa);
+    }
+    .demo-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-subtle);
+      margin-bottom: 16px;
+    }
+    .demo-transcript {
+      background: rgba(108,99,255,0.05);
+      border: 1px solid rgba(108,99,255,0.15);
+      border-radius: var(--radius);
+      padding: 16px;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+    .demo-transcript .voice-name {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent-light);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .play-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--accent);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+      justify-content: center;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .play-btn:hover {
+      background: var(--accent-light);
+      text-decoration: none;
+    }
+
+    /* ============================
+       HOW IT WORKS
+    ============================ */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 48px;
+    }
+    @media (min-width: 640px) {
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 900px) {
+      .steps-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .step-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      position: relative;
+    }
+    .step-num {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--accent);
+      background: rgba(108,99,255,0.1);
+      border: 1px solid rgba(108,99,255,0.25);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .step-card h3 { color: var(--text); margin-bottom: 8px; font-size: 1rem; }
+    .step-card p { font-size: 0.875rem; }
+
+    /* ============================
+       PRICING
+    ============================ */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 48px;
+      align-items: start;
+    }
+    @media (min-width: 768px) {
+      .pricing-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      position: relative;
+      transition: transform 0.2s;
+    }
+    .pricing-card:hover { transform: translateY(-3px); }
+    .pricing-card.featured {
+      border-color: var(--accent);
+      box-shadow: 0 0 40px rgba(108,99,255,0.15);
+    }
+    .pricing-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 100px;
+    }
+    .plan-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    .plan-price {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .plan-price span { font-size: 1rem; font-weight: 500; color: var(--text-muted); }
+    .plan-desc {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .plan-features {
+      list-style: none;
+      margin-bottom: 28px;
+    }
+    .plan-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 7px 0;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .plan-features li .tick { color: var(--green); flex-shrink: 0; }
+    .plan-features li .cross { color: var(--text-subtle); flex-shrink: 0; }
+    .plan-cta {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 13px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .plan-cta-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .plan-cta-primary:hover {
+      background: var(--accent-light);
+      text-decoration: none;
+    }
+    .plan-cta-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .plan-cta-outline:hover {
+      background: var(--bg-hover);
+      border-color: var(--accent);
+      text-decoration: none;
+    }
+    .pricing-note {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-top: 24px;
+    }
+
+    /* ============================
+       FAQ
+    ============================ */
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 48px;
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    @media (min-width: 640px) {
+      .faq-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    details {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      transition: border-color 0.2s;
+    }
+    details[open] { border-color: var(--accent); }
+    summary {
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+      gap: 12px;
+    }
+    summary::-webkit-details-marker { display: none; }
+    .faq-arrow {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--bg-hover);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      transition: transform 0.2s;
+    }
+    details[open] .faq-arrow { transform: rotate(45deg); }
+    details p {
+      margin-top: 12px;
+      font-size: 0.875rem;
+      line-height: 1.7;
+    }
+
+    /* ============================
+       TESTIMONIAL
+    ============================ */
+    .testimonials {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-top: 48px;
+    }
+    @media (min-width: 640px) {
+      .testimonials { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 900px) {
+      .testimonials { grid-template-columns: repeat(3, 1fr); }
+    }
+    .testimonial-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+    .stars { color: #f59e0b; font-size: 0.9rem; margin-bottom: 12px; }
+    .testimonial-card blockquote {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--text);
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+    .reviewer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #a78bfa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #fff;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .reviewer-name { font-weight: 600; color: var(--text); font-size: 0.9rem; }
+    .reviewer-role { font-size: 0.8rem; color: var(--text-muted); }
+    .result-tag {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--green);
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.2);
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+
+    /* ============================
+       CTA SECTION
+    ============================ */
+    .cta-section {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 80px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      bottom: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(108,99,255,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-section h2 { max-width: 600px; margin: 0 auto 16px; }
+    .cta-section p { max-width: 500px; margin: 0 auto 36px; }
+    .cta-guarantee {
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: var(--text-subtle);
+    }
+
+    /* ============================
+       FOOTER
+    ============================ */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+    }
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-brand { font-weight: 700; color: var(--text); }
+    .footer-brand span { color: var(--accent); }
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text); text-decoration: none; }
+    .footer-copy {
+      color: var(--text-subtle);
+      font-size: 0.8rem;
+    }
+
+    /* ============================
+       UTILITIES
+    ============================ */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 32px;
+    }
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================
+     NAV
+============================ -->
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo">Voice<span>Desk</span></span>
+    <ul class="nav-links">
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a href="#demo" class="btn btn-primary nav-cta">Book Free Demo</a>
+  </div>
+</nav>
+
+<!-- ============================
+     HERO
+============================ -->
+<section class="hero text-center">
+  <div class="container">
+    <div class="hero-eyebrow">
+      <span class="label">AI Voice Automation for Dental Practices</span>
+    </div>
+    <h1>Never lose a patient to a <span class="highlight">missed appointment</span> again.</h1>
+    <p class="hero-sub">VoiceDesk calls your patients automatically — 24/7, in your receptionist's own voice — so they confirm, reschedule, or cancel before it costs you money.</p>
+    <div class="hero-buttons">
+      <a href="#demo" class="btn btn-primary btn-lg">
+        📅 Book a Free Demo
+      </a>
+      <a href="voice-ai-demo.html" target="_blank" class="btn btn-outline btn-lg">
+        ▶ See It Live
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-box">
+        <div class="stat-number green">−47%</div>
+        <div class="stat-label">Avg. no-show reduction</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">5 min</div>
+        <div class="stat-label">Setup time</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number green">$4.2K</div>
+        <div class="stat-label">Avg. monthly recovery</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================
+     SOCIAL PROOF BAR
+============================ -->
+<div class="proof-bar">
+  <div class="proof-inner">
+    <div class="proof-item">
+      <span class="proof-icon">🔒</span>
+      <span>HIPAA Compliant</span>
+    </div>
+    <div class="proof-item">
+      <span class="proof-icon">⚡</span>
+      <span>5-Minute Setup</span>
+    </div>
+    <div class="proof-item">
+      <span class="proof-icon">🎤</span>
+      <span>Custom Voice Cloning</span>
+    </div>
+    <div class="proof-item">
+      <span class="proof-icon">🔁</span>
+      <span>Works with Dentrix & Open Dental</span>
+    </div>
+    <div class="proof-item">
+      <span class="proof-icon">✅</span>
+      <span>30-Day Free Trial</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================
+     PROBLEM
+============================ -->
+<section class="section" id="problem">
+  <div class="container">
+    <div class="text-center">
+      <span class="label">The Problem</span>
+      <h2>Your patients are not the problem.<br />Your reminder system is.</h2>
+      <p class="mt-4" style="max-width:560px;margin-left:auto;margin-right:auto;">Dental practices lose thousands every month to preventable no-shows — and the current tools just aren't cutting it.</p>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-icon">📞</div>
+        <h3>Manual reminder calls</h3>
+        <p>Your receptionist spends hours every week calling patients who mostly don't pick up. It's tedious, inconsistent, and scaleless.</p>
+        <span class="cost-tag">~10 hrs/week wasted</span>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">💸</div>
+        <h3>No-shows drain revenue</h3>
+        <p>Each missed appointment costs $150–$400 in lost chair time. At 8 no-shows per week, that's over $100K per year walking out the door.</p>
+        <span class="cost-tag">$100K+/yr lost</span>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🤖</div>
+        <h3>Text-only reminders fail</h3>
+        <p>Text reminders have a 20% confirmation rate. Voice calls get 3–4× higher engagement — but nobody has time to make 200 calls a week.</p>
+        <span class="cost-tag">80% go unanswered</span>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">💰</div>
+        <h3>Answering services cost too much</h3>
+        <p>Traditional phone answering services charge $300–500/month for generic, scripted calls that don't sound like your practice at all.</p>
+        <span class="cost-tag">$300–500/mo</span>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🌙</div>
+        <h3>Zero after-hours coverage</h3>
+        <p>A patient wants to reschedule at 9 PM. Nobody picks up. They don't call back. You get a no-show. This happens multiple times a week.</p>
+        <span class="cost-tag">Lost every night</span>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">📊</div>
+        <h3>No visibility into the problem</h3>
+        <p>You know no-shows are hurting you, but you have no data — no confirmation rates, no cancellation trends, no way to fix what you can't measure.</p>
+        <span class="cost-tag">Flying blind</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================
+     SOLUTION
+============================ -->
+<section class="section" id="solution" style="background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <div class="solution-wrap">
+      <div>
+        <span class="label">The Solution</span>
+        <h2>Your AI receptionist.<br />On call 24/7.</h2>
+        <p class="mt-4">VoiceDesk integrates with your scheduling software and automatically calls every patient before their appointment — in a voice that sounds exactly like your front desk. Patients confirm, reschedule, or cancel right on the call. You get real-time data. Your staff gets their time back.</p>
+        <ul class="solution-features mt-8">
+          <li>
+            <div class="check">✓</div>
+            <div>
+              <strong>Voice cloning from your receptionist</strong>
+              <span>Patients hear a familiar voice, not a robot. We clone your actual front desk voice in minutes.</span>
+            </div>
+          </li>
+          <li>
+            <div class="check">✓</div>
+            <div>
+              <strong>Automatic 24h reminders</strong>
+              <span>Calls go out automatically the day before. No manual work, no missed patients.</span>
+            </div>
+          </li>
+          <li>
+            <div class="check">✓</div>
+            <div>
+              <strong>2-way IVR: confirm, reschedule, cancel</strong>
+              <span>Patients respond with their voice. VoiceDesk updates your schedule automatically.</span>
+            </div>
+          </li>
+          <li>
+            <div class="check">✓</div>
+            <div>
+              <strong>SMS fallback if call fails</strong>
+              <span>If the call goes unanswered, we send a text reminder automatically. Nothing falls through the cracks.</span>
+            </div>
+          </li>
+          <li>
+            <div class="check">✓</div>
+            <div>
+              <strong>No-show recovery calls</strong>
+              <span>Patient no-showed? VoiceDesk calls them within 2 hours to reschedule — recovering revenue you'd otherwise lose.</span>
+            </div>
+          </li>
+          <li>
+            <div class="check">✓</div>
+            <div>
+              <strong>Real-time dashboard & reporting</strong>
+              <span>See confirmation rates, no-show trends, and revenue impact — updated live.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <div class="voice-demo-card">
+          <div class="demo-label">🎤 Live Call Preview</div>
+          <div class="demo-transcript">
+            <span class="voice-name">VoiceDesk (as Sarah, Front Desk)</span>
+            "Hi Emily, this is Sarah calling from Bright Smiles Dental. Just a reminder that you have an appointment with Dr. Johnson tomorrow, Tuesday, at 2:30 PM. To confirm your appointment, press 1 or say 'confirm.' To reschedule, press 2 or say 'reschedule.' If you have questions, press 0 to speak with our team. We look forward to seeing you!"
+          </div>
+          <a href="voice-ai-demo.html" target="_blank" class="play-btn">
+            ▶ &nbsp; Hear the Full Demo
+          </a>
+        </div>
+        <div class="badge-row">
+          <div class="badge">🔒 HIPAA-Ready</div>
+          <div class="badge">🎤 Voice Cloned</div>
+          <div class="badge">⚡ 5-Min Setup</div>
+          <div class="badge">📱 SMS Fallback</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================
+     HOW IT WORKS
+============================ -->
+<section class="section" id="how-it-works">
+  <div class="container">
+    <div class="text-center">
+      <span class="label">How It Works</span>
+      <h2>From setup to first call in under an hour.</h2>
+      <p class="mt-4">VoiceDesk plugs into your existing workflow. No new equipment, no developer needed.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Connect Your Schedule</h3>
+        <p>Link VoiceDesk to Dentrix, Open Dental, Eaglesoft, or any calendar via webhook. Takes 5 minutes.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Clone Your Voice</h3>
+        <p>Record a 2-minute voice sample from your receptionist. VoiceDesk creates a custom AI voice clone that sounds just like them.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>VoiceDesk Calls</h3>
+        <p>24 hours before each appointment, VoiceDesk automatically calls the patient in your voice. They confirm, reschedule, or cancel — right on the call.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <h3>You See the Results</h3>
+        <p>Your dashboard updates in real time. See who confirmed, who's rescheduled, and watch your no-show rate drop week over week.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================
+     TESTIMONIALS
+============================ -->
+<section class="section-sm" style="background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <div class="text-center">
+      <span class="label">Early Results</span>
+      <h2>Practices seeing real numbers.</h2>
+    </div>
+    <div class="testimonials">
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"We were averaging 9 no-shows a week. After 30 days with VoiceDesk it dropped to 4. My receptionist actually thanked me for setting it up — she had no idea how much time those reminder calls were eating."</blockquote>
+        <div class="reviewer">
+          <div class="avatar">MK</div>
+          <div>
+            <div class="reviewer-name">Dr. Michael K.</div>
+            <div class="reviewer-role">General Dentist, Ohio</div>
+          </div>
+        </div>
+        <span class="result-tag">↓ 56% no-shows in 30 days</span>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"The voice clone is genuinely impressive. A patient told us 'thanks for calling personally' — they had no idea it was automated. That's the level of quality that makes patients actually pick up."</blockquote>
+        <div class="reviewer">
+          <div class="avatar">SC</div>
+          <div>
+            <div class="reviewer-name">Sarah C., Practice Manager</div>
+            <div class="reviewer-role">3-Dentist Group, Texas</div>
+          </div>
+        </div>
+        <span class="result-tag">+38% confirmation rate</span>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"We were skeptical about AI voice calls. Set it up in 15 minutes anyway. First month recovered $4,200 in appointments that would have been no-shows. Hard to argue with that."</blockquote>
+        <div class="reviewer">
+          <div class="avatar">RN</div>
+          <div>
+            <div class="reviewer-name">Dr. Raj N.</div>
+            <div class="reviewer-role">Cosmetic Dentist, California</div>
+          </div>
+        </div>
+        <span class="result-tag">$4,200 recovered month 1</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================
+     PRICING
+============================ -->
+<section class="section" id="pricing">
+  <div class="container">
+    <div class="text-center">
+      <span class="label">Pricing</span>
+      <h2>Simple, transparent pricing.</h2>
+      <p class="mt-4">No hidden fees. No contracts. Cancel anytime. Start free for 30 days.</p>
+    </div>
+    <div class="pricing-grid">
+
+      <!-- Starter -->
+      <div class="pricing-card">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">$99<span>/mo</span></div>
+        <div class="plan-desc">Solo practitioners &amp; small practices under 50 appts/month.</div>
+        <ul class="plan-features">
+          <li><span class="tick">✓</span> Up to 100 reminder calls/month</li>
+          <li><span class="tick">✓</span> 1 custom voice clone</li>
+          <li><span class="tick">✓</span> Pre-built dental scripts (3)</li>
+          <li><span class="tick">✓</span> SMS fallback</li>
+          <li><span class="tick">✓</span> Weekly email reports</li>
+          <li><span class="cross">–</span> 2-way IVR (reschedule/cancel)</li>
+          <li><span class="cross">–</span> No-show recovery calls</li>
+          <li><span class="cross">–</span> Practice software integration</li>
+        </ul>
+        <a href="#demo" class="plan-cta plan-cta-outline">Start Free Trial</a>
+      </div>
+
+      <!-- Growth (featured) -->
+      <div class="pricing-card featured">
+        <span class="pricing-badge">Most Popular</span>
+        <div class="plan-name">Growth</div>
+        <div class="plan-price">$199<span>/mo</span></div>
+        <div class="plan-desc">For active practices with 1–3 dentists, 100–250 appts/month.</div>
+        <ul class="plan-features">
+          <li><span class="tick">✓</span> Up to 300 reminder calls/month</li>
+          <li><span class="tick">✓</span> 1 custom voice clone</li>
+          <li><span class="tick">✓</span> Custom script builder</li>
+          <li><span class="tick">✓</span> SMS fallback</li>
+          <li><span class="tick">✓</span> Real-time dashboard</li>
+          <li><span class="tick">✓</span> <strong>2-way IVR</strong> (confirm / reschedule / cancel)</li>
+          <li><span class="tick">✓</span> <strong>No-show recovery calls</strong></li>
+          <li><span class="tick">✓</span> Dentrix / Open Dental integration</li>
+        </ul>
+        <a href="#demo" class="plan-cta plan-cta-primary">Start Free Trial</a>
+      </div>
+
+      <!-- Scale -->
+      <div class="pricing-card">
+        <div class="plan-name">Scale</div>
+        <div class="plan-price">$349<span>/mo</span></div>
+        <div class="plan-desc">Multi-dentist practices, 250+ appts/month. Full automation.</div>
+        <ul class="plan-features">
+          <li><span class="tick">✓</span> Unlimited reminder calls</li>
+          <li><span class="tick">✓</span> 2 voice clones</li>
+          <li><span class="tick">✓</span> Patient recall campaigns</li>
+          <li><span class="tick">✓</span> Post-visit satisfaction calls</li>
+          <li><span class="tick">✓</span> Full software integrations</li>
+          <li><span class="tick">✓</span> Custom analytics &amp; reporting</li>
+          <li><span class="tick">✓</span> Dedicated onboarding call (1:1)</li>
+          <li><span class="tick">✓</span> Priority support</li>
+        </ul>
+        <a href="#demo" class="plan-cta plan-cta-outline">Start Free Trial</a>
+      </div>
+
+    </div>
+    <p class="pricing-note">
+      All plans include a <strong>30-day free trial</strong>. No credit card required to start.<br />
+      Questions? <a href="#demo">Book a demo</a> and we'll walk you through the right plan for your practice.
+    </p>
+  </div>
+</section>
+
+<!-- ============================
+     FAQ
+============================ -->
+<section class="section" id="faq" style="background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <div class="text-center">
+      <span class="label">FAQ</span>
+      <h2>Common questions.</h2>
+    </div>
+    <div class="faq-grid" style="display:block; max-width:760px; margin:48px auto 0;">
+      <div style="display:grid; gap:16px;">
+
+        <details>
+          <summary>Will patients know it's an AI calling them? <span class="faq-arrow">+</span></summary>
+          <p>With voice cloning, patients hear your actual receptionist's voice — not a generic robot. Many of our clients report patients saying "thanks for calling personally." That said, in an abundance of caution (and for compliance), the call can include a brief disclosure that it's an automated reminder.</p>
+        </details>
+
+        <details>
+          <summary>Is VoiceDesk HIPAA compliant? <span class="faq-arrow">+</span></summary>
+          <p>Yes. VoiceDesk runs on ElevenLabs (ISO 27001 certified) and Twilio (HIPAA-eligible infrastructure). We do not store patient health information on our servers. We provide a Business Associate Agreement (BAA) as part of the setup. Your compliance team will be satisfied.</p>
+        </details>
+
+        <details>
+          <summary>What practice management software does it work with? <span class="faq-arrow">+</span></summary>
+          <p>VoiceDesk integrates with Dentrix, Open Dental, and Eaglesoft via webhook. Other systems can connect via our API or through Zapier/Make.com integrations. If you're on something else, contact us — we can usually get you connected within a day.</p>
+        </details>
+
+        <details>
+          <summary>How long does setup take? <span class="faq-arrow">+</span></summary>
+          <p>Most practices are live in under an hour. You'll record a 2-minute voice sample, connect your scheduling software, and customize your reminder script. We handle everything else. If you're on the Scale plan, we do the setup with you in a 1:1 onboarding call.</p>
+        </details>
+
+        <details>
+          <summary>What if a patient doesn't pick up? <span class="faq-arrow">+</span></summary>
+          <p>VoiceDesk leaves a voicemail and then automatically sends an SMS reminder as a fallback. If the appointment is still unconfirmed 4 hours before, it sends a final text nudge. Nothing falls through the cracks.</p>
+        </details>
+
+        <details>
+          <summary>Can I customize what the AI says? <span class="faq-arrow">+</span></summary>
+          <p>Absolutely. You can edit the reminder script, add specific instructions (e.g., "bring your insurance card"), adjust the tone, and set different scripts for different appointment types. Growth and Scale plans include a full script builder.</p>
+        </details>
+
+        <details>
+          <summary>Is there a contract? <span class="faq-arrow">+</span></summary>
+          <p>No contracts, ever. VoiceDesk is month-to-month. You can cancel anytime with no penalties. We also offer a 30-day free trial so you can see the no-show impact before you spend a cent.</p>
+        </details>
+
+        <details>
+          <summary>What's included in the free trial? <span class="faq-arrow">+</span></summary>
+          <p>Your free 30-day trial includes everything in the Growth plan — up to 300 reminder calls, voice cloning, 2-way IVR, and real-time dashboard. No credit card required to start. After 30 days, you choose your plan or walk away with no charge.</p>
+        </details>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================
+     FINAL CTA
+============================ -->
+<section class="cta-section" id="demo">
+  <div class="container">
+    <span class="label">Get Started Free</span>
+    <h2>Book your free demo.<br />See VoiceDesk running in your practice.</h2>
+    <p>10 minutes. No pitch. Just the tool — live, personalized for your practice. We'll show you exactly how it works, answer every question, and set you up for a free 30-day trial on the spot.</p>
+    <a href="https://calendly.com" target="_blank" class="btn btn-primary btn-lg">
+      📅 Book Free Demo — 10 Minutes
+    </a>
+    <p class="cta-guarantee">No credit card · No contract · Instant setup · 30-day free trial</p>
+    <div class="badge-row" style="margin-top:32px;">
+      <div class="badge">🔒 HIPAA Compliant</div>
+      <div class="badge">🎤 Voice Cloning Included</div>
+      <div class="badge">⚡ Live in Under 1 Hour</div>
+      <div class="badge">📞 30-Day Free Trial</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================
+     FOOTER
+============================ -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">Voice<span>Desk</span></div>
+      <div class="footer-links">
+        <a href="#how-it-works">How It Works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a href="voice-ai-demo.html" target="_blank">Live Demo</a>
+        <a href="#demo">Book Demo</a>
+      </div>
+      <div class="footer-copy">© 2026 VoiceDesk. Built for dental practices.</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

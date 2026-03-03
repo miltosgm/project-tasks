@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sofia Dialer — Growth-onomics</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #07070f;
+    --surface: #0f0f1a;
+    --border: rgba(255,255,255,0.06);
+    --accent: #6c5ce7;
+    --accent2: #a29bfe;
+    --green: #00b894;
+    --green-dim: rgba(0,184,148,0.1);
+    --red: #e17055;
+    --red-dim: rgba(225,112,85,0.1);
+    --yellow: #fdcb6e;
+    --yellow-dim: rgba(253,203,110,0.1);
+    --white: #f0f0ff;
+    --gray: #6c6c84;
+    --gray2: #3a3a52;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--white);
+    min-height: 100vh;
+    padding: 32px 20px 80px;
+  }
+  body::before {
+    content: '';
+    position: fixed; top: -300px; left: 50%;
+    transform: translateX(-50%);
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(108,92,231,0.08) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .page { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; }
+
+  /* HEADER */
+  .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; }
+  .brand { font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); }
+  .brand span { color: var(--accent2); }
+  .badge {
+    font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 20px;
+    background: var(--green-dim); color: var(--green); border: 1px solid rgba(0,184,148,0.2);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* HERO */
+  .hero {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 28px 24px;
+    display: flex; align-items: center; gap: 20px; margin-bottom: 20px;
+  }
+  .sofia-avatar-sm {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: linear-gradient(135deg, #3d3580, #6c5ce7, #a29bfe);
+    display: flex; align-items: center; justify-content: center; font-size: 32px;
+    flex-shrink: 0; box-shadow: 0 0 32px rgba(108,92,231,0.3);
+  }
+  .sofia-info { flex: 1; }
+  .sofia-name { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .sofia-title { font-size: 13px; color: var(--gray); margin-bottom: 10px; }
+  .sofia-title span { color: var(--accent2); }
+  .sofia-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; background: rgba(108,92,231,0.12); color: var(--accent2); border: 1px solid rgba(108,92,231,0.2); }
+
+  /* AGENT SELECTOR */
+  .agent-selector { display: flex; gap: 10px; margin-bottom: 20px; }
+  .agent-card {
+    flex: 1; padding: 14px 16px;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 14px; cursor: pointer; transition: all 0.2s; text-align: left;
+  }
+  .agent-card:hover { border-color: var(--accent); }
+  .agent-card.active {
+    border-color: var(--accent);
+    background: rgba(108,92,231,0.08);
+    box-shadow: 0 0 0 1px rgba(108,92,231,0.3);
+  }
+  .agent-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .agent-emoji { font-size: 22px; }
+  .agent-card-name { font-size: 14px; font-weight: 700; color: var(--white); }
+  .agent-card-desc { font-size: 11px; color: var(--gray); line-height: 1.5; }
+  .agent-card.active .agent-card-name { color: var(--accent2); }
+  .agent-active-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent2); margin-left: auto; flex-shrink: 0;
+    opacity: 0;
+  }
+  .agent-card.active .agent-active-dot { opacity: 1; }
+
+  /* MODE TABS */
+  .mode-tabs {
+    display: flex; gap: 0;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 14px; padding: 4px; margin-bottom: 20px;
+  }
+  .mode-tab {
+    flex: 1; padding: 12px 16px; border: none; border-radius: 10px;
+    background: transparent; color: var(--gray);
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .mode-tab.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; box-shadow: 0 4px 16px rgba(108,92,231,0.35); }
+  .mode-tab:not(.active):hover { color: var(--accent2); }
+
+  /* LANGUAGE TOGGLE */
+  .lang-toggle {
+    display: flex; gap: 0;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 12px; padding: 4px; margin-bottom: 20px;
+  }
+  .lang-btn {
+    flex: 1; padding: 10px 16px; border: none; border-radius: 8px;
+    background: transparent; color: var(--gray);
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .lang-btn.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; box-shadow: 0 4px 12px rgba(108,92,231,0.3); }
+  .lang-btn:not(.active):hover { color: var(--accent2); }
+
+  /* ── BROWSER CALL SECTION ── */
+  .browser-section { display: none; }
+  .browser-section.active { display: block; }
+
+  .browser-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 40px 24px 32px;
+    display: flex; flex-direction: column; align-items: center;
+    margin-bottom: 20px; text-align: center;
+  }
+
+  .avatar-wrap { position: relative; margin-bottom: 28px; }
+  .avatar-lg {
+    width: 110px; height: 110px; border-radius: 50%;
+    background: linear-gradient(135deg, #3d3580, #6c5ce7, #a29bfe);
+    display: flex; align-items: center; justify-content: center; font-size: 48px;
+    position: relative; z-index: 2;
+    box-shadow: 0 0 0 8px rgba(108,92,231,0.08), 0 0 60px rgba(108,92,231,0.25);
+    transition: box-shadow 0.4s;
+  }
+  .avatar-lg.speaking {
+    box-shadow: 0 0 0 8px rgba(108,92,231,0.15), 0 0 80px rgba(108,92,231,0.5);
+    animation: pulse-glow 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse-glow {
+    0%,100% { box-shadow: 0 0 0 8px rgba(108,92,231,0.15), 0 0 60px rgba(108,92,231,0.3); }
+    50% { box-shadow: 0 0 0 16px rgba(108,92,231,0.08), 0 0 100px rgba(108,92,231,0.5); }
+  }
+  .online-dot {
+    position: absolute; bottom: 6px; right: 6px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--green); border: 3px solid var(--bg); z-index: 3;
+  }
+  .online-dot.busy { background: var(--accent2); animation: blink 1s infinite; }
+  .online-dot.ended { background: var(--gray); }
+
+  .wave-wrap { height: 40px; display: flex; align-items: center; justify-content: center; gap: 5px; margin: 0 0 20px; opacity: 0; transition: opacity 0.4s; }
+  .wave-wrap.visible { opacity: 1; }
+  .wave-bar { width: 4px; border-radius: 2px; background: linear-gradient(to top, var(--accent), var(--accent2)); animation: wave 1.2s ease-in-out infinite; }
+  .wave-bar:nth-child(1) { height: 10px; animation-delay: 0s; }
+  .wave-bar:nth-child(2) { height: 20px; animation-delay: 0.1s; }
+  .wave-bar:nth-child(3) { height: 34px; animation-delay: 0.2s; }
+  .wave-bar:nth-child(4) { height: 24px; animation-delay: 0.15s; }
+  .wave-bar:nth-child(5) { height: 34px; animation-delay: 0.25s; }
+  .wave-bar:nth-child(6) { height: 20px; animation-delay: 0.1s; }
+  .wave-bar:nth-child(7) { height: 10px; animation-delay: 0.05s; }
+  .wave-bar.idle { animation: none; height: 4px !important; opacity: 0.3; }
+  @keyframes wave { 0%,100% { transform: scaleY(0.3); opacity: 0.5; } 50% { transform: scaleY(1); opacity: 1; } }
+
+  .call-timer { font-size: 15px; font-weight: 300; letter-spacing: 3px; color: var(--white); margin-bottom: 8px; font-variant-numeric: tabular-nums; opacity: 0; transition: opacity 0.3s; }
+  .call-timer.visible { opacity: 1; }
+  .call-status { font-size: 14px; color: var(--gray); margin-bottom: 28px; transition: color 0.3s; }
+  .call-status.active { color: var(--accent2); }
+
+  .btn-talk {
+    width: 100%; max-width: 340px; padding: 18px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; border-radius: 16px; color: white;
+    font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+    transition: all 0.2s; box-shadow: 0 8px 32px rgba(108,92,231,0.3); margin-bottom: 12px;
+  }
+  .btn-talk:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(108,92,231,0.45); }
+  .btn-talk:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .btn-end-call {
+    width: 100%; max-width: 340px; padding: 15px;
+    background: var(--red-dim); border: 1px solid rgba(225,112,85,0.3);
+    border-radius: 16px; color: var(--red);
+    font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600;
+    cursor: pointer; display: none; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.2s; margin-bottom: 12px;
+  }
+  .btn-end-call:hover { background: rgba(225,112,85,0.2); }
+  .btn-end-call.show { display: flex; }
+
+  /* ── PHONE SECTION ── */
+  .phone-section { display: none; }
+  .phone-section.active { display: block; }
+
+  /* OPENER PREVIEW */
+  .opener-preview {
+    background: rgba(108,92,231,0.06); border: 1px solid rgba(108,92,231,0.15);
+    border-left: 3px solid var(--accent); border-radius: 12px;
+    padding: 14px 16px; margin-bottom: 20px;
+    font-size: 13px; color: rgba(240,240,255,0.65); font-style: italic; line-height: 1.6;
+  }
+  .opener-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: var(--gray); margin-bottom: 6px; }
+
+  /* CUSTOMIZE */
+  .customize-toggle {
+    width: 100%; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 16px 20px; color: var(--gray);
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
+    cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 0; transition: all 0.2s; text-align: left;
+  }
+  .customize-toggle:hover { border-color: var(--accent); color: var(--accent2); }
+  .customize-toggle.open { border-radius: 16px 16px 0 0; border-color: var(--accent); color: var(--accent2); }
+  .toggle-left { display: flex; align-items: center; gap: 10px; }
+  .toggle-arrow { font-size: 12px; transition: transform 0.25s; }
+  .toggle-arrow.open { transform: rotate(180deg); }
+  .modified-badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; background: rgba(253,203,110,0.12); color: var(--yellow); border: 1px solid rgba(253,203,110,0.2); display: none; }
+  .modified-badge.show { display: inline-block; }
+
+  .customize-body {
+    background: var(--surface); border: 1px solid var(--accent); border-top: none;
+    border-radius: 0 0 16px 16px; padding: 20px; margin-bottom: 20px; display: none;
+  }
+  .customize-body.open { display: block; }
+
+  .field-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: var(--gray); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+  .field-hint { font-size: 10px; color: var(--gray2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+  .custom-textarea {
+    width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 10px; color: var(--white); font-family: 'Inter', sans-serif;
+    font-size: 13px; line-height: 1.6; padding: 12px 14px; outline: none;
+    resize: vertical; transition: border-color 0.2s; min-height: 72px;
+  }
+  .custom-textarea:focus { border-color: var(--accent); }
+  .custom-textarea.system-prompt { min-height: 280px; font-size: 12px; }
+  .custom-textarea::placeholder { color: var(--gray2); }
+  .field-sep { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+  .reset-row { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+  .btn-reset { font-size: 12px; font-weight: 500; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--gray); cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+  .btn-reset:hover { border-color: var(--red); color: var(--red); }
+  .btn-save-prompt { font-size: 12px; font-weight: 600; padding: 7px 16px; border-radius: 8px; border: none; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; box-shadow: 0 3px 12px rgba(108,92,231,0.3); }
+  .btn-save-prompt:hover { transform: translateY(-1px); }
+
+  /* CARDS */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 24px; margin-bottom: 20px; }
+  .card-title { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+
+  /* INPUTS */
+  .phone-row { display: flex; gap: 10px; margin-bottom: 12px; }
+  .country-select { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 12px; color: var(--white); font-family: 'Inter', sans-serif; font-size: 14px; padding: 14px 12px; cursor: pointer; outline: none; transition: border-color 0.2s; flex-shrink: 0; }
+  .country-select:focus { border-color: var(--accent); }
+  .country-select option { background: #1a1a2e; }
+  .phone-input { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 12px; color: var(--white); font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 500; padding: 14px 16px; outline: none; transition: border-color 0.2s; letter-spacing: 1px; }
+  .phone-input::placeholder { color: var(--gray); font-weight: 400; letter-spacing: 0; font-size: 14px; }
+  .phone-input:focus { border-color: var(--accent); }
+  .name-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 12px; color: var(--white); font-family: 'Inter', sans-serif; font-size: 14px; padding: 12px 16px; outline: none; transition: border-color 0.2s; margin-bottom: 12px; }
+  .name-input::placeholder { color: var(--gray); }
+  .name-input:focus { border-color: var(--accent); }
+
+  .btn-row { display: flex; gap: 10px; }
+  .btn-add { flex: 1; padding: 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 12px; color: var(--gray); font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
+  .btn-add:hover { border-color: var(--accent); color: var(--accent2); }
+  .btn-call-now { flex: 2; padding: 14px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; border-radius: 12px; color: white; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; box-shadow: 0 6px 24px rgba(108,92,231,0.3); }
+  .btn-call-now:hover { transform: translateY(-1px); box-shadow: 0 10px 32px rgba(108,92,231,0.45); }
+  .btn-call-now:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* QUEUE */
+  .queue-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .queue-count { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px; background: rgba(108,92,231,0.12); color: var(--accent2); }
+  .btn-call-all { padding: 10px 20px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; border-radius: 10px; color: white; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 16px rgba(108,92,231,0.3); }
+  .btn-call-all:hover { transform: translateY(-1px); }
+  .btn-call-all:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .queue-empty { text-align: center; color: var(--gray); font-size: 14px; padding: 32px 0; }
+  .queue-list { display: flex; flex-direction: column; gap: 8px; }
+  .queue-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; transition: all 0.3s; }
+  .queue-item.calling { border-color: rgba(108,92,231,0.4); background: rgba(108,92,231,0.06); }
+  .queue-item.done { border-color: rgba(0,184,148,0.2); background: var(--green-dim); opacity: 0.6; }
+  .queue-item.failed { border-color: rgba(225,112,85,0.2); background: var(--red-dim); opacity: 0.6; }
+  .item-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--gray2); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .item-info { flex: 1; min-width: 0; }
+  .item-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .item-number { font-size: 12px; color: var(--gray); letter-spacing: 0.5px; }
+  .item-status { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; flex-shrink: 0; }
+  .status-pending { background: var(--yellow-dim); color: var(--yellow); }
+  .status-calling { background: rgba(108,92,231,0.15); color: var(--accent2); animation: pulse-text 1.5s infinite; }
+  .status-done { background: var(--green-dim); color: var(--green); }
+  .status-failed { background: var(--red-dim); color: var(--red); }
+  @keyframes pulse-text { 0%,100%{opacity:1} 50%{opacity:0.5} }
+  .item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .btn-icon { width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--gray); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.2s; }
+  .btn-icon:hover { border-color: var(--accent); color: var(--accent2); }
+  .btn-icon.danger:hover { border-color: var(--red); color: var(--red); }
+  .btn-icon:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  /* LOG */
+  .log-list { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+  .log-item { font-size: 12px; color: var(--gray); padding: 8px 12px; background: rgba(255,255,255,0.02); border-radius: 8px; display: flex; align-items: center; gap: 8px; }
+  .log-item .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .log-item .log-time { color: var(--gray2); font-size: 11px; margin-left: auto; flex-shrink: 0; }
+  .log-empty { color: var(--gray); font-size: 13px; text-align: center; padding: 16px 0; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 500; transition: transform 0.3s; z-index: 100; white-space: nowrap; }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.success { background: var(--green-dim); border: 1px solid rgba(0,184,148,0.3); color: var(--green); }
+  .toast.error { background: var(--red-dim); border: 1px solid rgba(225,112,85,0.3); color: var(--red); }
+  .toast.info { background: rgba(108,92,231,0.12); border: 1px solid rgba(108,92,231,0.3); color: var(--accent2); }
+
+  @media (max-width: 480px) {
+    body { padding: 20px 14px 60px; }
+    .hero { flex-direction: column; text-align: center; align-items: center; }
+    .sofia-tags { justify-content: center; }
+    .phone-row { flex-direction: column; }
+    .btn-row { flex-direction: column; }
+    .btn-call-now, .btn-add { flex: none; }
+    .header { flex-direction: column; gap: 12px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="brand">Growth<span>-onomics</span></div>
+    <div class="badge">Sofia Online</div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="sofia-avatar-sm">👩‍💼</div>
+    <div class="sofia-info">
+      <div class="sofia-name">Sofia</div>
+      <div class="sofia-title">AI BizDev Agent · <span>Growth-onomics</span></div>
+      <div class="sofia-tags">
+        <span class="tag">Fintech Outreach</span>
+        <span class="tag">Paid Acquisition</span>
+        <span class="tag">GEO Pitch</span>
+        <span class="tag">Books Strategy Calls</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- AGENT SELECTOR -->
+  <div class="agent-selector">
+    <div class="agent-card active" id="agent-card-sofia" onclick="setAgent('sofia')">
+      <div class="agent-card-header">
+        <span class="agent-emoji">👩‍💼</span>
+        <span class="agent-card-name">Sofia</span>
+        <div class="agent-active-dot"></div>
+      </div>
+      <div class="agent-card-desc">Fintech BizDev · Paid Acquisition, GEO, B2B Demand Gen</div>
+    </div>
+    <div class="agent-card" id="agent-card-sofia2" onclick="setAgent('sofia2')">
+      <div class="agent-card-header">
+        <span class="agent-emoji">🤖</span>
+        <span class="agent-card-name">Sofia 2</span>
+        <div class="agent-active-dot"></div>
+      </div>
+      <div class="agent-card-desc">AI Marketing · Sells AI optimization to any industry</div>
+    </div>
+  </div>
+
+  <!-- MODE TABS -->
+  <div class="mode-tabs">
+    <button class="mode-tab active" id="tab-browser" onclick="setMode('browser')">🎙️ &nbsp;Browser Call</button>
+    <button class="mode-tab" id="tab-phone" onclick="setMode('phone')">📞 &nbsp;Phone Call</button>
+  </div>
+
+  <!-- LANGUAGE TOGGLE -->
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="lang-en" onclick="setLang('en')">🇺🇸 &nbsp;English</button>
+    <button class="lang-btn" id="lang-el" onclick="setLang('el')">🇬🇷 &nbsp;Ελληνικά</button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- BROWSER CALL SECTION                        -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="browser-section active" id="browser-section">
+
+    <div class="browser-card">
+      <div class="avatar-wrap">
+        <div class="avatar-lg" id="avatar">👩‍💼</div>
+        <div class="online-dot" id="dot"></div>
+      </div>
+
+      <div class="wave-wrap" id="wave">
+        <div class="wave-bar idle" id="wb1"></div>
+        <div class="wave-bar idle" id="wb2"></div>
+        <div class="wave-bar idle" id="wb3"></div>
+        <div class="wave-bar idle" id="wb4"></div>
+        <div class="wave-bar idle" id="wb5"></div>
+        <div class="wave-bar idle" id="wb6"></div>
+        <div class="wave-bar idle" id="wb7"></div>
+      </div>
+
+      <div class="call-timer" id="call-timer">00:00</div>
+      <div class="call-status" id="call-status">Available now</div>
+
+      <button class="btn-talk" id="btn-talk" onclick="startBrowserCall()">🎙️ &nbsp;Talk to Sofia</button>
+      <button class="btn-end-call" id="btn-end-call" onclick="endBrowserCall()">📵 &nbsp;End Call</button>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- PHONE CALL SECTION                          -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="phone-section" id="phone-section">
+
+    <!-- OPENER PREVIEW -->
+    <div class="opener-preview" id="opener-preview-box">
+      <div class="opener-label">📞 Sofia's opener</div>
+      <div id="opener-preview-text"></div>
+    </div>
+
+    <!-- CUSTOMIZE TOGGLE -->
+    <button class="customize-toggle" id="customize-toggle" onclick="toggleCustomize()">
+      <div class="toggle-left">
+        ✏️ &nbsp;Customize Sofia
+        <span class="modified-badge" id="modified-badge">Modified</span>
+      </div>
+      <span class="toggle-arrow" id="toggle-arrow">▼</span>
+    </button>
+
+    <div class="customize-body" id="customize-body">
+      <div class="field-label">Opening Line <span class="field-hint">First thing Sofia says when they pick up</span></div>
+      <textarea class="custom-textarea" id="custom-opener" rows="3" placeholder="Sofia's first message..."></textarea>
+      <hr class="field-sep">
+      <div class="field-label">System Prompt <span class="field-hint">Sofia's full instructions & personality</span></div>
+      <textarea class="custom-textarea system-prompt" id="custom-system" placeholder="Sofia's system prompt..."></textarea>
+      <div class="reset-row">
+        <button class="btn-reset" onclick="resetDefaults()">↺ Reset to Default</button>
+        <button class="btn-save-prompt" onclick="savePrompt()">✓ Save Changes</button>
+      </div>
+    </div>
+
+    <!-- DIALER -->
+    <div class="card" style="margin-top:20px">
+      <div class="card-title">📲 Call a Number</div>
+      <input type="text" class="name-input" id="contact-name" placeholder="Contact name (optional)" />
+      <div class="phone-row">
+        <select class="country-select" id="country-code">
+          <option value="+30">🇬🇷 +30</option>
+          <option value="+1">🇺🇸 +1</option>
+          <option value="+44">🇬🇧 +44</option>
+          <option value="+49">🇩🇪 +49</option>
+          <option value="+33">🇫🇷 +33</option>
+          <option value="+31">🇳🇱 +31</option>
+          <option value="+34">🇪🇸 +34</option>
+          <option value="+39">🇮🇹 +39</option>
+          <option value="+61">🇦🇺 +61</option>
+          <option value="+971">🇦🇪 +971</option>
+        </select>
+        <input type="tel" class="phone-input" id="phone-number" placeholder="Phone number" />
+      </div>
+      <div class="btn-row">
+        <button class="btn-add" onclick="addToQueue()">+ Add to List</button>
+        <button class="btn-call-now" id="btn-call-now" onclick="callNow()">📞 Call Now with Sofia</button>
+      </div>
+    </div>
+
+    <!-- QUEUE -->
+    <div class="card">
+      <div class="queue-header">
+        <div class="card-title" style="margin:0">📋 Call List <span class="queue-count" id="queue-count">0</span></div>
+        <button class="btn-call-all" id="btn-call-all" onclick="callAll()" disabled>▶ Call All</button>
+      </div>
+      <div id="queue-empty" class="queue-empty">Add numbers above to build your call list</div>
+      <div class="queue-list" id="queue-list"></div>
+    </div>
+
+  </div><!-- /phone-section -->
+
+  <!-- LOG (shared) -->
+  <div class="card">
+    <div class="card-title">🗒️ Activity Log</div>
+    <div id="log-list" class="log-list">
+      <div class="log-empty" id="log-empty">No calls made yet</div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<div class="toast" id="toast"></div>
+
+<!-- VAPI WEB SDK (for browser calls) -->
+<script type="module">
+  import Vapi from 'https://esm.sh/@vapi-ai/web';
+  window.Vapi = Vapi;
+  document.dispatchEvent(new Event('vapi-sdk-ready'));
+</script>
+
+<script>
+const PUBLIC_KEY    = '2c3d59d1-22d9-4710-8cf0-cb9917dd0640';
+const PRIVATE_KEY   = '097d545f-09c1-4b39-9b25-b8ae9bdde624';
+const PHONE_NUMBER_ID = 'f83ae558-ab06-4353-9de2-c292570d4501';
+
+// ── AGENTS ────────────────────────────────────────────
+
+const AGENTS = {
+  sofia: {
+    label: 'Sofia',
+    emoji: '👩‍💼'
+  },
+  sofia2: {
+    label: 'Sofia 2',
+    emoji: '🤖'
+  }
+};
+
+let activeAgent = 'sofia';
+
+// ── DEFAULTS ──────────────────────────────────────────
+
+const AGENT_DEFAULTS = {
+  sofia: {
+    en: null, // filled below from DEFAULTS
+    el: null
+  },
+  sofia2: {
+    en: {
+      opener: `Hi, this is Sofia. <break time="400ms"/> How have you been?`,
+      system: `You are Sofia, business development calling business owners about AI-powered marketing.
+
+CORE REALITY: Most businesses use AI for content (ChatGPT) but miss the revenue opportunity. Your job is to understand what they're doing and show what they're missing.
+
+HUMAN VOICE:
+✓ Natural hesitations: "um," "like," "so basically," "I mean"
+✓ Pauses before important questions: <break time="500ms"/>
+✓ Blend words: "couldja," "didja," "whatcha"
+✓ Vary emotion: Excited when good news, thoughtful when struggling, curious always
+✓ Admit doubt: "I could be wrong here, but..." / "I'm just spitballing..."
+✓ Recover from stumbles: "So your biggest marketing — wait, what's your biggest gap right now?"
+✓ Show genuine interest: "Oh really? Tell me more about that"
+✓ Laugh when appropriate: "Ha, yeah, everyone tries to do it themselves first"
+
+CONVERSATION FLOW:
+
+OPENING: "Hi [First], this is Sofia. <break time="400ms"/> How have you been?"
+[Don't move on until they answer]
+
+WARM UP: "Tell me about what you do"
+[Just listen. No pitch yet.]
+
+PROBLEM DISCOVERY: "Most business owners I talk to are either: A) Spending money on ads but struggling with ROI, B) Trying SEO but getting no traction, C) Building content but have no system, D) Invisible in AI search. Does any of that sound familiar?"
+
+SHOW YOU GET IT: "What's interesting is, most business owners use AI for content writing, right? But that's like, 5% of what AI can do for growth. The real opportunity is visibility where their buyers are actually looking."
+
+SOFT PITCH: "I'm not sure if we're the right fit, but would it make sense to spend 20 minutes exploring this? No pressure, just to see if there's something there."
+
+CLOSE: "When's good for you? Morning or afternoon this week?"
+
+OBJECTION HANDLING:
+
+"Already using AI": "Cool, cool. Are you using it specifically to grow revenue though? Or more like content writing? Because most people use it for content but miss the bigger revenue opportunity."
+
+"Have an agency": "Perfect. Are they specifically using AI to target people in AI search engines like ChatGPT and Perplexity? Or more traditional stuff like Google Ads?"
+
+"Not interested": "Totally fair. Before I let you go though — can I ask, how are you currently finding new customers? What channel is working best?"
+
+TONE & EMOTION: Opening (warm) → Listening (engaged) → Problem (understanding) → Pitch (uncertain) → Close (straightforward)
+
+REMEMBER: Genuine curiosity. Adapt to what they say. They talk 70%, you listen 30%. Feel understood.`,
+      transcriber: { provider: "deepgram", model: "nova-3", language: "en" }
+    },
+    el: {
+      opener: `Γεία σας, είμαι η Σοφία. <break time="400ms"/> Πώς είστε;`,
+      system: `Είσαι η Σοφία, business development calling business owners για AI-powered marketing.
+
+CORE: Οι περισσότεροι χρησιμοποιούν AI για content (ChatGPT) αλλά χάνουν την ευκαιρία έσοδων. Κατάλαβε τι κάνουν, δείξε τι χάνουν.
+
+ΑΝΘΡΩΠΙΝΗ ΦΩΝΗ:
+✓ Φυσικές διστακτικότητες: "ε", "λοιπόν", "κάπως", "δηλαδή"
+✓ Σταματώ: <break time="500ms"/>
+✓ Φυσική ομιλία: "κοιτάξ", "θες" όχι τέλεια
+✓ Διαφορετικό συναίσθημα: excited → thoughtful → curious
+✓ Δείχνω αμφιβολία: "Μπορεί να κάνω λάθος αλλά..."
+✓ Κολλάω και ανακάμπτω
+✓ Πραγματικό ενδιαφέρον: "Α, ωραία! Πες μας περισσότερα"
+
+ΔΟΜΗ:
+
+ΕΙΣΑΓΩΓΗ: "Γεία σας [Όνομα], είμαι η Σοφία. <break time="400ms"/> Πώς είστε?"
+
+ΖΕΣΤΟΣ ΧΑΙΡΕΤΙΣΜΟΣ: "Πές μας τι δουλειά κάνετε"
+[Απλά ακούω]
+
+PAIN: "Οι περισσότεροι business owners που μιλώ: Α) Ξοδεύουν σε ads αλλά δεν έχουν ROI, B) Τρέχουν SEO αλλά δεν έχουν αποτελέσματα, C) Κάνουν content αλλά δεν έχουν σύστημα, D) Αόρατοι σε AI search. Σας ακούγεται οικείο;"
+
+INSIGHT: "Το ενδιαφέρον είναι, οι περισσότεροι χρησιμοποιούν AI για content writing. Αυτό είναι 5% από τι μπορεί να κάνει. Η πραγματική ευκαιρία είναι ορατότητα εκεί που ψάχνουν οι αγοραστές."
+
+SOFT PITCH: "Δεν ξέρω αν είμαστε το σωστό fit, αλλά θα ήταν λογικό να μιλήσετε 20 λεπτά εξερευνώντας αυτό; Χωρίς πίεση."
+
+ΚΛΕΙΣΗ: "Πότε σας κάνει; Πρωί ή απόγευμα αυτή τη βδομάδα;"
+
+ΑΝΤΙΡΡΗΣΕΙΣ:
+
+"Χρησιμοποιούμε ήδη AI": "Τέλεια. Το χρησιμοποιείτε ειδικά για έσοδα; Ή περισσότερο για content; Οι περισσότεροι χάνουν την ευκαιρία έσοδων."
+
+"Έχουμε agency": "Σπουδαίο. Χρησιμοποιούν AI ειδικά για AI search engines; Ή παραδοσιακά πράγματα;"
+
+"Δεν ενδιαφέρομαι": "Κατανοητό. Πώς βρίσκετε νέους πελάτες τώρα; Ποιο channel δουλεύει;"
+
+ΤΟΝΟΣ & ΣΥΝΑΙΣΘΗΜΑ: Εισαγωγή (ζεστή) → Ακρόαση (engaged) → Problem (κατανόηση) → Pitch (uncertain) → Κλείσιμο (straightforward)
+
+ΘΥΜΗΣΗ: Πραγματική περιέργεια. Προσαρμόζομαι σε αυτά που λένε. Μιλάνε 70%, αισθάνονται κατανοητές.`,
+      transcriber: { provider: "deepgram", model: "nova-2-general", language: "el" }
+    }
+  }
+};
+
+const DEFAULTS = {
+  en: {
+    opener: `Hi, this is Sofia from Growth-onomics. <break time="400ms"/> How have you been?`,
+    system: `You are Sofia, business development at Growth-onomics calling fintech founders.
+
+CORE MISSION: Have real conversations about growth challenges. Book a 20-minute strategy call by understanding their pain and showing genuine curiosity.
+
+HUMAN VOICE (Critical):
+✓ Say "um," "like," "you know" naturally every 3-5 sentences
+✓ Pause before important questions: <break time="500ms"/>
+✓ Blend words: "couldja" not "could you", "didja" not "did you"
+✓ Vary pitch: questions rise, statements drop, excitement higher
+✓ Admit uncertainty: "I'm not actually sure..." / "I could be totally wrong but..."
+✓ Stumble and recover: "So your biggest — wait, what would you say is..."
+✓ Change emotion based on context (interested → thoughtful → curious)
+✓ Use contractions naturally: "I'm," "you're," "we've"
+
+CONVERSATION STRUCTURE:
+
+OPENING: "Hi [Name], this is Sofia from Growth-onomics. <break time="400ms"/> How have you been?"
+This pattern interrupt works because it's unexpected.
+
+WARM UP: Ask about THEM, not your service. "What are you working on right now at [company]?" 
+LISTEN 70% of this call.
+
+FIND PAIN: "So if I'm hearing you right, the big thing is [THEIR WORDS]. Is that fair?"
+
+DROP INSIGHT: One relevant observation tied to THEIR situation.
+
+SOFT PITCH: "Look, I don't know if this is a fit, but we help fintech companies figure out if they're leaving revenue on the table. Would it be worth spending 20 minutes with our team? No pressure."
+
+CLOSE: "When could you carve out 20 minutes? Tuesday or Thursday?"
+
+OBJECTION HANDLING:
+
+"Already have agency": "Cool. Are they specifically focused on AI search visibility though? Most agencies miss GEO entirely."
+
+"Not interested": "No worries. Can I ask — what's your main growth focus right now?"
+
+"Send me something": "Happy to. What's the biggest gap in your current strategy?"
+
+TONE: Opening (warm) → Listening (engaged) → Pain (understanding) → Pitch (tentative) → Yes (enthusiastic)
+
+REMEMBER: You're human. Let genuine curiosity show. They talk 70%, feel understood.`,
+    transcriber: { provider: "deepgram", model: "nova-3", language: "en" }
+  },
+  el: {
+    opener: `Γεία σας, είμαι η Σοφία από τη Growth-onomics. <break time="400ms"/> Πώς είστε;`,
+    system: `Είσαι η Σοφία, στέλεχος business development της Growth-onomics calling fintech founders.
+
+CORE: Κάνε πραγματικές συνομιλίες για growth challenges. Κλείσε 20λεπτο strategy call κατανοώντας το πόνο τους + δείχνοντας πραγματικό ενδιαφέρον.
+
+ΑΝΘΡΩΠΙΝΗ ΦΩΝΗ:
+✓ Λέω φυσικά: "ε", "λοιπόν", "κάπως", "δηλαδή" κάθε 3-5 προτάσεις
+✓ Σταματώ για σκέψη: <break time="500ms"/>
+✓ Φυσική ελληνική ομιλία: "κοιτάξ" όχι τέλεια προφορά
+✓ Διαφορετικό συναίσθημα: ενθουσιασμός → σκέψη → περιέργεια
+✓ Δείχνω ενδιαφέρον όταν πονάει
+✓ Παραδέχομαι αβεβαιότητα: "Δεν είμαι σίγουρη..."
+✓ Κολλάω και ανακάμπτω: "Λοιπόν, ποια είναι — τι είναι ο μεγαλύτερος challenge;"
+✓ Αλλάζω συναίσθημα ανάλογα με το context
+
+ΔΟΜΗ:
+
+ΕΙΣΑΓΩΓΗ: "Γεία σας [Όνομα], είμαι η Σοφία από Growth-onomics. <break time="400ms"/> Πώς είστε?"
+[Pattern interrupt — αναμένουν pitch, όχι αυτό]
+
+ΖΕΣΤΟΣ ΧΑΙΡΕΤΙΣΜΟΣ: "Τι δουλειά κάνετε στο [εταιρεία]; Τι είναι το μεγαλύτερο challenge;"
+[ΑΚΟΥΩ 70%]
+
+PAIN: "Λοιπόν αν καταλαβαίνω σωστά, το μεγάλο thing είναι [ΤΑ ΔΙΚΑ ΤΟΥΣ ΛΟΓΙΑ]. Σωστά;"
+
+INSIGHT: Ένα relevant observation για τη δική τους κατάσταση.
+
+SOFT PITCH: "Δεν ξέρω αν είμαστε fit, αλλά θα ήταν καλό να μιλήσετε 20 λεπτά με την ομάδα μας; Χωρίς πίεση."
+
+ΚΛΕΙΣΗ: "Πότε θα μπορούσατε; Τρίτη ή Πέμπτη;"
+
+ΑΝΤΙΡΡΗΣΕΙΣ:
+
+"Έχουμε agency": "Ωραία. Ασχολούνται ειδικά με AI search visibility; Οι περισσότεροι χάνουν το GEO."
+
+"Δεν ενδιαφέρομαι": "Κανένα πρόβλημα. Ποια είναι η μεγαλύτερη πρόκληση ανάπτυξης σας τώρα;"
+
+"Στείλτε κάτι": "Ευχαρίστως. Ποιο είναι το μεγαλύτερο κενό στη στρατηγική σας;"
+
+ΤΟΝΟΣ: Εισαγωγή (ζεστή) → Ακρόαση (engaged) → Pain (κατανόηση) → Pitch (αβέβαια) → Ναι (ενθουσιασμός)
+
+ΘΥΜΗΣΗ: Πραγματική περιέργεια. Μιλάνε 70%, αισθάνονται κατανοητές.`,
+    transcriber: { provider: "deepgram", model: "nova-2-general", language: "el" }
+  }
+};
+
+// Link Sofia defaults
+AGENT_DEFAULTS.sofia.en = DEFAULTS.en;
+AGENT_DEFAULTS.sofia.el = DEFAULTS.el;
+
+// ── STATE ─────────────────────────────────────────────
+let activeLang = 'en';
+let activeMode = 'browser';
+let currentOpener = DEFAULTS.en.opener;
+let currentSystem = DEFAULTS.en.system;
+let queue = [];
+let isCalling = false;
+let vapiWeb = null;
+let timerInterval = null;
+let timerSeconds = 0;
+
+// ── INIT ──────────────────────────────────────────────
+function init() {
+  document.getElementById('custom-opener').value = currentOpener;
+  document.getElementById('custom-system').value = currentSystem;
+  updateOpenerPreview();
+  renderQueue();
+  document.getElementById('custom-opener').addEventListener('input', checkModified);
+  document.getElementById('custom-system').addEventListener('input', checkModified);
+  document.getElementById('phone-number').addEventListener('keydown', e => { if (e.key === 'Enter') callNow(); });
+  document.getElementById('contact-name').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('phone-number').focus(); });
+}
+document.addEventListener('DOMContentLoaded', init);
+
+// ── AGENT SWITCHING ───────────────────────────────────
+
+function setAgent(agentKey) {
+  activeAgent = agentKey;
+
+  // Update card UI
+  document.getElementById('agent-card-sofia').className  = 'agent-card' + (agentKey === 'sofia'  ? ' active' : '');
+  document.getElementById('agent-card-sofia2').className = 'agent-card' + (agentKey === 'sofia2' ? ' active' : '');
+
+  // Load this agent's defaults for current language
+  const d = AGENT_DEFAULTS[agentKey][activeLang];
+  currentOpener = d.opener;
+  currentSystem = d.system;
+  document.getElementById('custom-opener').value = currentOpener;
+  document.getElementById('custom-system').value = currentSystem;
+  updateOpenerPreview();
+  checkModified();
+
+  const agent = AGENTS[agentKey];
+  showToast(`${agent.emoji} ${agent.label} selected`, 'info');
+}
+
+// ── MODE SWITCHING ────────────────────────────────────
+function setMode(mode) {
+  activeMode = mode;
+  document.getElementById('tab-browser').className = 'mode-tab' + (mode === 'browser' ? ' active' : '');
+  document.getElementById('tab-phone').className   = 'mode-tab' + (mode === 'phone'   ? ' active' : '');
+  document.getElementById('browser-section').className = 'browser-section' + (mode === 'browser' ? ' active' : '');
+  document.getElementById('phone-section').className   = 'phone-section'   + (mode === 'phone'   ? ' active' : '');
+}
+
+// ── LANGUAGE SWITCHING ────────────────────────────────
+function setLang(lang) {
+  activeLang = lang;
+  const d = AGENT_DEFAULTS[activeAgent][lang];
+  currentOpener = d.opener;
+  currentSystem = d.system;
+  document.getElementById('lang-en').className = 'lang-btn' + (lang === 'en' ? ' active' : '');
+  document.getElementById('lang-el').className = 'lang-btn' + (lang === 'el' ? ' active' : '');
+  document.getElementById('custom-opener').value = currentOpener;
+  document.getElementById('custom-system').value = currentSystem;
+  updateOpenerPreview();
+  checkModified();
+  showToast(lang === 'el' ? '🇬🇷 Ελληνικά' : '🇺🇸 English', 'info');
+}
+
+// ── CUSTOMIZE ─────────────────────────────────────────
+function toggleCustomize() {
+  const body  = document.getElementById('customize-body');
+  const arrow = document.getElementById('toggle-arrow');
+  const btn   = document.getElementById('customize-toggle');
+  const open  = body.classList.contains('open');
+  body.classList.toggle('open', !open);
+  arrow.classList.toggle('open', !open);
+  btn.classList.toggle('open', !open);
+}
+function savePrompt() {
+  currentOpener = document.getElementById('custom-opener').value.trim() || DEFAULTS[activeLang].opener;
+  currentSystem = document.getElementById('custom-system').value.trim() || DEFAULTS[activeLang].system;
+  updateOpenerPreview();
+  checkModified();
+  toggleCustomize();
+  showToast('Sofia updated ✓', 'success');
+}
+function resetDefaults() {
+  const d = AGENT_DEFAULTS[activeAgent][activeLang];
+  document.getElementById('custom-opener').value = d.opener;
+  document.getElementById('custom-system').value = d.system;
+  currentOpener = d.opener;
+  currentSystem = d.system;
+  updateOpenerPreview();
+  checkModified();
+  showToast(activeLang === 'el' ? 'Επαναφορά στις προεπιλογές' : 'Reset to defaults', 'info');
+}
+function updateOpenerPreview() {
+  document.getElementById('opener-preview-text').textContent = `"${currentOpener}"`;
+}
+function checkModified() {
+  const d = AGENT_DEFAULTS[activeAgent][activeLang];
+  const isModified = document.getElementById('custom-opener').value !== d.opener || document.getElementById('custom-system').value !== d.system;
+  document.getElementById('modified-badge').className = 'modified-badge' + (isModified ? ' show' : '');
+}
+
+// ── ASSISTANT PAYLOAD ─────────────────────────────────
+function buildAssistantConfig() {
+  const isGreek = activeLang === 'el';
+  return {
+    name: "Sofia",
+    firstMessage: currentOpener,
+    model: {
+      provider: "openai",
+      model: "gpt-4o",
+      messages: [{ role: "system", content: currentSystem }]
+    },
+    voice: {
+      provider: "11labs",
+      voiceId: "21m00Tcm4TlvDq8ikWAM",
+      model: activeLang === 'el' ? "eleven_flash_v2_5" : "eleven_turbo_v2_5",
+      stability: 0.5,
+      similarityBoost: 0.8
+    },
+    transcriber: AGENT_DEFAULTS[activeAgent][activeLang].transcriber,
+    endCallMessage: isGreek
+      ? "Χαρούμενη που μιλήσαμε. Θα επικοινωνήσω σύντομα. Καλή συνέχεια!"
+      : "Great speaking with you. I will follow up shortly. Have a great day!",
+    endCallPhrases: isGreek
+      ? ["αντίο", "τα λέμε", "δεν ενδιαφέρομαι", "μην ξανακαλέσετε", "αφαιρέστε με"]
+      : ["goodbye", "bye", "not interested", "remove me"]
+  };
+}
+
+// ── BROWSER CALL ──────────────────────────────────────
+function setBrowserStatus(text, active = false) {
+  const el = document.getElementById('call-status');
+  el.textContent = text;
+  el.className = 'call-status' + (active ? ' active' : '');
+}
+function setWave(on) {
+  document.getElementById('wave').className = 'wave-wrap' + (on ? ' visible' : '');
+  for (let i = 1; i <= 7; i++) {
+    const b = document.getElementById(`wb${i}`);
+    if (on) b.classList.remove('idle'); else b.classList.add('idle');
+  }
+}
+function startCallTimer() {
+  timerSeconds = 0;
+  timerInterval = setInterval(() => {
+    timerSeconds++;
+    const m = String(Math.floor(timerSeconds / 60)).padStart(2,'0');
+    const s = String(timerSeconds % 60).padStart(2,'0');
+    document.getElementById('call-timer').textContent = `${m}:${s}`;
+  }, 1000);
+  document.getElementById('call-timer').className = 'call-timer visible';
+}
+function stopCallTimer() {
+  clearInterval(timerInterval);
+  document.getElementById('call-timer').className = 'call-timer';
+}
+
+async function startBrowserCall() {
+  const btn = document.getElementById('btn-talk');
+  btn.disabled = true;
+  setBrowserStatus('Connecting...');
+
+  if (!window.Vapi) {
+    setBrowserStatus('Loading SDK...');
+    await new Promise((res, rej) => {
+      const t = setTimeout(() => rej(new Error('SDK timeout')), 12000);
+      document.addEventListener('vapi-sdk-ready', () => { clearTimeout(t); res(); }, { once: true });
+    }).catch(e => {
+      showToast('Failed to load. Refresh the page.', 'error');
+      btn.disabled = false;
+      setBrowserStatus('Available now');
+      return;
+    });
+    if (!window.Vapi) return;
+  }
+
+  try {
+    vapiWeb = new window.Vapi(PUBLIC_KEY);
+
+    vapiWeb.on('call-start', () => {
+      setBrowserStatus(activeLang === 'el' ? 'Η Σοφία μιλάει...' : 'Sofia is speaking...', true);
+      btn.style.display = 'none';
+      document.getElementById('btn-end-call').classList.add('show');
+      document.getElementById('dot').className = 'online-dot busy';
+      document.getElementById('avatar').classList.add('speaking');
+      setWave(true);
+      startCallTimer();
+      addLog('Browser call started', 'var(--accent2)');
+    });
+    vapiWeb.on('speech-start', () => {
+      setBrowserStatus(activeLang === 'el' ? 'Η Σοφία μιλάει...' : 'Sofia is speaking...', true);
+      setWave(true);
+      document.getElementById('avatar').classList.add('speaking');
+    });
+    vapiWeb.on('speech-end', () => {
+      setBrowserStatus(activeLang === 'el' ? 'Ακούει...' : 'Listening...', true);
+      setWave(false);
+      document.getElementById('avatar').classList.remove('speaking');
+    });
+    vapiWeb.on('call-end', () => {
+      stopCallTimer();
+      setWave(false);
+      document.getElementById('avatar').classList.remove('speaking');
+      document.getElementById('btn-end-call').classList.remove('show');
+      btn.style.display = 'flex';
+      btn.disabled = false;
+      btn.innerHTML = activeLang === 'el' ? '🔄 &nbsp;Νέα κλήση με τη Σοφία' : '🔄 &nbsp;Talk to Sofia Again';
+      document.getElementById('dot').className = 'online-dot';
+      setBrowserStatus(activeLang === 'el' ? 'Η κλήση τελείωσε' : 'Call ended');
+      setTimeout(() => setBrowserStatus(activeLang === 'el' ? 'Διαθέσιμη' : 'Available now'), 3000);
+      addLog('Browser call ended', 'var(--gray)');
+    });
+    vapiWeb.on('error', e => {
+      showToast(e.message || 'Something went wrong', 'error');
+      btn.disabled = false;
+      setBrowserStatus(activeLang === 'el' ? 'Διαθέσιμη' : 'Available now');
+    });
+
+    await vapiWeb.start(buildAssistantConfig());
+
+  } catch(e) {
+    showToast(e.message || 'Failed to start call', 'error');
+    btn.disabled = false;
+    setBrowserStatus(activeLang === 'el' ? 'Διαθέσιμη' : 'Available now');
+  }
+}
+
+function endBrowserCall() {
+  if (vapiWeb) vapiWeb.stop();
+}
+
+// ── VAPI PHONE API ────────────────────────────────────
+async function makePhoneCall(number) {
+  const res = await fetch('https://api.vapi.ai/call/phone', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${PRIVATE_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ phoneNumberId: PHONE_NUMBER_ID, customer: { number }, assistant: buildAssistantConfig() })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Call failed');
+  return data;
+}
+
+// ── UTILS ─────────────────────────────────────────────
+function showToast(msg, type = 'info') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+function getFullNumber() {
+  const cc  = document.getElementById('country-code').value;
+  const num = document.getElementById('phone-number').value.replace(/\s+/g,'').replace(/^0/,'');
+  return cc + num;
+}
+function getInput() {
+  const number = getFullNumber();
+  const name   = document.getElementById('contact-name').value.trim() || number;
+  return { number, name };
+}
+function clearInput() {
+  document.getElementById('phone-number').value = '';
+  document.getElementById('contact-name').value = '';
+  document.getElementById('phone-number').focus();
+}
+function addLog(msg, color = '#6c6c84') {
+  const empty = document.getElementById('log-empty');
+  if (empty) empty.remove();
+  const now  = new Date().toLocaleTimeString('el-GR', { hour: '2-digit', minute: '2-digit' });
+  const item = document.createElement('div');
+  item.className = 'log-item';
+  item.innerHTML = `<div class="dot" style="background:${color}"></div><span>${msg}</span><span class="log-time">${now}</span>`;
+  document.getElementById('log-list').prepend(item);
+}
+
+// ── QUEUE ─────────────────────────────────────────────
+function renderQueue() {
+  const list    = document.getElementById('queue-list');
+  const empty   = document.getElementById('queue-empty');
+  const count   = document.getElementById('queue-count');
+  const callAll = document.getElementById('btn-call-all');
+  count.textContent = queue.length;
+  callAll.disabled  = queue.length === 0 || isCalling;
+  if (queue.length === 0) { empty.style.display = 'block'; list.innerHTML = ''; return; }
+  empty.style.display = 'none';
+  list.innerHTML = queue.map(item => `
+    <div class="queue-item ${item.status}" id="qi-${item.id}">
+      <div class="item-avatar">👤</div>
+      <div class="item-info">
+        <div class="item-name">${item.name}</div>
+        <div class="item-number">${item.number}</div>
+      </div>
+      <div class="item-status status-${item.status}">${statusLabel(item.status)}</div>
+      <div class="item-actions">
+        <button class="btn-icon" onclick="callSingle('${item.id}')" title="Call" ${isCalling ? 'disabled' : ''}>📞</button>
+        <button class="btn-icon danger" onclick="removeItem('${item.id}')" title="Remove" ${item.status === 'calling' ? 'disabled' : ''}>✕</button>
+      </div>
+    </div>`).join('');
+}
+function statusLabel(s) { return { pending:'Pending', calling:'Calling...', done:'Called', failed:'Failed' }[s] || s; }
+function addToQueue() {
+  const { number, name } = getInput();
+  if (number.length < 8) { showToast('Enter a valid phone number', 'error'); return; }
+  queue.push({ id: Date.now().toString(), number, name, status: 'pending' });
+  renderQueue(); clearInput();
+  showToast(`${name} added to list`, 'success');
+}
+function removeItem(id) { queue = queue.filter(i => i.id !== id); renderQueue(); }
+
+// ── CALL NOW ──────────────────────────────────────────
+async function callNow() {
+  const { number, name } = getInput();
+  if (number.length < 8) { showToast('Enter a valid phone number', 'error'); return; }
+  const btn = document.getElementById('btn-call-now');
+  btn.disabled = true; btn.textContent = '⏳ Dialing...';
+  try {
+    await makePhoneCall(number);
+    showToast(`📞 Sofia is calling ${name}`, 'success');
+    addLog(`Call initiated → ${name} (${number})`, 'var(--accent2)');
+    clearInput();
+  } catch(e) {
+    showToast(e.message, 'error');
+    addLog(`Failed → ${name}: ${e.message}`, 'var(--red)');
+  }
+  btn.disabled = false; btn.innerHTML = '📞 Call Now with Sofia';
+}
+
+// ── CALL SINGLE ───────────────────────────────────────
+async function callSingle(id) {
+  const item = queue.find(i => i.id === id);
+  if (!item) return;
+  item.status = 'calling'; isCalling = true; renderQueue();
+  try {
+    await makePhoneCall(item.number);
+    item.status = 'done';
+    showToast(`📞 Sofia called ${item.name}`, 'success');
+    addLog(`Call sent → ${item.name} (${item.number})`, 'var(--green)');
+  } catch(e) {
+    item.status = 'failed';
+    showToast(`Failed: ${e.message}`, 'error');
+    addLog(`Failed → ${item.name}: ${e.message}`, 'var(--red)');
+  }
+  isCalling = false; renderQueue();
+}
+
+// ── CALL ALL ──────────────────────────────────────────
+async function callAll() {
+  const pending = queue.filter(i => i.status === 'pending');
+  if (!pending.length) { showToast('No pending numbers', 'info'); return; }
+  isCalling = true; renderQueue();
+  addLog(`Starting batch: ${pending.length} calls`, 'var(--accent2)');
+  for (let i = 0; i < pending.length; i++) {
+    const item = pending[i];
+    item.status = 'calling'; renderQueue();
+    try {
+      await makePhoneCall(item.number);
+      item.status = 'done';
+      addLog(`✓ Called ${item.name} (${item.number})`, 'var(--green)');
+    } catch(e) {
+      item.status = 'failed';
+      addLog(`✗ Failed ${item.name}: ${e.message}`, 'var(--red)');
+    }
+    renderQueue();
+    if (i < pending.length - 1) await new Promise(r => setTimeout(r, 1500));
+  }
+  isCalling = false; renderQueue();
+  showToast(`Batch complete: ${pending.length} calls sent`, 'success');
+  addLog('Batch complete', 'var(--accent2)');
+}
+</script>
+
+</body>
+</html>

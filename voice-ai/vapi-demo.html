@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Growth-onomics — Sofia BizDev Demo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --card: #13131a;
+    --border: rgba(255,255,255,0.08);
+    --accent: #7c6fff;
+    --accent2: #a78bfa;
+    --green: #22c55e;
+    --red: #ef4444;
+    --white: #f8f8ff;
+    --gray: #8b8b9e;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--white);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .logo-icon {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .logo-text {
+    font-size: 22px; font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .logo-text span { color: var(--accent2); }
+  .header p {
+    font-size: 14px;
+    color: var(--gray);
+  }
+
+  /* SETUP CARD */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--gray);
+    margin-bottom: 20px;
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+    padding: 4px;
+  }
+  .tab {
+    flex: 1;
+    padding: 9px;
+    border-radius: 7px;
+    border: none;
+    background: transparent;
+    color: var(--gray);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab.active {
+    background: var(--accent);
+    color: white;
+  }
+
+  /* FORM */
+  .form-group { margin-bottom: 16px; }
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--white);
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input:focus { border-color: var(--accent); }
+  input::placeholder { color: rgba(255,255,255,0.2); }
+
+  .hint {
+    font-size: 11px;
+    color: var(--gray);
+    margin-top: 6px;
+  }
+  .hint a { color: var(--accent2); text-decoration: none; }
+
+  /* SOFIA CARD */
+  .sofia-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: rgba(124,111,255,0.08);
+    border: 1px solid rgba(124,111,255,0.2);
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+  .sofia-avatar {
+    width: 48px; height: 48px;
+    background: linear-gradient(135deg, #7c6fff, #a78bfa);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .sofia-status-dot {
+    width: 12px; height: 12px;
+    background: var(--green);
+    border: 2px solid var(--card);
+    border-radius: 50%;
+    position: absolute;
+    bottom: 1px; right: 1px;
+  }
+  .sofia-info h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .sofia-info p {
+    font-size: 12px;
+    color: var(--gray);
+  }
+
+  /* CALL BUTTON */
+  .btn-call {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .btn-call.start {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+    box-shadow: 0 8px 32px rgba(124,111,255,0.3);
+  }
+  .btn-call.start:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(124,111,255,0.4);
+  }
+  .btn-call.end {
+    background: rgba(239,68,68,0.15);
+    color: var(--red);
+    border: 1px solid rgba(239,68,68,0.3);
+  }
+  .btn-call.end:hover {
+    background: rgba(239,68,68,0.25);
+  }
+  .btn-call:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ACTIVE CALL UI */
+  .call-ui {
+    display: none;
+    text-align: center;
+    padding: 8px 0;
+    margin-bottom: 20px;
+  }
+  .call-ui.visible { display: block; }
+
+  .wave-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 48px;
+    margin-bottom: 16px;
+  }
+  .wave-bar {
+    width: 4px;
+    background: linear-gradient(to top, var(--accent), var(--accent2));
+    border-radius: 2px;
+    animation: wave 1.2s ease-in-out infinite;
+  }
+  .wave-bar:nth-child(1) { animation-delay: 0s; height: 16px; }
+  .wave-bar:nth-child(2) { animation-delay: 0.1s; height: 32px; }
+  .wave-bar:nth-child(3) { animation-delay: 0.2s; height: 44px; }
+  .wave-bar:nth-child(4) { animation-delay: 0.3s; height: 32px; }
+  .wave-bar:nth-child(5) { animation-delay: 0.4s; height: 20px; }
+  .wave-bar:nth-child(6) { animation-delay: 0.2s; height: 36px; }
+  .wave-bar:nth-child(7) { animation-delay: 0.1s; height: 24px; }
+  @keyframes wave {
+    0%, 100% { transform: scaleY(0.4); opacity: 0.6; }
+    50% { transform: scaleY(1); opacity: 1; }
+  }
+  .wave-bar.idle { animation: none; transform: scaleY(0.3); opacity: 0.3; }
+
+  .call-timer {
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 2px;
+    color: var(--white);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 6px;
+  }
+  .call-label {
+    font-size: 13px;
+    color: var(--gray);
+  }
+
+  /* STATUS LOG */
+  .status-log {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    max-height: 120px;
+    overflow-y: auto;
+    font-size: 12px;
+    color: var(--gray);
+    font-family: 'SF Mono', 'Monaco', monospace;
+    margin-bottom: 16px;
+  }
+  .status-log .log-line { margin-bottom: 4px; }
+  .status-log .log-line.ok { color: var(--green); }
+  .status-log .log-line.err { color: var(--red); }
+  .status-log .log-line.info { color: var(--accent2); }
+
+  /* PHONE TAB EXTRA */
+  .phone-note {
+    background: rgba(250,204,21,0.08);
+    border: 1px solid rgba(250,204,21,0.2);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: rgba(250,204,21,0.9);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  /* KEY STEPS */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--gray);
+  }
+  .step-num {
+    width: 22px; height: 22px;
+    background: rgba(124,111,255,0.15);
+    border: 1px solid rgba(124,111,255,0.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    color: var(--accent2);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 480px) {
+    .card { padding: 20px; }
+    body { padding: 16px; align-items: flex-start; padding-top: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">🎙️</div>
+      <div class="logo-text">Growth<span>-onomics</span></div>
+    </div>
+    <p>Sofia BizDev Demo — Powered by VAPI</p>
+  </div>
+
+  <!-- MAIN CARD -->
+  <div class="card">
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('browser')">🎧 Browser Call</button>
+      <button class="tab" onclick="switchTab('phone')">📞 Call My Phone</button>
+    </div>
+
+    <!-- SOFIA -->
+    <div class="sofia-card">
+      <div class="sofia-avatar">
+        👩‍💼
+        <div class="sofia-status-dot" id="status-dot"></div>
+      </div>
+      <div class="sofia-info">
+        <h3>Sofia</h3>
+        <p>BizDev Agent · Growth-onomics</p>
+      </div>
+    </div>
+
+    <!-- BROWSER TAB -->
+    <div id="tab-browser">
+      <div class="form-group">
+        <label>VAPI Public Key</label>
+        <input type="text" id="public-key" value="2c3d59d1-22d9-4710-8cf0-cb9917dd0640" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
+        <p class="hint">Get it at <a href="https://dashboard.vapi.ai" target="_blank">dashboard.vapi.ai</a> → Account → API Keys → Public Key</p>
+      </div>
+
+      <!-- ACTIVE CALL UI -->
+      <div class="call-ui" id="call-ui">
+        <div class="wave-container">
+          <div class="wave-bar idle" id="w1"></div>
+          <div class="wave-bar idle" id="w2"></div>
+          <div class="wave-bar idle" id="w3"></div>
+          <div class="wave-bar idle" id="w4"></div>
+          <div class="wave-bar idle" id="w5"></div>
+          <div class="wave-bar idle" id="w6"></div>
+          <div class="wave-bar idle" id="w7"></div>
+        </div>
+        <div class="call-timer" id="call-timer">00:00</div>
+        <div class="call-label" id="call-label">Connecting...</div>
+      </div>
+
+      <div class="status-log" id="status-log"><div class="log-line">Ready. Enter your VAPI key and press Start.</div></div>
+
+      <button class="btn-call start" id="btn-start" onclick="startBrowserCall()">
+        <span>🎙️</span> Start Demo Call
+      </button>
+      <button class="btn-call end" id="btn-end" onclick="endCall()" style="display:none; margin-top:10px;">
+        <span>📵</span> End Call
+      </button>
+    </div>
+
+    <!-- PHONE TAB -->
+    <div id="tab-phone" style="display:none;">
+      <div class="phone-note">
+        ⚠️ Phone calls require a VAPI phone number (~$2/mo). You can buy one inside the VAPI dashboard under <strong>Phone Numbers</strong>.
+      </div>
+
+      <div class="form-group">
+        <label>VAPI Private Key</label>
+        <input type="text" id="private-key" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
+        <p class="hint">Dashboard → Account → API Keys → Private Key (never share this)</p>
+      </div>
+      <div class="form-group">
+        <label>Your Phone Number</label>
+        <input type="tel" id="phone-number" placeholder="+30 69xxxxxxxx" />
+      </div>
+      <div class="form-group">
+        <label>VAPI Phone Number ID</label>
+        <input type="text" id="phone-number-id" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
+        <p class="hint">Dashboard → Phone Numbers → click your number → copy the ID</p>
+      </div>
+
+      <div class="status-log" id="phone-log"><div class="log-line">Fill in the fields above and press Call Me.</div></div>
+
+      <button class="btn-call start" onclick="callMyPhone()">
+        <span>📞</span> Call Me Now
+      </button>
+    </div>
+
+  </div>
+
+  <!-- HOW TO GET KEY -->
+  <div class="card">
+    <div class="card-title">How to Get Your VAPI Key</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <span>Go to <a href="https://dashboard.vapi.ai" target="_blank" style="color:var(--accent2);text-decoration:none;">dashboard.vapi.ai</a> and create a free account</span>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <span>Click your profile icon → <strong>API Keys</strong></span>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <span>Copy your <strong>Public Key</strong> and paste it above</span>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <span>Press <strong>Start Demo Call</strong> — Sofia will speak through your browser</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- VAPI WEB SDK -->
+<script type="module">
+  import Vapi from 'https://esm.sh/@vapi-ai/web';
+  window.Vapi = Vapi;
+  window.vapiReady = true;
+  document.dispatchEvent(new Event('vapi-ready'));
+</script>
+
+<script>
+let vapi = null;
+let callTimer = null;
+let callSeconds = 0;
+let isCallActive = false;
+
+const SOFIA_CONFIG = {
+  name: "Sofia",
+  firstMessage: "Hey! This is Sofia from Growth-onomics. We help fintech companies grow profitably — I wanted to reach out and see if there's a fit. Do you have 2 minutes?",
+  model: {
+    provider: "openai",
+    model: "gpt-4o",
+    messages: [
+      {
+        role: "system",
+        content: `You are Sofia, a sharp and confident business development agent for Growth-onomics — a specialist growth agency exclusively for fintech companies.
+
+Growth-onomics services:
+- Paid Acquisition (Meta, Google, programmatic — CAC-positive or you say so)
+- GEO — Generative Engine Optimization (getting clients found by ChatGPT, Perplexity, Claude — the new SEO)
+- B2B Demand Gen (pipeline for sales teams)
+- Growth Strategy & GTM (go-to-market for new fintech products)
+- Fractional CMO (senior growth leadership without full-time cost)
+
+Your unique angle: "We grow fintechs. Profitably." — not vanity metrics, not just ad spend. Revenue-focused growth.
+
+Your job on this call:
+- Open warm and direct — you're not reading from a script
+- Quickly qualify: are they a fintech? Do they have a growth problem?
+- Tease the GEO angle — most fintechs have no idea ChatGPT is sending (or NOT sending) traffic to their competitors
+- Goal: book a 20-minute strategy call with the founder/CMO
+- Handle objections confidently (budget, "we have an agency", "not the right time")
+- Keep it short — 2-3 mins max, end with a clear ask
+
+Voice style: confident, smart, slightly casual. Not salesy. More like a sharp colleague who spotted something interesting.
+
+If they ask who referred you: "We research fintechs that look like they're ready to scale — you came up on our radar."
+If they ask about pricing: "Depends on where you're at — that's exactly what the strategy call figures out."
+
+Never say you're an AI unless directly asked.`
+      }
+    ]
+  },
+  voice: {
+    provider: "11labs",
+    voiceId: "21m00Tcm4TlvDq8ikWAM",
+    stability: 0.5,
+    similarityBoost: 0.75
+  },
+  recordingEnabled: false
+};
+
+function log(msg, type = '') {
+  const el = document.getElementById('status-log');
+  const line = document.createElement('div');
+  line.className = `log-line ${type}`;
+  line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+}
+
+function phonelog(msg, type = '') {
+  const el = document.getElementById('phone-log');
+  const line = document.createElement('div');
+  line.className = `log-line ${type}`;
+  line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+}
+
+function startTimer() {
+  callSeconds = 0;
+  callTimer = setInterval(() => {
+    callSeconds++;
+    const m = String(Math.floor(callSeconds / 60)).padStart(2, '0');
+    const s = String(callSeconds % 60).padStart(2, '0');
+    document.getElementById('call-timer').textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+function stopTimer() {
+  if (callTimer) clearInterval(callTimer);
+}
+
+function setWaveActive(active) {
+  for (let i = 1; i <= 7; i++) {
+    const el = document.getElementById(`w${i}`);
+    if (active) el.classList.remove('idle');
+    else el.classList.add('idle');
+  }
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', (i === 0 && tab === 'browser') || (i === 1 && tab === 'phone'));
+  });
+  document.getElementById('tab-browser').style.display = tab === 'browser' ? 'block' : 'none';
+  document.getElementById('tab-phone').style.display = tab === 'phone' ? 'block' : 'none';
+}
+
+async function startBrowserCall() {
+  const key = document.getElementById('public-key').value.trim();
+  if (!key) { log('❌ Please enter your VAPI Public Key', 'err'); return; }
+
+  document.getElementById('btn-start').disabled = true;
+  log('Initializing VAPI...', 'info');
+
+  // Wait for SDK to load if not ready yet
+  if (!window.Vapi) {
+    log('Loading SDK...', 'info');
+    await new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => reject(new Error('SDK load timeout')), 10000);
+      document.addEventListener('vapi-ready', () => { clearTimeout(timeout); resolve(); }, { once: true });
+    });
+  }
+
+  try {
+    vapi = new window.Vapi(key);
+
+    vapi.on('call-start', () => {
+      log('✅ Call connected!', 'ok');
+      document.getElementById('call-ui').classList.add('visible');
+      document.getElementById('call-label').textContent = 'Sofia is speaking...';
+      document.getElementById('btn-start').style.display = 'none';
+      document.getElementById('btn-end').style.display = 'block';
+      document.getElementById('status-dot').style.background = '#22c55e';
+      setWaveActive(true);
+      startTimer();
+      isCallActive = true;
+    });
+
+    vapi.on('speech-start', () => {
+      document.getElementById('call-label').textContent = 'Sofia is speaking...';
+      setWaveActive(true);
+    });
+
+    vapi.on('speech-end', () => {
+      document.getElementById('call-label').textContent = 'Listening...';
+      setWaveActive(false);
+    });
+
+    vapi.on('call-end', () => {
+      log('Call ended.', 'info');
+      document.getElementById('call-label').textContent = 'Call ended';
+      document.getElementById('btn-end').style.display = 'none';
+      document.getElementById('btn-start').style.display = 'block';
+      document.getElementById('btn-start').disabled = false;
+      document.getElementById('btn-start').textContent = '🔄 Start Another Call';
+      document.getElementById('status-dot').style.background = '#ef4444';
+      setWaveActive(false);
+      stopTimer();
+      isCallActive = false;
+    });
+
+    vapi.on('error', (e) => {
+      log(`❌ Error: ${e.message || JSON.stringify(e)}`, 'err');
+      document.getElementById('btn-start').disabled = false;
+    });
+
+    log('Starting call with Sofia...', 'info');
+    await vapi.start(SOFIA_CONFIG);
+
+  } catch (err) {
+    log(`❌ ${err.message}`, 'err');
+    document.getElementById('btn-start').disabled = false;
+  }
+}
+
+function endCall() {
+  if (vapi) {
+    vapi.stop();
+    log('Ending call...', 'info');
+  }
+}
+
+async function callMyPhone() {
+  const privateKey = document.getElementById('private-key').value.trim();
+  const phoneNumber = document.getElementById('phone-number').value.trim();
+  const phoneNumberId = document.getElementById('phone-number-id').value.trim();
+
+  if (!privateKey || !phoneNumber || !phoneNumberId) {
+    phonelog('❌ Please fill in all fields', 'err');
+    return;
+  }
+
+  phonelog('Initiating outbound call...', 'info');
+
+  try {
+    const res = await fetch('https://api.vapi.ai/call/phone', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${privateKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        phoneNumberId: phoneNumberId,
+        customer: { number: phoneNumber },
+        assistant: SOFIA_CONFIG
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      phonelog(`✅ Call initiated! ID: ${data.id}`, 'ok');
+      phonelog('Sofia will call you in a few seconds...', 'ok');
+    } else {
+      phonelog(`❌ ${data.message || JSON.stringify(data)}`, 'err');
+    }
+  } catch (err) {
+    phonelog(`❌ ${err.message}`, 'err');
+  }
+}
+</script>
+
+</body>
+</html>
