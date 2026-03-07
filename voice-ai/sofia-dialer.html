@@ -403,6 +403,29 @@
   <!-- ═══════════════════════════════════════════ -->
   <div class="browser-section active" id="browser-section">
 
+    <div class="browser-card">
+      <div class="avatar-wrap">
+        <div class="avatar-lg" id="avatar">👩‍💼</div>
+        <div class="online-dot" id="dot"></div>
+      </div>
+
+      <div class="wave-wrap" id="wave">
+        <div class="wave-bar idle" id="wb1"></div>
+        <div class="wave-bar idle" id="wb2"></div>
+        <div class="wave-bar idle" id="wb3"></div>
+        <div class="wave-bar idle" id="wb4"></div>
+        <div class="wave-bar idle" id="wb5"></div>
+        <div class="wave-bar idle" id="wb6"></div>
+        <div class="wave-bar idle" id="wb7"></div>
+      </div>
+
+      <div class="call-timer" id="call-timer">00:00</div>
+      <div class="call-status" id="call-status">Available now</div>
+
+      <button class="btn-talk" id="btn-talk" onclick="startBrowserCall()">🎙️ &nbsp;Talk to Sofia</button>
+      <button class="btn-end-call" id="btn-end-call" onclick="endBrowserCall()">📵 &nbsp;End Call</button>
+    </div>
+
     <!-- OPENER PREVIEW -->
     <div class="opener-preview" id="opener-preview-box">
       <div class="opener-label">📞 Sofia's opener</div>
@@ -428,29 +451,6 @@
         <button class="btn-reset" onclick="resetDefaults()">↺ Reset to Default</button>
         <button class="btn-save-prompt" onclick="savePrompt()">✓ Save Changes</button>
       </div>
-    </div>
-
-    <div class="browser-card">
-      <div class="avatar-wrap">
-        <div class="avatar-lg" id="avatar">👩‍💼</div>
-        <div class="online-dot" id="dot"></div>
-      </div>
-
-      <div class="wave-wrap" id="wave">
-        <div class="wave-bar idle" id="wb1"></div>
-        <div class="wave-bar idle" id="wb2"></div>
-        <div class="wave-bar idle" id="wb3"></div>
-        <div class="wave-bar idle" id="wb4"></div>
-        <div class="wave-bar idle" id="wb5"></div>
-        <div class="wave-bar idle" id="wb6"></div>
-        <div class="wave-bar idle" id="wb7"></div>
-      </div>
-
-      <div class="call-timer" id="call-timer">00:00</div>
-      <div class="call-status" id="call-status">Available now</div>
-
-      <button class="btn-talk" id="btn-talk" onclick="startBrowserCall()">🎙️ &nbsp;Talk to Sofia</button>
-      <button class="btn-end-call" id="btn-end-call" onclick="endBrowserCall()">📵 &nbsp;End Call</button>
     </div>
 
   </div>
