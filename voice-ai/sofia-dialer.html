@@ -214,6 +214,7 @@
 
   /* OPENER PREVIEW */
   .opener-preview {
+    display: block !important;
     background: rgba(108,92,231,0.06); border: 1px solid rgba(108,92,231,0.15);
     border-left: 3px solid var(--accent); border-radius: 12px;
     padding: 14px 16px; margin-bottom: 20px;
@@ -230,8 +231,8 @@
     width: 100%; background: var(--surface); border: 1px solid var(--border);
     border-radius: 16px; padding: 16px 20px; color: var(--gray);
     font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
-    cursor: pointer; display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 0; transition: all 0.2s; text-align: left;
+    cursor: pointer; display: flex !important; align-items: center; justify-content: space-between;
+    margin-bottom: 0; transition: all 0.2s; text-align: left; visibility: visible !important;
   }
   .customize-toggle:hover { border-color: var(--accent); color: var(--accent2); }
   .customize-toggle.open { border-radius: 16px 16px 0 0; border-color: var(--accent); color: var(--accent2); }
