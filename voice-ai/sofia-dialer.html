@@ -100,6 +100,18 @@
   }
   .agent-card.active .agent-active-dot { opacity: 1; }
   
+  .btn-delete-agent {
+    position: absolute; top: 8px; right: 8px;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: rgba(225,112,85,0.1); border: 1px solid rgba(225,112,85,0.3);
+    color: var(--red); font-size: 14px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; opacity: 0;
+  }
+  .agent-card:hover .btn-delete-agent { opacity: 1; }
+  .btn-delete-agent:hover { background: rgba(225,112,85,0.2); border-color: var(--red); }
+  .agent-card { position: relative; }
+  
   .agent-create-btn {
     display: flex; align-items: center; justify-content: center;
     padding: 14px 16px; background: rgba(255,255,255,0.03); border: 1px dashed var(--border);
@@ -963,14 +975,14 @@ function renderAgentCards() {
     const card = document.createElement('div');
     card.className = 'agent-card' + (key === activeAgent ? ' active' : '');
     card.id = `agent-card-${key}`;
-    card.onclick = () => setAgent(key);
     card.innerHTML = `
-      <div class="agent-card-header">
+      <div class="agent-card-header" onclick="setAgent('${key}')">
         <span class="agent-emoji">${agent.emoji}</span>
         <span class="agent-card-name">${agent.label}</span>
         <div class="agent-active-dot"></div>
       </div>
       <div class="agent-card-desc">${agent.brand}</div>
+      ${key.startsWith('custom_') ? `<button class="btn-delete-agent" onclick="deleteAgent('${key}', event)" title="Delete agent">✕</button>` : ''}
     `;
     container.appendChild(card);
   });
@@ -1025,6 +1037,47 @@ Close by asking for a meeting time.`;
   setAgent(key);
   showToast(`✓ ${name} created!`, 'success');
   return key;
+}
+
+// ── DELETE AGENT ───────────────────────────────────────
+function deleteAgent(key, event) {
+  event.stopPropagation();
+  
+  // Prevent deletion of built-in agents
+  if (!key.startsWith('custom_')) {
+    showToast(`Can't delete built-in agents`, 'error');
+    return;
+  }
+  
+  const agent = AGENTS[key];
+  if (!confirm(`Delete "${agent.label}"?`)) return;
+  
+  // Remove from AGENTS
+  delete AGENTS[key];
+  delete AGENT_DEFAULTS[key];
+  
+  // Save to localStorage
+  const custom = {};
+  Object.keys(AGENTS).filter(k => k.startsWith('custom_')).forEach(k => {
+    custom[k] = AGENTS[k];
+  });
+  localStorage.setItem('customAgents', JSON.stringify(custom));
+  
+  // Save agent defaults
+  const agentDefaults = {};
+  Object.keys(AGENT_DEFAULTS).filter(k => k.startsWith('custom_')).forEach(k => {
+    agentDefaults[k] = AGENT_DEFAULTS[k];
+  });
+  localStorage.setItem('agentDefaults', JSON.stringify(agentDefaults));
+  
+  // If deleted agent was active, switch to first available
+  if (activeAgent === key) {
+    const remaining = Object.keys(AGENTS);
+    setAgent(remaining.length > 0 ? remaining[0] : 'sofia');
+  }
+  
+  renderAgentCards();
+  showToast(`✓ ${agent.label} deleted`, 'success');
 }
 
 // ── AGENT SWITCHING ───────────────────────────────────
