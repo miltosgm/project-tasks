@@ -399,37 +399,36 @@
     <button class="lang-btn" id="lang-el" onclick="setLang('el')">🇬🇷 &nbsp;Ελληνικά</button>
   </div>
 
+  <!-- SHARED CUSTOMIZE SECTION (above all tabs) -->
+  <div class="opener-preview" id="opener-preview-box" style="display: block !important; margin-bottom: 20px;">
+    <div class="opener-label">📞 Sofia's opener</div>
+    <div id="opener-preview-text"></div>
+  </div>
+
+  <button class="customize-toggle" id="customize-toggle" onclick="toggleCustomize()" style="display: flex !important; margin-bottom: 20px;">
+    <div class="toggle-left">
+      ✏️ &nbsp;Customize Sofia
+      <span class="modified-badge" id="modified-badge">Modified</span>
+    </div>
+    <span class="toggle-arrow" id="toggle-arrow">▼</span>
+  </button>
+
+  <div class="customize-body" id="customize-body" style="display: none;">
+    <div class="field-label">Opening Line <span class="field-hint">First thing Sofia says when they pick up</span></div>
+    <textarea class="custom-textarea" id="custom-opener" rows="3" placeholder="Sofia's first message..."></textarea>
+    <hr class="field-sep">
+    <div class="field-label">System Prompt <span class="field-hint">Sofia's full instructions & personality</span></div>
+    <textarea class="custom-textarea system-prompt" id="custom-system" placeholder="Sofia's system prompt..."></textarea>
+    <div class="reset-row">
+      <button class="btn-reset" onclick="resetDefaults()">↺ Reset to Default</button>
+      <button class="btn-save-prompt" onclick="savePrompt()">✓ Save Changes</button>
+    </div>
+  </div>
+
   <!-- ═══════════════════════════════════════════ -->
   <!-- BROWSER CALL SECTION                        -->
   <!-- ═══════════════════════════════════════════ -->
   <div class="browser-section active" id="browser-section">
-
-    <!-- OPENER PREVIEW -->
-    <div class="opener-preview" id="opener-preview-box">
-      <div class="opener-label">📞 Sofia's opener</div>
-      <div id="opener-preview-text"></div>
-    </div>
-
-    <!-- CUSTOMIZE TOGGLE -->
-    <button class="customize-toggle" id="customize-toggle" onclick="toggleCustomize()">
-      <div class="toggle-left">
-        ✏️ &nbsp;Customize Sofia
-        <span class="modified-badge" id="modified-badge">Modified</span>
-      </div>
-      <span class="toggle-arrow" id="toggle-arrow">▼</span>
-    </button>
-
-    <div class="customize-body" id="customize-body">
-      <div class="field-label">Opening Line <span class="field-hint">First thing Sofia says when they pick up</span></div>
-      <textarea class="custom-textarea" id="custom-opener" rows="3" placeholder="Sofia's first message..."></textarea>
-      <hr class="field-sep">
-      <div class="field-label">System Prompt <span class="field-hint">Sofia's full instructions & personality</span></div>
-      <textarea class="custom-textarea system-prompt" id="custom-system" placeholder="Sofia's system prompt..."></textarea>
-      <div class="reset-row">
-        <button class="btn-reset" onclick="resetDefaults()">↺ Reset to Default</button>
-        <button class="btn-save-prompt" onclick="savePrompt()">✓ Save Changes</button>
-      </div>
-    </div>
 
     <div class="browser-card">
       <div class="avatar-wrap">
@@ -460,33 +459,6 @@
   <!-- PHONE CALL SECTION                          -->
   <!-- ═══════════════════════════════════════════ -->
   <div class="phone-section" id="phone-section">
-
-    <!-- OPENER PREVIEW (duplicate for phone tab) -->
-    <div class="opener-preview">
-      <div class="opener-label">📞 Sofia's opener</div>
-      <div id="opener-preview-text-phone"></div>
-    </div>
-
-    <!-- CUSTOMIZE TOGGLE (duplicate for phone tab) -->
-    <button class="customize-toggle" onclick="toggleCustomize()">
-      <div class="toggle-left">
-        ✏️ &nbsp;Customize Sofia
-        <span class="modified-badge" id="modified-badge-phone">Modified</span>
-      </div>
-      <span class="toggle-arrow" id="toggle-arrow-phone">▼</span>
-    </button>
-
-    <div class="customize-body" id="customize-body-phone">
-      <div class="field-label">Opening Line <span class="field-hint">First thing Sofia says when they pick up</span></div>
-      <textarea class="custom-textarea" id="custom-opener-phone" rows="3" placeholder="Sofia's first message..."></textarea>
-      <hr class="field-sep">
-      <div class="field-label">System Prompt <span class="field-hint">Sofia's full instructions & personality</span></div>
-      <textarea class="custom-textarea system-prompt" id="custom-system-phone" placeholder="Sofia's system prompt..."></textarea>
-      <div class="reset-row">
-        <button class="btn-reset" onclick="resetDefaults()">↺ Reset to Default</button>
-        <button class="btn-save-prompt" onclick="savePrompt()">✓ Save Changes</button>
-      </div>
-    </div>
 
     <!-- DIALER -->
     <div class="card" style="margin-top:20px">
@@ -898,18 +870,10 @@ let timerSeconds = 0;
 function init() {
   document.getElementById('custom-opener').value = currentOpener;
   document.getElementById('custom-system').value = currentSystem;
-  if(document.getElementById('custom-opener-phone')) {
-    document.getElementById('custom-opener-phone').value = currentOpener;
-    document.getElementById('custom-system-phone').value = currentSystem;
-  }
   updateOpenerPreview();
   renderQueue();
-  document.getElementById('custom-opener').addEventListener('input', () => { checkModified(); syncTextareas(); });
-  document.getElementById('custom-system').addEventListener('input', () => { checkModified(); syncTextareas(); });
-  if(document.getElementById('custom-opener-phone')) {
-    document.getElementById('custom-opener-phone').addEventListener('input', () => { checkModified(); syncFromPhone(); });
-    document.getElementById('custom-system-phone').addEventListener('input', () => { checkModified(); syncFromPhone(); });
-  }
+  document.getElementById('custom-opener').addEventListener('input', checkModified);
+  document.getElementById('custom-system').addEventListener('input', checkModified);
   document.getElementById('phone-number').addEventListener('keydown', e => { if (e.key === 'Enter') callNow(); });
   document.getElementById('contact-name').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('phone-number').focus(); });
 }
@@ -931,10 +895,6 @@ function setAgent(agentKey) {
   currentSystem = d.system;
   document.getElementById('custom-opener').value = currentOpener;
   document.getElementById('custom-system').value = currentSystem;
-  if(document.getElementById('custom-opener-phone')) {
-    document.getElementById('custom-opener-phone').value = currentOpener;
-    document.getElementById('custom-system-phone').value = currentSystem;
-  }
   updateOpenerPreview();
   checkModified();
 
@@ -961,10 +921,6 @@ function setLang(lang) {
   document.getElementById('lang-el').className = 'lang-btn' + (lang === 'el' ? ' active' : '');
   document.getElementById('custom-opener').value = currentOpener;
   document.getElementById('custom-system').value = currentSystem;
-  if(document.getElementById('custom-opener-phone')) {
-    document.getElementById('custom-opener-phone').value = currentOpener;
-    document.getElementById('custom-system-phone').value = currentSystem;
-  }
   updateOpenerPreview();
   checkModified();
   showToast(lang === 'el' ? '🇬🇷 Ελληνικά' : '🇺🇸 English', 'info');
@@ -973,21 +929,16 @@ function setLang(lang) {
 // ── CUSTOMIZE ─────────────────────────────────────────
 function toggleCustomize() {
   const body  = document.getElementById('customize-body');
-  const body2 = document.getElementById('customize-body-phone');
   const arrow = document.getElementById('toggle-arrow');
-  const arrow2 = document.getElementById('toggle-arrow-phone');
   const btn   = document.getElementById('customize-toggle');
   const open  = body.classList.contains('open');
   body.classList.toggle('open', !open);
   arrow.classList.toggle('open', !open);
   btn.classList.toggle('open', !open);
-  if(body2) body2.classList.toggle('open', !open);
-  if(arrow2) arrow2.classList.toggle('open', !open);
 }
 function savePrompt() {
   currentOpener = document.getElementById('custom-opener').value.trim() || DEFAULTS[activeLang].opener;
   currentSystem = document.getElementById('custom-system').value.trim() || DEFAULTS[activeLang].system;
-  syncTextareas();
   updateOpenerPreview();
   checkModified();
   toggleCustomize();
@@ -997,10 +948,6 @@ function resetDefaults() {
   const d = AGENT_DEFAULTS[activeAgent][activeLang];
   document.getElementById('custom-opener').value = d.opener;
   document.getElementById('custom-system').value = d.system;
-  if(document.getElementById('custom-opener-phone')) {
-    document.getElementById('custom-opener-phone').value = d.opener;
-    document.getElementById('custom-system-phone').value = d.system;
-  }
   currentOpener = d.opener;
   currentSystem = d.system;
   updateOpenerPreview();
@@ -1009,23 +956,11 @@ function resetDefaults() {
 }
 function updateOpenerPreview() {
   document.getElementById('opener-preview-text').textContent = `"${currentOpener}"`;
-  if(document.getElementById('opener-preview-text-phone')) document.getElementById('opener-preview-text-phone').textContent = `"${currentOpener}"`;
 }
 function checkModified() {
   const d = AGENT_DEFAULTS[activeAgent][activeLang];
   const isModified = document.getElementById('custom-opener').value !== d.opener || document.getElementById('custom-system').value !== d.system;
   document.getElementById('modified-badge').className = 'modified-badge' + (isModified ? ' show' : '');
-  if(document.getElementById('modified-badge-phone')) document.getElementById('modified-badge-phone').className = 'modified-badge' + (isModified ? ' show' : '');
-}
-function syncTextareas() {
-  // Sync browser tab to phone tab
-  if(document.getElementById('custom-opener-phone')) document.getElementById('custom-opener-phone').value = document.getElementById('custom-opener').value;
-  if(document.getElementById('custom-system-phone')) document.getElementById('custom-system-phone').value = document.getElementById('custom-system').value;
-}
-function syncFromPhone() {
-  // Sync phone tab to browser tab
-  if(document.getElementById('custom-opener-phone')) document.getElementById('custom-opener').value = document.getElementById('custom-opener-phone').value;
-  if(document.getElementById('custom-system-phone')) document.getElementById('custom-system').value = document.getElementById('custom-system-phone').value;
 }
 
 // ── ASSISTANT PAYLOAD ─────────────────────────────────
