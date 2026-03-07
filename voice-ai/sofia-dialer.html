@@ -99,6 +99,27 @@
     opacity: 0;
   }
   .agent-card.active .agent-active-dot { opacity: 1; }
+  
+  .agent-create-btn {
+    display: flex; align-items: center; justify-content: center;
+    padding: 14px 16px; background: rgba(255,255,255,0.03); border: 1px dashed var(--border);
+    border-radius: 14px; cursor: pointer; transition: all 0.2s; color: var(--gray);
+    font-size: 14px; font-weight: 600; gap: 8px;
+  }
+  .agent-create-btn:hover { border-color: var(--accent); color: var(--accent2); }
+  
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; }
+  .modal-overlay.show { display: flex; align-items: center; justify-content: center; }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 32px; max-width: 400px; width: 90%; }
+  .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+  .modal-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 12px; color: var(--white); font-family: 'Inter', sans-serif; font-size: 14px; padding: 12px 16px; outline: none; margin-bottom: 16px; }
+  .modal-input:focus { border-color: var(--accent); }
+  .modal-buttons { display: flex; gap: 10px; }
+  .modal-btn { flex: 1; padding: 12px; border-radius: 10px; border: none; font-family: 'Inter', sans-serif; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .modal-btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; }
+  .modal-btn.primary:hover { transform: translateY(-1px); }
+  .modal-btn.secondary { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--gray); }
+  .modal-btn.secondary:hover { border-color: var(--accent); color: var(--accent2); }
 
   /* MODE TABS */
   .mode-tabs {
@@ -363,7 +384,7 @@
   </div>
 
   <!-- AGENT SELECTOR -->
-  <div class="agent-selector">
+  <div class="agent-selector" id="agent-selector">
     <div class="agent-card active" id="agent-card-sofia" onclick="setAgent('sofia')">
       <div class="agent-card-header">
         <span class="agent-emoji">👩‍💼</span>
@@ -379,6 +400,10 @@
         <div class="agent-active-dot"></div>
       </div>
       <div class="agent-card-desc">AI Marketing · Sells AI optimization to any industry</div>
+    </div>
+    <div class="agent-card agent-create-btn" onclick="showCreateAgentModal()">
+      <span>+</span>
+      <span>Create Agent</span>
     </div>
   </div>
 
@@ -546,7 +571,7 @@ const PHONE_NUMBER_ID = 'f83ae558-ab06-4353-9de2-c292570d4501';
 
 // ── AGENTS ────────────────────────────────────────────
 
-const AGENTS = {
+let AGENTS = {
   sofia: {
     label: 'Maria',
     emoji: '👩‍💼',
@@ -565,6 +590,26 @@ const AGENTS = {
 };
 
 let activeAgent = 'sofia';
+
+// Load custom agents from localStorage
+function loadCustomAgents() {
+  const saved = localStorage.getItem('customAgents');
+  if (saved) {
+    const custom = JSON.parse(saved);
+    AGENTS = { ...AGENTS, ...custom };
+  }
+  
+  // Load custom agent defaults
+  const savedDefaults = localStorage.getItem('agentDefaults');
+  if (savedDefaults) {
+    const custom = JSON.parse(savedDefaults);
+    Object.keys(custom).forEach(k => {
+      if (!AGENT_DEFAULTS[k]) AGENT_DEFAULTS[k] = {};
+      AGENT_DEFAULTS[k].en = custom[k].en;
+      AGENT_DEFAULTS[k].el = custom[k].el;
+    });
+  }
+}
 
 // ── DEFAULTS ──────────────────────────────────────────
 
@@ -891,6 +936,8 @@ let timerSeconds = 0;
 
 // ── INIT ──────────────────────────────────────────────
 function init() {
+  loadCustomAgents();
+  renderAgentCards();
   document.getElementById('custom-opener').value = currentOpener;
   document.getElementById('custom-system').value = currentSystem;
   document.getElementById('custom-opener-phone').value = currentOpener;
@@ -906,20 +953,103 @@ function init() {
 }
 document.addEventListener('DOMContentLoaded', init);
 
+// ── RENDER AGENT CARDS ────────────────────────────────
+function renderAgentCards() {
+  const container = document.getElementById('agent-selector');
+  if (!container) return;
+  
+  container.innerHTML = '';
+  Object.entries(AGENTS).forEach(([key, agent]) => {
+    const card = document.createElement('div');
+    card.className = 'agent-card' + (key === activeAgent ? ' active' : '');
+    card.id = `agent-card-${key}`;
+    card.onclick = () => setAgent(key);
+    card.innerHTML = `
+      <div class="agent-card-header">
+        <span class="agent-emoji">${agent.emoji}</span>
+        <span class="agent-card-name">${agent.label}</span>
+        <div class="agent-active-dot"></div>
+      </div>
+      <div class="agent-card-desc">${agent.brand}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// ── CREATE NEW AGENT ───────────────────────────────────
+function createAgent(name, emoji, brand, lang = 'en') {
+  const key = `custom_${Date.now()}`;
+  
+  // Generate default prompts
+  const opener = `Hi, I'm ${name} from ${brand}. How have you been?`;
+  const system = `You are ${name}, business development from ${brand}.
+Your goal is to understand their needs and book a 20-minute strategy call.
+TONE: Warm, curious, human. Listen more than you pitch.
+OBJECTION HANDLING: Understand their pain, show genuine interest.
+Close by asking for a meeting time.`;
+  
+  // Create agent definition
+  AGENTS[key] = { label: name, emoji, brand };
+  
+  // Create defaults (both languages)
+  if (!AGENT_DEFAULTS[key]) {
+    AGENT_DEFAULTS[key] = { en: null, el: null };
+  }
+  
+  AGENT_DEFAULTS[key].en = { opener, system, transcriber: { provider: "deepgram", model: "nova-3", language: "en" } };
+  AGENT_DEFAULTS[key].el = { 
+    opener: `Γεία σας, είμαι ${name} από τη ${brand}. Πώς είστε;`,
+    system: `Είσαι ${name}, business development από τη ${brand}.
+Στόχος: Να καταλάβεις τις ανάγκες και να κλείσεις ένα 20λεπτο strategy call.
+ΤΟΝΟΣ: Ζεστή, περίεργη, ανθρώπινη. Ακούω περισσότερο από το να κάνω pitch.
+ΑΝΤΙΡΡΗΣΕΙΣ: Κατανοώ τον πόνο, δείχνω πραγματικό ενδιαφέρον.
+Κλείσιμο: Ζητώ ώρα για συνάντηση.`,
+    transcriber: { provider: "deepgram", model: "nova-2-general", language: "el" } 
+  };
+  
+  // Save to localStorage
+  const custom = {};
+  Object.keys(AGENTS).filter(k => k.startsWith('custom_')).forEach(k => {
+    custom[k] = AGENTS[k];
+  });
+  localStorage.setItem('customAgents', JSON.stringify(custom));
+  
+  // Save agent defaults too
+  const agentDefaults = {};
+  Object.keys(AGENT_DEFAULTS).filter(k => k.startsWith('custom_')).forEach(k => {
+    agentDefaults[k] = AGENT_DEFAULTS[k];
+  });
+  localStorage.setItem('agentDefaults', JSON.stringify(agentDefaults));
+  
+  renderAgentCards();
+  setAgent(key);
+  showToast(`✓ ${name} created!`, 'success');
+  return key;
+}
+
 // ── AGENT SWITCHING ───────────────────────────────────
 
 function setAgent(agentKey) {
   activeAgent = agentKey;
 
-  // Update card UI
-  document.getElementById('agent-card-sofia').className  = 'agent-card' + (agentKey === 'sofia'  ? ' active' : '');
-  document.getElementById('agent-card-sofia2').className = 'agent-card' + (agentKey === 'sofia2' ? ' active' : '');
-  if(document.getElementById('agent-card-sofia3')) document.getElementById('agent-card-sofia3').className = 'agent-card' + (agentKey === 'sofia3' ? ' active' : '');
+  // Update all card UIs
+  document.querySelectorAll('.agent-card').forEach(card => {
+    card.classList.remove('active');
+  });
+  const activeCard = document.getElementById(`agent-card-${agentKey}`);
+  if (activeCard) activeCard.classList.add('active');
 
   // Load this agent's defaults for current language
-  const d = AGENT_DEFAULTS[agentKey][activeLang];
-  currentOpener = d.opener;
-  currentSystem = d.system;
+  if (!AGENT_DEFAULTS[agentKey]) {
+    console.warn(`No defaults found for ${agentKey}, using fallback`);
+    currentOpener = `Hi, this is ${AGENTS[agentKey].label}. How are you?`;
+    currentSystem = `You are ${AGENTS[agentKey].label}. Listen more than you pitch.`;
+  } else {
+    const d = AGENT_DEFAULTS[agentKey][activeLang];
+    currentOpener = d.opener;
+    currentSystem = d.system;
+  }
+  
   document.getElementById('custom-opener').value = currentOpener;
   document.getElementById('custom-system').value = currentSystem;
   document.getElementById('custom-opener-phone').value = currentOpener;
@@ -1265,7 +1395,51 @@ async function callAll() {
   showToast(`Batch complete: ${pending.length} calls sent`, 'success');
   addLog('Batch complete', 'var(--accent2)');
 }
+
+// ── CREATE AGENT MODAL ────────────────────────────────
+function showCreateAgentModal() {
+  document.getElementById('create-agent-modal').classList.add('show');
+  document.getElementById('agent-name-input').focus();
+}
+
+function closeCreateAgentModal() {
+  document.getElementById('create-agent-modal').classList.remove('show');
+  document.getElementById('agent-name-input').value = '';
+  document.getElementById('agent-emoji-input').value = '';
+  document.getElementById('agent-brand-input').value = '';
+}
+
+function submitCreateAgent() {
+  const name = document.getElementById('agent-name-input').value.trim();
+  const emoji = document.getElementById('agent-emoji-input').value.trim() || '🤖';
+  const brand = document.getElementById('agent-brand-input').value.trim();
+  
+  if (!name) { showToast('Agent name required', 'error'); return; }
+  if (!brand) { showToast('Brand/Company required', 'error'); return; }
+  
+  createAgent(name, emoji, brand, activeLang);
+  closeCreateAgentModal();
+}
+
+// Close modal on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeCreateAgentModal();
+});
 </script>
+
+<!-- CREATE AGENT MODAL -->
+<div class="modal-overlay" id="create-agent-modal">
+  <div class="modal">
+    <div class="modal-title">Create New Agent</div>
+    <input type="text" class="modal-input" id="agent-name-input" placeholder="Agent name (e.g., Hermione)" maxlength="30">
+    <input type="text" class="modal-input" id="agent-emoji-input" placeholder="Agent emoji (e.g., 🎯)" maxlength="2">
+    <input type="text" class="modal-input" id="agent-brand-input" placeholder="Brand/Company name" maxlength="50">
+    <div class="modal-buttons">
+      <button class="modal-btn secondary" onclick="closeCreateAgentModal()">Cancel</button>
+      <button class="modal-btn primary" onclick="submitCreateAgent()">Create Agent</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
