@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena - ROI Hero</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; background: white; color: #1a202c; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Header */
+        header { background: white; border-bottom: 1px solid #e2e8f0; padding: 20px 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        header nav { display: flex; justify-content: space-between; align-items: center; }
+        header .logo { font-size: 24px; font-weight: bold; color: #0d9488; }
+        header .nav-links { display: flex; gap: 30px; }
+        header a { text-decoration: none; color: #4b5563; font-size: 14px; }
+        header .cta-header { background: #0d9488; color: white; padding: 10px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; }
+        
+        /* Hero */
+        .hero { padding: 100px 20px; text-align: center; background: white; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: 
+            linear-gradient(90deg, rgba(13, 148, 136, 0.03) 1px, transparent 1px),
+            linear-gradient(0deg, rgba(13, 148, 136, 0.03) 1px, transparent 1px);
+            background-size: 80px 80px;
+            pointer-events: none; opacity: 0.5; }
+        .hero::after { content: ''; position: absolute; top: -300px; right: -200px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(13, 148, 136, 0.06) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+        .hero .container { position: relative; z-index: 1; }
+        .hero h1 { font-size: 56px; margin-bottom: 20px; line-height: 1.2; color: #0f172a; font-weight: 900; }
+        .hero .subtitle { font-size: 20px; margin-bottom: 40px; color: #4b5563; max-width: 700px; margin-left: auto; margin-right: auto; }
+        .hero-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; }
+        .btn { padding: 14px 32px; border-radius: 8px; font-size: 16px; font-weight: 600; text-decoration: none; cursor: pointer; border: none; transition: all 0.3s; }
+        .btn-primary { background: #0d9488; color: white; }
+        .btn-primary:hover { background: #0f766e; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(13, 148, 136, 0.2); }
+        .btn-secondary { background: white; color: #0d9488; border: 2px solid #0d9488; }
+        .btn-secondary:hover { background: #f0fdfa; }
+        
+        /* Section */
+        section { padding: 80px 20px; }
+        section h2 { font-size: 42px; text-align: center; margin-bottom: 50px; color: #0f172a; font-weight: 900; }
+        section h3 { font-size: 32px; margin-bottom: 30px; font-weight: 900; color: #0f172a; }
+        
+        /* How It Works */
+        .how-it-works { background: white; }
+        .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .step { background: #f0fdfa; padding: 40px 30px; border-radius: 12px; border: 2px solid #e2e8f0; text-align: center; transition: all 0.3s; }
+        .step:hover { border-color: #0d9488; }
+        .step-number { display: inline-block; width: 50px; height: 50px; background: #0d9488; color: white; border-radius: 50%; line-height: 50px; font-size: 24px; font-weight: bold; margin-bottom: 15px; }
+        .step h3 { font-size: 18px; margin-bottom: 10px; }
+        .step p { font-size: 14px; color: #4b5563; }
+        
+        /* Problem/Solution */
+        .problem { background: #f0fdfa; }
+        .solution { background: linear-gradient(135deg, white 0%, #f0fdfa 100%); }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+        .two-col h3 { font-size: 32px; margin-bottom: 30px; }
+        .two-col ul { list-style: none; }
+        .two-col li { padding: 12px 0; font-size: 16px; padding-left: 30px; position: relative; }
+        .two-col li:before { content: '→'; position: absolute; left: 0; color: #0d9488; font-weight: bold; font-size: 18px; }
+        .col-img { height: 400px; border-radius: 12px; border: 2px solid #0d9488; display: flex; align-items: center; justify-content: center; overflow: hidden; background: white; }
+        .col-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        
+        /* SVG Icons */
+        .icon-svg { display: inline-block; width: 48px; height: 48px; }
+        .feature-icon { width: 64px; height: 64px; margin-bottom: 10px; }
+        
+        /* Avatar styles */
+        .avatar { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; color: white; margin-bottom: 15px; }
+        .avatar-sc { background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%); }
+        .avatar-mr { background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%); }
+        .avatar-lp { background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); }
+        
+        /* Features */
+        .features { background: white; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .feature-card { background: white; padding: 40px 30px; border-radius: 12px; border: 2px solid #e2e8f0; transition: all 0.3s; }
+        .feature-card:hover { border-color: #0d9488; background: #f0fdfa; }
+        .feature-card h3 { font-size: 18px; margin-bottom: 10px; }
+        .feature-card p { font-size: 14px; color: #4b5563; }
+        
+        /* Comparison */
+        .comparison { background: #f8fafc; }
+        .comparison-table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+        .comparison-table th, .comparison-table td { padding: 15px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        .comparison-table th { background: #f0fdfa; font-weight: 700; color: #0d9488; }
+        .comparison-table tr:hover { background: #f0fdfa; }
+        .check { color: #0d9488; font-weight: bold; }
+        .cross { color: #ef4444; }
+        
+        /* Testimonials */
+        .testimonials { background: #f8fafc; }
+        .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        .testimonial { background: white; padding: 40px; border-radius: 12px; border-left: 4px solid #0d9488; box-shadow: 0 2px 8px rgba(13, 148, 136, 0.05); }
+        .stars { color: #f59e0b; margin-bottom: 15px; }
+        .testimonial p { margin-bottom: 15px; color: #4b5563; }
+        .testimonial-author { font-weight: 700; color: #0f172a; }
+        
+        /* Pricing */
+        .pricing { background: white; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1000px; margin: 40px auto; }
+        .pricing-card { background: white; padding: 45px 35px; border-radius: 12px; border: 2px solid #e2e8f0; text-align: center; transition: all 0.3s; }
+        .pricing-card:hover { border-color: #0d9488; }
+        .pricing-card.popular { border: 2px solid #0d9488; background: #f0fdfa; transform: scale(1.05); box-shadow: 0 10px 30px rgba(13, 148, 136, 0.15); }
+        .price { font-size: 40px; font-weight: 900; margin: 15px 0; color: #0d9488; }
+        .features-list { text-align: left; list-style: none; margin-bottom: 30px; }
+        .features-list li { padding: 10px 0; border-bottom: 1px solid #f0fdfa; }
+        .features-list li:before { content: '✓ '; color: #0d9488; font-weight: bold; margin-right: 8px; }
+        
+        /* FAQ */
+        .faq { background: white; }
+        .faq-items { max-width: 800px; margin: 0 auto; }
+        .faq-item { margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; }
+        .faq-question { background: #f0fdfa; padding: 20px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #0d9488; display: flex; justify-content: space-between; }
+        .faq-question:hover { background: #d1fae5; }
+        .faq-answer { display: none; padding: 20px 0; color: #4b5563; line-height: 1.8; }
+        .faq-item.active .faq-answer { display: block; }
+        .faq-toggle { font-size: 20px; }
+        
+        /* Footer */
+        footer { background: #0f172a; color: white; padding: 50px 20px; text-align: center; }
+
+        /* ROI callout */
+        .roi-highlight { background: #ecfdf5; border: 2px solid #0d9488; border-radius: 12px; padding: 30px; margin: 40px 0; text-align: center; }
+        .roi-highlight .amount { font-size: 48px; font-weight: 900; color: #0d9488; }
+        .roi-highlight .label { font-size: 16px; color: #4b5563; margin-top: 10px; }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 36px; }
+            .two-col { grid-template-columns: 1fr; }
+            section h2 { font-size: 32px; }
+            .pricing-card.popular { transform: scale(1); }
+            header .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <svg class="icon-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="24" cy="24" r="22" stroke="#0d9488" stroke-width="2"/>
+                        <path d="M24 8V40M16 24H32" stroke="#0d9488" stroke-width="2.5" stroke-linecap="round"/>
+                        <circle cx="24" cy="12" r="2" fill="#0d9488"/>
+                        <circle cx="24" cy="36" r="2" fill="#0d9488"/>
+                    </svg>
+                    Athena
+                </div>
+                <div class="nav-links">
+                    <a href="#how">How It Works</a>
+                    <a href="#features">Features</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#faq">FAQ</a>
+                </div>
+                <a href="#pricing" class="cta-header">Get Started</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <h1>Replace $200K/year of SDR Spend in 5 Minutes</h1>
+            <p class="subtitle">Stop hiring expensive sales reps. Athena makes 1,000+ intelligent calls per month, qualifies every lead, and books real meetings. All for $299.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-primary">Try Live Dialer</a>
+                <a href="#pricing" class="btn btn-secondary">View Pricing</a>
+            </div>
+            <div class="roi-highlight">
+                <div class="amount">$200K</div>
+                <div class="label">Annual savings vs traditional SDR hiring</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how">
+        <div class="container">
+            <h2>How Athena Works</h2>
+            <div class="steps-grid">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Upload Contacts</h3>
+                    <p>CSV, Salesforce, or direct import. Athena learns your list in seconds.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Configure Your Pitch</h3>
+                    <p>Set your opener, objection handlers, and closing pitch. Takes 5 minutes.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Athena Calls 24/7</h3>
+                    <p>AI makes calls. Sounds human. Handles objections. Qualifies leads.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>CRM Sync</h3>
+                    <p>Qualified leads auto-push to Salesforce. Your team just closes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem -->
+    <section class="problem">
+        <div class="container">
+            <h2>The Problem: SDR Hiring is Broken</h2>
+            <div class="two-col">
+                <div>
+                    <h3>Why Traditional Sales Teams Don't Scale</h3>
+                    <ul>
+                        <li>$130K per SDR annual salary</li>
+                        <li>6 months to ramp productivity</li>
+                        <li>Turnover costs replace entire teams yearly</li>
+                        <li>Inconsistent pitch quality across team</li>
+                        <li>Scaling costs multiply linearly</li>
+                        <li>Pipeline collapses when they leave</li>
+                    </ul>
+                </div>
+                <div class="col-img">
+                    <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=600&fit=crop&q=85" alt="Sales team working at desks" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution -->
+    <section class="solution">
+        <div class="container">
+            <h2>The Athena Solution: Scale Without Hiring</h2>
+            <div class="two-col">
+                <div class="col-img">
+                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop&q=85" alt="Happy team celebrating success" />
+                </div>
+                <div>
+                    <h3>Cut SDR Costs by 65-80%</h3>
+                    <ul>
+                        <li>$299/month vs $130K/year per hire</li>
+                        <li>Live and calling within 5 minutes</li>
+                        <li>100% consistent pitch every call</li>
+                        <li>No ramp-up time. No training needed.</li>
+                        <li>Scale to 5,000+ calls instantly</li>
+                        <li>Auto CRM sync. No manual data entry.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2>Why Teams Choose Athena</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <svg class="feature-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 32C16 24 18 18 22 18C26 18 28 24 28 32C28 40 26 46 22 46C18 46 16 40 16 32" fill="none" stroke="#0d9488" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M32 26C32 20 33 16 36 16C39 16 40 20 40 26C40 32 39 38 36 42C33 46 32 50 32 32" fill="none" stroke="#0d9488" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M48 28C48 22 49 18 52 18C55 18 56 22 56 28C56 34 55 40 52 44C49 48 48 52 48 32" fill="none" stroke="#0d9488" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M8 28 L8 36 L12 36 L18 40 L18 24 L12 28 Z" fill="none" stroke="#0d9488" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                    <h3>Sounds Completely Human</h3>
+                    <p>Premium voices with natural pacing. Prospects have no idea they're talking to AI.</p>
+                </div>
+                <div class="feature-card">
+                    <svg class="feature-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M32 12C26 12 22 16 22 22C22 24 23 26 24 27C22 28 20 30 20 33C20 36 22 38 24 39C23 40 22 42 22 44C22 50 26 54 32 54C38 54 42 50 42 44C42 42 41 40 40 39C42 38 44 36 44 33C44 30 42 28 40 27C41 26 42 24 42 22C42 16 38 12 32 12Z" fill="none" stroke="#0d9488" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="32" cy="28" r="2" fill="#0d9488"/>
+                        <circle cx="28" cy="34" r="2" fill="#0d9488"/>
+                        <circle cx="36" cy="34" r="2" fill="#0d9488"/>
+                        <circle cx="32" cy="42" r="2" fill="#0d9488"/>
+                    </svg>
+                    <h3>Handles Objections Intelligently</h3>
+                    <p>Adapts to conversation flow. Never loses a lead to common objections.</p>
+                </div>
+                <div class="feature-card">
+                    <svg class="feature-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="12" y="10" width="40" height="44" fill="none" stroke="#0d9488" stroke-width="2.5" rx="3"/>
+                        <path d="M28 28 L28 36 L38 32 Z" fill="#0d9488"/>
+                        <circle cx="52" cy="18" r="3" fill="#ef4444"/>
+                        <line x1="16" y1="48" x2="48" y2="48" stroke="#0d9488" stroke-width="1.5" stroke-linecap="round"/>
+                        <line x1="16" y1="52" x2="40" y2="52" stroke="#0d9488" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    <h3>100% Transparent</h3>
+                    <p>Every call recorded. Every word transcribed. Optimize your pitch with real data.</p>
+                </div>
+                <div class="feature-card">
+                    <svg class="feature-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="32" cy="32" r="20" fill="none" stroke="#0d9488" stroke-width="2.5"/>
+                        <path d="M24 32 L30 38 L42 26" stroke="#0d9488" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M52 16 L55 24 L63 25 L56 31 L58 39 L50 35 L42 39 L44 31 L37 25 L45 24 Z" fill="none" stroke="#0d9488" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                    <h3>Real Qualifications Only</h3>
+                    <p>Books actual meetings. Filters tire kickers. Quality leads, not vanity metrics.</p>
+                </div>
+                <div class="feature-card">
+                    <svg class="feature-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 40C14 38 12 34 12 30C12 24 16 20 22 20C23 14 28 10 34 10C42 10 48 16 48 24C52 25 55 28 55 32C55 36 52 40 48 41" fill="none" stroke="#0d9488" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="30" cy="35" r="3" fill="#0d9488"/>
+                        <circle cx="38" cy="35" r="3" fill="#0d9488"/>
+                        <circle cx="34" cy="42" r="3" fill="#0d9488"/>
+                        <line x1="30" y1="35" x2="34" y2="42" stroke="#0d9488" stroke-width="1.5"/>
+                        <line x1="38" y1="35" x2="34" y2="42" stroke="#0d9488" stroke-width="1.5"/>
+                    </svg>
+                    <h3>Salesforce Sync Included</h3>
+                    <p>Qualified leads auto-push. Call notes and transcripts included. Zero manual work.</p>
+                </div>
+                <div class="feature-card">
+                    <svg class="feature-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="10" y="18" width="20" height="28" fill="none" stroke="#0d9488" stroke-width="2.5" rx="2"/>
+                        <rect x="34" y="18" width="20" height="28" fill="none" stroke="#0d9488" stroke-width="2.5" rx="2"/>
+                        <text x="18" y="32" font-size="12" font-weight="bold" fill="#0d9488" text-anchor="middle">A</text>
+                        <text x="44" y="32" font-size="12" font-weight="bold" fill="#0d9488" text-anchor="middle">B</text>
+                        <rect x="13" y="42" width="8" height="12" fill="#0d9488" opacity="0.6" rx="1"/>
+                        <rect x="37" y="42" width="10" height="14" fill="#0d9488" rx="1"/>
+                        <text x="32" y="36" font-size="10" font-weight="bold" fill="#0d9488" text-anchor="middle">vs</text>
+                    </svg>
+                    <h3>A/B Test Messaging</h3>
+                    <p>Run 3 agents with different pitches. See which angle closes most deals.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison -->
+    <section class="comparison">
+        <div class="container">
+            <h2>Athena vs Traditional Hiring</h2>
+            <table class="comparison-table">
+                <tr>
+                    <th>Metric</th>
+                    <th>Athena ($299/mo)</th>
+                    <th>Traditional SDR ($130K/yr)</th>
+                </tr>
+                <tr>
+                    <td>Setup time</td>
+                    <td class="check">5 minutes</td>
+                    <td class="cross">2-3 months</td>
+                </tr>
+                <tr>
+                    <td>Monthly cost</td>
+                    <td class="check">$299</td>
+                    <td class="cross">$10,833</td>
+                </tr>
+                <tr>
+                    <td>Calls per month</td>
+                    <td class="check">1,000+</td>
+                    <td class="cross">200-400</td>
+                </tr>
+                <tr>
+                    <td>Ramp-up period</td>
+                    <td class="check">Immediate</td>
+                    <td class="cross">6 months</td>
+                </tr>
+                <tr>
+                    <td>Turnover impact</td>
+                    <td class="check">Zero</td>
+                    <td class="cross">Complete restart</td>
+                </tr>
+                <tr>
+                    <td>Consistency</td>
+                    <td class="check">100%</td>
+                    <td class="cross">Variable</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <h2>Real ROI from Real Companies</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <div class="avatar avatar-sc">SC</div>
+                    <div class="stars">★★★★★</div>
+                    <p>"Replaced 2 SDRs with Athena. That's $200K saved annually. The AI qualifies better than my humans ever did."</p>
+                    <div class="testimonial-author">Sarah Chen</div>
+                    <div class="testimonial-role">VP Sales, Fintech Startup</div>
+                </div>
+                <div class="testimonial">
+                    <div class="avatar avatar-mr">MR</div>
+                    <div class="stars">★★★★★</div>
+                    <p>"Made 1,000+ calls in week 1. Got 150 qualified meetings. At $299/mo, ROI paid for itself in day 1."</p>
+                    <div class="testimonial-author">Marcus Rodriguez</div>
+                    <div class="testimonial-role">CEO, B2B SaaS Company</div>
+                </div>
+                <div class="testimonial">
+                    <div class="avatar avatar-lp">LP</div>
+                    <div class="stars">★★★★★</div>
+                    <p>"Cut our CAC by 40%. Athena books qualified meetings while we sleep. Zero overhead compared to hiring."</p>
+                    <div class="testimonial-author">Lisa Park</div>
+                    <div class="testimonial-role">Founder, Growth-focused Startup</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2>Simple Pricing. No Hidden Fees.</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Starter</h3>
+                    <div class="price">$299<span style="font-size: 18px;">/mo</span></div>
+                    <ul class="features-list">
+                        <li>1,000 calls/month</li>
+                        <li>1 AI agent</li>
+                        <li>Full transcripts & recordings</li>
+                        <li>Email support</li>
+                    </ul>
+                    <button class="btn btn-primary">Start Free Trial</button>
+                </div>
+                <div class="pricing-card popular">
+                    <h3>Growth</h3>
+                    <div class="price">$899<span style="font-size: 18px;">/mo</span></div>
+                    <ul class="features-list">
+                        <li>5,000 calls/month</li>
+                        <li>3 AI agents</li>
+                        <li>Salesforce CRM sync</li>
+                        <li>Advanced analytics</li>
+                        <li>24/7 priority support</li>
+                    </ul>
+                    <button class="btn btn-primary">Start Free Trial</button>
+                </div>
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="price">$1,999<span style="font-size: 18px;">+/mo</span></div>
+                    <ul class="features-list">
+                        <li>10,000+ calls/month</li>
+                        <li>Unlimited agents</li>
+                        <li>All integrations</li>
+                        <li>White-label option</li>
+                        <li>Dedicated account manager</li>
+                    </ul>
+                    <button class="btn btn-primary">Schedule Demo</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-items">
+                <div class="faq-item active">
+                    <div class="faq-question">
+                        <span>How much will I actually save?</span>
+                        <span class="faq-toggle">−</span>
+                    </div>
+                    <div class="faq-answer">
+                        On average, replacing 2 SDRs saves $200K/year. Compare that to Athena's $299/mo ($3,588/yr). Most companies see payback in under 2 weeks.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Will prospects know it's AI?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        No. Athena uses premium human-quality voices with natural pacing and inflection. Most prospects never realize it's AI.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How many calls can I make per month?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        Starter: 1,000 calls. Growth: 5,000 calls. Enterprise: 10,000+. You can add more anytime. Most use 30-50% of their monthly allotment in week 1.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I change my pitch mid-campaign?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        Yes. Changes take effect immediately. Update your opener, objection handlers, or closing pitch anytime. This is a huge advantage vs competitors.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Do you integrate with Salesforce?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        Yes. Growth and Enterprise plans include automatic Salesforce sync. Qualified leads push to your CRM in real-time with transcripts and call notes.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What if I'm not happy?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        30-day money-back guarantee. No questions asked. We're confident you'll see results, but if you don't, we refund everything.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Athena AI. Building in public.</p>
+        <p style="margin-top: 20px; font-size: 12px; opacity: 0.8;">30-day free trial. No credit card required.</p>
+    </footer>
+
+    <script>
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', function() {
+                this.parentElement.classList.toggle('active');
+                this.querySelector('.faq-toggle').textContent = 
+                    this.parentElement.classList.contains('active') ? '−' : '+';
+            });
+        });
+    </script>
+</body>
+</html>
