@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena - Case Studies & Results</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; background: white; color: #1a202c; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Header */
+        header { background: white; border-bottom: 1px solid #e2e8f0; padding: 20px 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        header nav { display: flex; justify-content: space-between; align-items: center; }
+        header .logo { font-size: 24px; font-weight: bold; color: #0d9488; }
+        header .nav-links { display: flex; gap: 30px; }
+        header a { text-decoration: none; color: #4b5563; font-size: 14px; }
+        header .cta-header { background: #0d9488; color: white; padding: 10px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; }
+        
+        /* Hero */
+        .hero { padding: 100px 20px; text-align: center; background: linear-gradient(135deg, #f0fdfa 0%, #e8f5f3 100%); position: relative; overflow: hidden; }
+        .hero::after { content: ''; position: absolute; top: -300px; right: -200px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(13, 148, 136, 0.06) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+        .hero .container { position: relative; z-index: 1; }
+        .hero h1 { font-size: 56px; margin-bottom: 20px; line-height: 1.2; color: #0f172a; font-weight: 900; }
+        .hero .subtitle { font-size: 20px; margin-bottom: 40px; color: #4b5563; max-width: 900px; margin-left: auto; margin-right: auto; }
+        .hero-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .btn { padding: 14px 32px; border-radius: 8px; font-size: 16px; font-weight: 600; text-decoration: none; cursor: pointer; border: none; transition: all 0.3s; }
+        .btn-primary { background: #0d9488; color: white; }
+        .btn-primary:hover { background: #0f766e; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(13, 148, 136, 0.2); }
+        .btn-secondary { background: white; color: #0d9488; border: 2px solid #0d9488; }
+        
+        /* Section */
+        section { padding: 80px 20px; }
+        section h2 { font-size: 42px; text-align: center; margin-bottom: 50px; color: #0f172a; font-weight: 900; }
+        
+        /* Case Study */
+        .case-study { background: white; margin-bottom: 40px; border-radius: 12px; overflow: hidden; border: 2px solid #e2e8f0; }
+        .case-study-header { background: white; padding: 40px; border-bottom: 2px solid #f0fdfa; }
+        .case-study-company { color: #0d9488; font-weight: 700; font-size: 14px; margin-bottom: 10px; }
+        .case-study-title { font-size: 24px; font-weight: 900; color: #0f172a; margin-bottom: 15px; }
+        .case-study-meta { display: flex; gap: 30px; flex-wrap: wrap; margin-bottom: 20px; }
+        .meta-item { display: flex; flex-direction: column; }
+        .meta-label { font-size: 12px; color: #0d9488; font-weight: 700; text-transform: uppercase; }
+        .meta-value { font-size: 16px; font-weight: 700; color: #0f172a; margin-top: 3px; }
+        .case-study-body { padding: 40px; background: white; }
+        .case-study-body h4 { color: #0f172a; margin-top: 25px; margin-bottom: 10px; font-size: 16px; font-weight: 700; }
+        .case-study-body p { color: #4b5563; margin-bottom: 15px; line-height: 1.8; }
+        .case-study-body ul { list-style: none; margin-bottom: 20px; }
+        .case-study-body li { padding: 8px 0; padding-left: 25px; position: relative; color: #4b5563; }
+        .case-study-body li:before { content: '✓'; position: absolute; left: 0; color: #0d9488; font-weight: bold; font-size: 16px; }
+        .results-highlight { background: #f0fdfa; border-left: 4px solid #0d9488; padding: 20px; margin: 20px 0; border-radius: 6px; }
+        .results-highlight .metric { display: inline-block; margin-right: 30px; }
+        .metric-value { font-size: 24px; font-weight: 900; color: #0d9488; }
+        .metric-label { font-size: 12px; color: #4b5563; margin-top: 3px; }
+        
+        /* Stats Bar */
+        .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin-top: 40px; }
+        .stat-item { background: white; border: 2px solid #e2e8f0; border-radius: 12px; padding: 25px; text-align: center; }
+        .stat-item .value { font-size: 28px; font-weight: 900; color: #0d9488; }
+        .stat-item .label { font-size: 13px; color: #4b5563; margin-top: 8px; }
+        
+        /* Quote */
+        .quote { background: #f0fdfa; border-left: 6px solid #0d9488; padding: 25px; border-radius: 8px; margin: 30px 0; }
+        .quote p { color: #0f172a; font-size: 16px; font-weight: 600; font-style: italic; margin-bottom: 12px; }
+        .quote-author { color: #4b5563; font-size: 13px; }
+        
+        /* CTA Section */
+        .case-study-cta { background: linear-gradient(135deg, #f0fdfa 0%, #e8f5f3 100%); padding: 60px 20px; text-align: center; }
+        .case-study-cta h2 { margin-bottom: 30px; }
+        .case-study-cta p { color: #4b5563; font-size: 18px; margin-bottom: 30px; }
+        
+        /* Footer */
+        footer { background: #0f172a; color: white; padding: 50px 20px; text-align: center; }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 36px; }
+            section h2 { font-size: 32px; }
+            .case-study-meta { flex-direction: column; gap: 15px; }
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <svg style="width: 32px; height: 32px; display: inline-block; margin-right: 8px;" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="24" cy="24" r="22" stroke="#0d9488" stroke-width="2"/>
+                        <path d="M24 8V40M16 24H32" stroke="#0d9488" stroke-width="2.5" stroke-linecap="round"/>
+                        <circle cx="24" cy="12" r="2" fill="#0d9488"/>
+                        <circle cx="24" cy="36" r="2" fill="#0d9488"/>
+                    </svg>
+                    Athena
+                </div>
+                <div class="nav-links">
+                    <a href="#fintech">Fintech</a>
+                    <a href="#saas">SaaS</a>
+                    <a href="#agency">Agency</a>
+                    <a href="#recruitment">Recruitment</a>
+                </div>
+                <a href="#" class="cta-header">Get Started</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <h1>Real Results. Real Companies. Real Revenue.</h1>
+            <p class="subtitle">See how companies across fintech, SaaS, and B2B are using Athena to replace expensive SDR teams and scale qualified pipeline.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-primary">Read Case Studies</a>
+                <a href="#" class="btn btn-secondary">Schedule Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fintech Case Study -->
+    <section id="fintech" style="background: white;">
+        <div class="container">
+            <h2 style="margin-bottom: 40px;">Fintech: Prop Trading Platform</h2>
+            
+            <div class="case-study">
+                <div class="case-study-header">
+                    <div class="case-study-company">HolaFin (Prop Trading)</div>
+                    <div class="case-study-title">From 20 Qualified Leads/Month to 400+ in 90 Days</div>
+                    <div class="case-study-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Industry</span>
+                            <span class="meta-value">Fintech / Prop Trading</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Company Size</span>
+                            <span class="meta-value">45 employees</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Time on Athena</span>
+                            <span class="meta-value">6 months</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Plan</span>
+                            <span class="meta-value">Growth ($899/mo)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="case-study-body">
+                    <h4>The Challenge</h4>
+                    <p>HolaFin was spending $45K/month on an in-house SDR and contractor team but only generating 20-30 qualified leads per month. Sales leadership knew they needed more pipeline to hit 2024 growth targets, but hiring 3-4 additional SDRs would cost $180K annually.</p>
+                    
+                    <div class="quote">
+                        <p>"We were stuck. More headcount wasn't sustainable. We needed a scalable solution that didn't mean hiring 5 more people."</p>
+                        <div class="quote-author">Sarah Chen, VP Sales @ HolaFin</div>
+                    </div>
+                    
+                    <h4>Athena Implementation</h4>
+                    <ul>
+                        <li>Imported 50K qualified prospects (traders, fintech founders, prop shop managers)</li>
+                        <li>Built custom pitch emphasizing funding, education, and competitive returns</li>
+                        <li>Configured objection handlers for common "too risky", "not enough capital", and "tried something similar" objections</li>
+                        <li>Integrated with Salesforce and Slack for real-time lead routing</li>
+                    </ul>
+                    
+                    <h4>Results (90 Days)</h4>
+                    <div class="results-highlight">
+                        <div class="metric">
+                            <div class="metric-value">8,500</div>
+                            <div class="metric-label">Total calls made</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">64%</div>
+                            <div class="metric-label">Answer rate</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">410</div>
+                            <div class="metric-label">Qualified leads</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">$0.11</div>
+                            <div class="metric-label">Cost per qualified lead</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-bar">
+                        <div class="stat-item">
+                            <div class="value">20x</div>
+                            <div class="label">Pipeline increase</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="value">$40K+</div>
+                            <div class="label">Monthly savings vs SDR team</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="value">72%</div>
+                            <div class="label">Meeting to demo rate</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="value">6 weeks</div>
+                            <div class="label">Payback period</div>
+                        </div>
+                    </div>
+                    
+                    <h4>Business Impact</h4>
+                    <p>By Month 6, HolaFin had booked 2,400+ qualified meetings and closed $1.2M in new client deposits. Sales team productivity increased 5x (now closing 2-3 deals per person vs 0.5 deals prior). Reduced hiring for SDRs, letting sales leadership focus on retention and deal velocity instead.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SaaS Case Study -->
+    <section id="saas" style="background: #f8fafc; padding: 80px 20px;">
+        <div class="container">
+            <h2 style="margin-bottom: 40px;">SaaS: HR Tech Platform</h2>
+            
+            <div class="case-study">
+                <div class="case-study-header">
+                    <div class="case-study-company">ThePayStubs (HR SaaS)</div>
+                    <div class="case-study-title">Doubled Pipeline While Cutting Sales Ops Costs</div>
+                    <div class="case-study-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Industry</span>
+                            <span class="meta-value">SaaS / HR Tech</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Company Size</span>
+                            <span class="meta-value">28 employees</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Time on Athena</span>
+                            <span class="meta-value">4 months</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Plan</span>
+                            <span class="meta-value">Growth ($899/mo)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="case-study-body">
+                    <h4>The Situation</h4>
+                    <p>ThePayStubs was growing but sales leadership was overwhelmed by manual outreach. They had 2 part-time SDRs doing outbound + inbound support. Scaling meant either hiring more SDRs or finding automation. They chose Athena.</p>
+                    
+                    <h4>What They Did</h4>
+                    <ul>
+                        <li>Loaded 30K small business HR decision makers (HR managers, business owners)</li>
+                        <li>Created 2 pitch variants (ROI focus vs efficiency focus) and A/B tested</li>
+                        <li>Set up HubSpot sync to auto-route leads to appropriate AE</li>
+                        <li>Athena ran 24/7 while team slept</li>
+                    </ul>
+                    
+                    <div class="quote">
+                        <p>"Athena generated more qualified leads in 30 days than our SDRs did in 6 months. Now our sales team actually has a full pipeline."</p>
+                        <div class="quote-author">Marcus Johnson, CEO @ ThePayStubs</div>
+                    </div>
+                    
+                    <h4>4-Month Results</h4>
+                    <div class="results-highlight">
+                        <div class="metric">
+                            <div class="metric-value">15,000</div>
+                            <div class="metric-label">Calls completed</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">38%</div>
+                            <div class="metric-label">Qualification rate</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">5,700</div>
+                            <div class="metric-label">Qualified meetings scheduled</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">$2.8M</div>
+                            <div class="metric-label">Pipeline generated</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-bar">
+                        <div class="stat-item">
+                            <div class="value">2.4x</div>
+                            <div class="label">Pipeline growth</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="value">$8K/mo</div>
+                            <div class="label">Savings vs SDR hiring</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="value">$0.49</div>
+                            <div class="label">Cost per meeting</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="value">78%</div>
+                            <div class="label">Booking accuracy</div>
+                        </div>
+                    </div>
+                    
+                    <h4>Key Insight</h4>
+                    <p>The ROI-focused pitch outperformed the efficiency pitch by 3.2x, leading to pivot in all subsequent campaigns. This type of testing (impossible with 2 SDRs) unlocked $200K in incremental annual revenue from better targeting.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- B2B/Agency Case Study -->
+    <section id="agency" style="padding: 80px 20px;">
+        <div class="container">
+            <h2 style="margin-bottom: 40px;">B2B Services: Growth Agency</h2>
+            
+            <div class="case-study">
+                <div class="case-study-header">
+                    <div class="case-study-company">Growth-onomics (Growth Consulting)</div>
+                    <div class="case-study-title">Turned Outbound into Reliable Client Acquisition Channel</div>
+                    <div class="case-study-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Industry</span>
+                            <span class="meta-value">B2B Services / Consulting</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Company Size</span>
+                            <span class="meta-value">8 employees</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Time on Athena</span>
+                            <span class="meta-value">3 months</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Plan</span>
+                            <span class="meta-value">Growth ($899/mo)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="case-study-body">
+                    <h4>The Problem</h4>
+                    <p>Growth agency was 100% dependent on inbound (content + SEO). Outbound was haphazard. Founder knew B2B outbound should work but manual calling wasn't scaling. Tried hiring freelance SDR (failed). Tried outsourced BPO (garbage quality leads). Needed a new approach.</p>
+                    
+                    <h4>Strategy</h4>
+                    <ul>
+                        <li>Identified ideal customer profiles (fintech founders, B2B SaaS CEOs, DTC e-commerce brands)</li>
+                        <li>Loaded 8,000 hand-picked prospects across all segments</li>
+                        <li>Created 3 agents with different pitches (GEO/AEO focus, paid ads focus, full-funnel focus)</li>
+                        <li>Ran A/B tests to find which pitch resonated best</li>
+                    </ul>
+                    
+                    <div class="quote">
+                        <p>"This is the first outbound channel that actually works. We're now 40% inbound, 60% outbound. Athena made that possible."</p>
+                        <div class="quote-author">Miltos G., Founder @ Growth-onomics</div>
+                    </div>
+                    
+                    <h4>3-Month Performance</h4>
+                    <div class="results-highlight">
+                        <div class="metric">
+                            <div class="metric-value">4,200</div>
+                            <div class="metric-label">Calls executed</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">68%</div>
+                            <div class="metric-label">Conversation completion</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">380</div>
+                            <div class="metric-label">Qualified meetings</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">$850K</div>
+                            <div class="metric-label">Qualified pipeline</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-bar">
+                        <div class="stat-item">
+                            <div class="value">12</div>
+                            <div class="label">New clients closed (3mo)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="value">$240K+</div>
+                            <div class="label">Annual contract value</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="value">$2,247</div>
+                            <div class="label">Cost per customer acquired</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="value">107x</div>
+                            <div class="label">ROI on Athena spend</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recruitment Case Study -->
+    <section id="recruitment" style="background: #f8fafc; padding: 80px 20px;">
+        <div class="container">
+            <h2 style="margin-bottom: 40px;">Recruitment: Executive Staffing</h2>
+            
+            <div class="case-study">
+                <div class="case-study-header">
+                    <div class="case-study-company">Talent Forge (Executive Recruitment)</div>
+                    <div class="case-study-title">Reduced Candidate Sourcing Time by 75%</div>
+                    <div class="case-study-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Industry</span>
+                            <span class="meta-value">Recruitment / Executive Search</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Company Size</span>
+                            <span class="meta-value">22 employees</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Time on Athena</span>
+                            <span class="meta-value">2 months</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Plan</span>
+                            <span class="meta-value">Enterprise</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="case-study-body">
+                    <h4>Use Case</h4>
+                    <p>Talent Forge specializes in placing C-suite and director-level candidates. Sourcing quality candidates required manual LinkedIn outreach + networking. Hiring managers spent 20+ hours per placement on sourcing before Athena.</p>
+                    
+                    <h4>What They Implemented</h4>
+                    <ul>
+                        <li>Loaded target buyer companies (50K+ potential hiring managers)</li>
+                        <li>Pitch: "We specialize in CFO/VP Sales placements. Currently working with 5 high-quality candidates ready for immediate placement"</li>
+                        <li>Athena qualifies hiring urgency and budget before booking calls</li>
+                        <li>Real-time lead sync into recruitment CRM</li>
+                    </ul>
+                    
+                    <div class="quote">
+                        <p>"Athena does the sourcing work that used to take weeks. We now have pre-qualified, warm meetings with actual hiring managers. Game changer."</p>
+                        <div class="quote-author">Lisa Park, VP Operations @ Talent Forge</div>
+                    </div>
+                    
+                    <h4>2-Month Results</h4>
+                    <div class="results-highlight">
+                        <div class="metric">
+                            <div class="metric-value">6,800</div>
+                            <div class="metric-label">Calls made</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">1,040</div>
+                            <div class="metric-label">Qualified leads</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">340</div>
+                            <div class="metric-label">Active hiring managers</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">18</div>
+                            <div class="metric-label">Successful placements</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-bar">
+                        <div class="stat-item">
+                            <div class="value">75%</div>
+                            <div class="label">Time savings on sourcing</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="value">$540K</div>
+                            <div class="label">Incremental revenue (2mo)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="value">$420</div>
+                            <div class="label">Cost per placement</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="value">1,286x</div>
+                            <div class="label">ROI on Athena spend</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="case-study-cta">
+        <div class="container">
+            <h2>Ready to Scale Your Outbound?</h2>
+            <p>See what Athena can do for your business. First 100 calls are on us.</p>
+            <a href="#" class="btn btn-primary" style="display: inline-block;">Get Started for Free</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Athena AI. Results-driven voice automation.</p>
+        <p style="margin-top: 20px; font-size: 12px; opacity: 0.8;">Data sourced from actual customer deployments. Results vary by vertical and implementation.</p>
+    </footer>
+</body>
+</html>

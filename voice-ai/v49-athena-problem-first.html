@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena - The Outbound Problem & Solution</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; background: white; color: #1a202c; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Header */
+        header { background: white; border-bottom: 1px solid #e2e8f0; padding: 20px 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        header nav { display: flex; justify-content: space-between; align-items: center; }
+        header .logo { font-size: 24px; font-weight: bold; color: #0d9488; }
+        header .nav-links { display: flex; gap: 30px; }
+        header a { text-decoration: none; color: #4b5563; font-size: 14px; }
+        header .cta-header { background: #0d9488; color: white; padding: 10px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; }
+        
+        /* Hero Problem */
+        .hero { padding: 100px 20px; text-align: center; background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); position: relative; overflow: hidden; }
+        .hero::after { content: ''; position: absolute; top: -300px; right: -200px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(239, 68, 68, 0.08) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+        .hero .container { position: relative; z-index: 1; }
+        .hero h1 { font-size: 56px; margin-bottom: 20px; line-height: 1.2; color: #7f1d1d; font-weight: 900; }
+        .hero .subtitle { font-size: 20px; margin-bottom: 40px; color: #4b5563; max-width: 800px; margin-left: auto; margin-right: auto; }
+        
+        /* Section */
+        section { padding: 80px 20px; }
+        section h2 { font-size: 42px; text-align: center; margin-bottom: 50px; color: #0f172a; font-weight: 900; }
+        section h3 { font-size: 28px; margin-bottom: 30px; font-weight: 900; color: #0f172a; }
+        
+        /* Problem Grid */
+        .problem-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .problem-card { background: white; padding: 35px; border-radius: 12px; border: 2px solid #fecaca; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.08); }
+        .problem-card .icon { font-size: 40px; margin-bottom: 15px; }
+        .problem-card h4 { color: #991b1b; font-size: 18px; margin-bottom: 12px; font-weight: 700; }
+        .problem-card p { color: #4b5563; font-size: 15px; line-height: 1.7; }
+        
+        /* Pain Point Section */
+        .pain-section { background: #f8fafc; }
+        .pain-item { margin-bottom: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+        .pain-item:nth-child(even) { grid-template-columns: 1fr 1fr; }
+        .pain-item .pain-text h3 { color: #991b1b; margin-bottom: 15px; }
+        .pain-item .pain-text ul { list-style: none; }
+        .pain-item .pain-text li { padding: 10px 0; padding-left: 28px; position: relative; color: #4b5563; }
+        .pain-item .pain-text li:before { content: '✗'; position: absolute; left: 0; color: #ef4444; font-weight: bold; font-size: 18px; }
+        .pain-stats { background: white; padding: 30px; border-radius: 12px; border: 2px solid #fecaca; }
+        .pain-stat { margin-bottom: 20px; }
+        .pain-stat .stat-num { font-size: 32px; font-weight: 900; color: #991b1b; }
+        .pain-stat .stat-text { font-size: 14px; color: #4b5563; margin-top: 5px; }
+        
+        /* Solution Section */
+        .solution { background: white; }
+        .solution-intro { text-align: center; margin-bottom: 60px; }
+        .solution-intro p { font-size: 18px; color: #4b5563; max-width: 700px; margin: 0 auto 20px; }
+        
+        .solution-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
+        .solution-card { background: #f0fdfa; padding: 40px 35px; border-radius: 12px; border: 2px solid #0d9488; }
+        .solution-card h4 { color: #0d9488; font-size: 18px; margin-bottom: 12px; font-weight: 700; }
+        .solution-card p { color: #4b5563; font-size: 15px; line-height: 1.7; }
+        .solution-card ul { list-style: none; margin-top: 15px; }
+        .solution-card li { padding: 6px 0; padding-left: 25px; position: relative; color: #4b5563; font-size: 14px; }
+        .solution-card li:before { content: '✓'; position: absolute; left: 0; color: #0d9488; font-weight: bold; font-size: 16px; }
+        
+        /* Comparison */
+        .comparison { background: #f8fafc; }
+        .comparison-table { width: 100%; border-collapse: collapse; margin-top: 40px; }
+        .comparison-table th, .comparison-table td { padding: 18px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        .comparison-table th { background: white; font-weight: 700; color: #0f172a; }
+        .comparison-table tr:hover { background: white; }
+        .comparison-table td:first-child { font-weight: 600; color: #0f172a; }
+        .problem-row { color: #ef4444; }
+        .solution-row { color: #0d9488; }
+        
+        /* Button */
+        .btn { padding: 14px 32px; border-radius: 8px; font-size: 16px; font-weight: 600; text-decoration: none; cursor: pointer; border: none; transition: all 0.3s; display: inline-block; }
+        .btn-primary { background: #0d9488; color: white; }
+        .btn-primary:hover { background: #0f766e; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(13, 148, 136, 0.2); }
+        
+        /* CTA */
+        .cta-section { background: linear-gradient(135deg, #f0fdfa 0%, #e8f5f3 100%); padding: 80px 20px; text-align: center; }
+        .cta-section h2 { margin-bottom: 20px; }
+        .cta-section p { color: #4b5563; font-size: 18px; margin-bottom: 30px; }
+        
+        /* Footer */
+        footer { background: #0f172a; color: white; padding: 50px 20px; text-align: center; }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 36px; }
+            section h2 { font-size: 32px; }
+            .pain-item { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <svg style="width: 32px; height: 32px; display: inline-block; margin-right: 8px;" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="24" cy="24" r="22" stroke="#0d9488" stroke-width="2"/>
+                        <path d="M24 8V40M16 24H32" stroke="#0d9488" stroke-width="2.5" stroke-linecap="round"/>
+                        <circle cx="24" cy="12" r="2" fill="#0d9488"/>
+                        <circle cx="24" cy="36" r="2" fill="#0d9488"/>
+                    </svg>
+                    Athena
+                </div>
+                <div class="nav-links">
+                    <a href="#problem">The Problem</a>
+                    <a href="#solution">The Solution</a>
+                    <a href="#comparison">Comparison</a>
+                </div>
+                <a href="#" class="cta-header">Solve This Now</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Problem -->
+    <section class="hero">
+        <div class="container">
+            <h1>Your Outbound is Broken</h1>
+            <p class="subtitle">If you're spending 6 figures on SDRs and getting mediocre results, you're not alone. The problem isn't your team. It's the broken model of manual outbound. Here's how to fix it.</p>
+        </div>
+    </section>
+
+    <!-- Problem Overview -->
+    <section id="problem" style="background: white;">
+        <div class="container">
+            <h2>7 Critical Failures of Manual Outbound</h2>
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <div class="icon">📉</div>
+                    <h4>Severely Limited Call Volume</h4>
+                    <p>Average SDR: 100-200 calls/month. With list management, admin, CRM data entry, they're not actually selling 60% of the day.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="icon">😴</div>
+                    <h4>Pitch Consistency Collapses</h4>
+                    <p>Pitch quality depends on mood, energy level, time of day. Monday calls are different from Friday calls. Same script, wildly different effectiveness.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="icon">💸</div>
+                    <h4>Cost is Unsustainable</h4>
+                    <p>$65K salary + $25K overhead + taxes = $130K minimum per SDR. To 3x pipeline, hire 3 more SDRs. You're now $390K deeper.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="icon">🔄</div>
+                    <h4>Turnover Destroys Momentum</h4>
+                    <p>SDRs burn out in 12-18 months. Each departure costs 8-12 weeks of ramp time for replacement. You're constantly rebuilding.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="icon">📱</div>
+                    <h4>Time-Zone Limited Calling</h4>
+                    <p>SDRs work 9-5 in one time zone. Prospects sleep for half your selling day. You miss Eastern morning calls if you're West Coast.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="icon">⏰</div>
+                    <h4>Objections Kill Forward Momentum</h4>
+                    <p>Prospect says "I'm interested but it's not the right time." SDR passes to sales. Deal gets stale. You needed real-time objection handling.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="icon">🎯</div>
+                    <h4>Qualification is Inconsistent</h4>
+                    <p>SDR A qualifies aggressively. SDR B qualifies conservatively. Sales team gets 40% junk leads. Nobody wins.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Deep Pain Points -->
+    <section class="pain-section" id="pain">
+        <div class="container">
+            <h2 style="margin-bottom: 60px;">The Real Cost of Broken Outbound</h2>
+            
+            <div class="pain-item">
+                <div class="pain-text">
+                    <h3>You're Undercalling Your Market</h3>
+                    <ul>
+                        <li>Typical SDR: 150 calls/month = 1,800 calls/year</li>
+                        <li>With 3 SDRs: 5,400 total calls/year</li>
+                        <li>Athena: 60,000 calls/year from one agent</li>
+                        <li>Missing 90% of your addressable market</li>
+                    </ul>
+                </div>
+                <div class="pain-stats">
+                    <div class="pain-stat">
+                        <div class="stat-num">90%</div>
+                        <div class="stat-text">Of prospects never get called</div>
+                    </div>
+                    <div class="pain-stat">
+                        <div class="stat-num">$800K+</div>
+                        <div class="stat-text">Annual revenue left on table</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pain-item">
+                <div class="pain-stats">
+                    <div class="pain-stat">
+                        <div class="stat-num">8-12 weeks</div>
+                        <div class="stat-text">Ramp time for each new SDR</div>
+                    </div>
+                    <div class="pain-stat">
+                        <div class="stat-num">25%</div>
+                        <div class="stat-text">Annual SDR turnover rate</div>
+                    </div>
+                </div>
+                <div class="pain-text">
+                    <h3>Turnover is Your Silent Killer</h3>
+                    <ul>
+                        <li>Hire SDR. Wait 2 months for productivity.</li>
+                        <li>SDR finally hits stride. Gets poached. Start over.</li>
+                        <li>Year 3: Repeat cycle again.</li>
+                        <li>You have 0 momentum.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pain-item">
+                <div class="pain-text">
+                    <h3>Your Cost Per Lead is Killing ROI</h3>
+                    <ul>
+                        <li>2 SDRs @ $130K + overhead = $350K/year</li>
+                        <li>500 qualified meetings per year</li>
+                        <li>Cost per meeting: $700</li>
+                        <li>Most B2B deals: $10K-$100K ACV</li>
+                        <li>Your CAC is 7-70% of annual value</li>
+                    </ul>
+                </div>
+                <div class="pain-stats">
+                    <div class="pain-stat">
+                        <div class="stat-num">$700</div>
+                        <div class="stat-text">Cost per qualified meeting</div>
+                    </div>
+                    <div class="pain-stat">
+                        <div class="stat-num">2.1x</div>
+                        <div class="stat-text">Expected payback period</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution -->
+    <section class="solution" id="solution">
+        <div class="container">
+            <h2>The Athena Solution</h2>
+            <div class="solution-intro">
+                <p>What if you could make 60,000 calls per year, zero burnout, zero turnover, and cut acquisition cost by 75%? That's Athena.</p>
+            </div>
+            
+            <div class="solution-grid">
+                <div class="solution-card">
+                    <h4>60,000+ Calls Per Year</h4>
+                    <p>Athena makes 5,000 calls per month with zero fatigue. One agent outworks 8 SDRs. You finally cover your market.</p>
+                    <ul>
+                        <li>70% answer rate</li>
+                        <li>68% full conversation completion</li>
+                        <li>Zero call reluctance</li>
+                        <li>24/7 availability</li>
+                    </ul>
+                </div>
+                <div class="solution-card">
+                    <h4>Perfect Pitch Consistency</h4>
+                    <p>Same opener. Same objection responses. Same closing. Every single time. Athena never has a bad day.</p>
+                    <ul>
+                        <li>100% pitch consistency</li>
+                        <li>No mood/energy variance</li>
+                        <li>Real-time pitch optimization</li>
+                        <li>A/B testing at scale</li>
+                    </ul>
+                </div>
+                <div class="solution-card">
+                    <h4>$299/Month. Unlimited Scaling.</h4>
+                    <p>One Athena agent costs $299. Two agents: $598. Ten agents: $2,990. Compare: hiring 3 SDRs = $390K+. Done.</p>
+                    <ul>
+                        <li>No hiring costs</li>
+                        <li>No onboarding/training</li>
+                        <li>No turnover</li>
+                        <li>Scales to 100 agents instantly</li>
+                    </ul>
+                </div>
+                <div class="solution-card">
+                    <h4>Real-Time Objection Handling</h4>
+                    <p>Prospect says "Too expensive"? Athena pivots. Says "Not the right time"? Athena reschedules for next quarter. No deal dies.</p>
+                    <ul>
+                        <li>65% objection overcome rate</li>
+                        <li>Dynamic conversation flow</li>
+                        <li>Keeps deals alive</li>
+                        <li>Reduces sales friction</li>
+                    </ul>
+                </div>
+                <div class="solution-card">
+                    <h4>No More Bad Leads</h4>
+                    <p>Athena qualifies budget, authority, need, and timeline in real-time. Your sales team only gets deals that are actually ready.</p>
+                    <ul>
+                        <li>3% false positive rate</li>
+                        <li>Real qualification criteria</li>
+                        <li>Higher close rates</li>
+                        <li>Salespeople actually sell</li>
+                    </ul>
+                </div>
+                <div class="solution-card">
+                    <h4>Full Transparency</h4>
+                    <p>Every call recorded. Every word transcribed. See exactly what Athena said and what moved prospects. Learn and optimize.</p>
+                    <ul>
+                        <li>Call recordings & transcripts</li>
+                        <li>Real-time dashboards</li>
+                        <li>Sentiment analysis</li>
+                        <li>Outcome scoring</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison -->
+    <section class="comparison" id="comparison">
+        <div class="container">
+            <h2>Head-to-Head Comparison</h2>
+            <table class="comparison-table">
+                <tr>
+                    <th style="width: 30%;">Metric</th>
+                    <th style="width: 35%;">2 SDRs (Manual)</th>
+                    <th style="width: 35%;">Athena (Growth Plan)</th>
+                </tr>
+                <tr>
+                    <td>Annual calls</td>
+                    <td class="problem-row">3,600</td>
+                    <td class="solution-row">60,000</td>
+                </tr>
+                <tr>
+                    <td>Annual qualified meetings</td>
+                    <td class="problem-row">400-500</td>
+                    <td class="solution-row">1,800+</td>
+                </tr>
+                <tr>
+                    <td>Pitch consistency</td>
+                    <td class="problem-row">60-70%</td>
+                    <td class="solution-row">100%</td>
+                </tr>
+                <tr>
+                    <td>Cost per month</td>
+                    <td class="problem-row">$29,000</td>
+                    <td class="solution-row">$899</td>
+                </tr>
+                <tr>
+                    <td>Cost per meeting</td>
+                    <td class="problem-row">$700</td>
+                    <td class="solution-row">$6</td>
+                </tr>
+                <tr>
+                    <td>Turnover rate</td>
+                    <td class="problem-row">25% annually</td>
+                    <td class="solution-row">0%</td>
+                </tr>
+                <tr>
+                    <td>Time to productivity</td>
+                    <td class="problem-row">8-12 weeks</td>
+                    <td class="solution-row">5 minutes</td>
+                </tr>
+                <tr>
+                    <td>24/7 calling capability</td>
+                    <td class="problem-row">No</td>
+                    <td class="solution-row">Yes</td>
+                </tr>
+                <tr>
+                    <td>Objection handling</td>
+                    <td class="problem-row">Manual, inconsistent</td>
+                    <td class="solution-row">Real-time, 65% success</td>
+                </tr>
+                <tr>
+                    <td>Lead qualification accuracy</td>
+                    <td class="problem-row">12-18% false positive</td>
+                    <td class="solution-row">3% false positive</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Fix Your Outbound in the Next 5 Minutes</h2>
+            <p>Upload your contact list, configure your pitch, start calling. No credit card required. First 100 calls free.</p>
+            <a href="#" class="btn btn-primary">Start Your Free Trial</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Athena AI. Built to replace broken outbound.</p>
+        <p style="margin-top: 20px; font-size: 12px; opacity: 0.8;">Data based on industry benchmarks and Athena customer results.</p>
+    </footer>
+</body>
+</html>

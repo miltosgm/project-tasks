@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena - Complete Feature Set</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; background: white; color: #1a202c; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Header */
+        header { background: white; border-bottom: 1px solid #e2e8f0; padding: 20px 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        header nav { display: flex; justify-content: space-between; align-items: center; }
+        header .logo { font-size: 24px; font-weight: bold; color: #0d9488; }
+        header .nav-links { display: flex; gap: 20px; }
+        header a { text-decoration: none; color: #4b5563; font-size: 13px; }
+        header .cta-header { background: #0d9488; color: white; padding: 10px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; }
+        
+        /* Hero */
+        .hero { padding: 80px 20px; text-align: center; background: linear-gradient(135deg, #f0fdfa 0%, #e8f5f3 100%); }
+        .hero h1 { font-size: 52px; margin-bottom: 15px; line-height: 1.2; color: #0f172a; font-weight: 900; }
+        .hero .subtitle { font-size: 18px; margin-bottom: 40px; color: #4b5563; max-width: 700px; margin-left: auto; margin-right: auto; }
+        .btn { padding: 12px 28px; border-radius: 6px; font-size: 15px; font-weight: 600; text-decoration: none; cursor: pointer; border: none; transition: all 0.3s; display: inline-block; }
+        .btn-primary { background: #0d9488; color: white; }
+        .btn-primary:hover { background: #0f766e; }
+        
+        /* Section */
+        section { padding: 70px 20px; }
+        section h2 { font-size: 38px; text-align: center; margin-bottom: 45px; color: #0f172a; font-weight: 900; }
+        section h3 { font-size: 20px; margin-bottom: 20px; font-weight: 700; color: #0f172a; }
+        
+        /* Feature Categories */
+        .feature-section { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: start; margin-bottom: 60px; }
+        .feature-section:nth-child(even) { grid-template-columns: 1fr 1fr; }
+        .feature-list { list-style: none; }
+        .feature-list li { padding: 12px 0; padding-left: 30px; position: relative; color: #4b5563; font-size: 15px; }
+        .feature-list li:before { content: '→'; position: absolute; left: 0; color: #0d9488; font-weight: bold; font-size: 18px; }
+        .feature-image { background: #f0fdfa; border: 2px solid #0d9488; border-radius: 12px; padding: 40px; text-align: center; min-height: 300px; display: flex; align-items: center; justify-content: center; color: #4b5563; }
+        
+        /* Card Grid */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .card { background: white; padding: 30px; border-radius: 10px; border: 2px solid #e2e8f0; }
+        .card:hover { border-color: #0d9488; box-shadow: 0 4px 12px rgba(13, 148, 136, 0.1); }
+        .card h4 { color: #0d9488; font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+        .card p { color: #4b5563; font-size: 14px; line-height: 1.6; }
+        
+        /* Feature Highlight */
+        .highlight { background: #f0fdfa; border-left: 4px solid #0d9488; padding: 25px; border-radius: 6px; margin: 25px 0; }
+        .highlight h4 { color: #0d9488; margin-bottom: 8px; }
+        .highlight p { color: #4b5563; font-size: 14px; margin: 0; }
+        
+        /* Call Module */
+        .call-module { background: white; border: 2px solid #e2e8f0; border-radius: 10px; padding: 35px; margin: 30px 0; }
+        .call-module h4 { color: #0f172a; margin-bottom: 15px; font-size: 16px; }
+        .call-module .module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; }
+        .module-item { background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0; text-align: center; }
+        .module-item .label { color: #4b5563; font-size: 12px; }
+        .module-item .value { color: #0d9488; font-weight: 700; font-size: 18px; margin-top: 5px; }
+        
+        /* Analytics Section */
+        .analytics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 40px 0; }
+        .analytics-card { background: white; border: 2px solid #e2e8f0; border-radius: 10px; padding: 25px; }
+        .analytics-card .metric { color: #0d9488; font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+        .analytics-card .desc { color: #4b5563; font-size: 13px; }
+        
+        /* Comparison Table */
+        .comparison-table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+        .comparison-table th, .comparison-table td { padding: 15px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+        .comparison-table th { background: white; font-weight: 700; color: #0d9488; }
+        .check { color: #0d9488; font-weight: bold; }
+        .cross { color: #999; }
+        
+        /* Footer */
+        footer { background: #0f172a; color: white; padding: 50px 20px; text-align: center; }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 36px; }
+            section h2 { font-size: 28px; }
+            .feature-section { grid-template-columns: 1fr; }
+            header .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <svg style="width: 32px; height: 32px; display: inline-block; margin-right: 8px;" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="24" cy="24" r="22" stroke="#0d9488" stroke-width="2"/>
+                        <path d="M24 8V40M16 24H32" stroke="#0d9488" stroke-width="2.5" stroke-linecap="round"/>
+                        <circle cx="24" cy="12" r="2" fill="#0d9488"/>
+                        <circle cx="24" cy="36" r="2" fill="#0d9488"/>
+                    </svg>
+                    Athena
+                </div>
+                <div class="nav-links">
+                    <a href="#calling">Calling Engine</a>
+                    <a href="#intelligence">Intelligence</a>
+                    <a href="#integrations">Integrations</a>
+                    <a href="#analytics">Analytics</a>
+                </div>
+                <a href="#" class="cta-header">View Docs</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <h1>Every Feature You Need. None You Don't.</h1>
+            <p class="subtitle">Comprehensive voice AI calling platform purpose-built for outbound teams. Built-in intelligence. Enterprise integrations. Maximum results.</p>
+            <a href="#" class="btn btn-primary" style="margin-top: 20px;">Start Building</a>
+        </div>
+    </section>
+
+    <!-- Calling Engine -->
+    <section id="calling" style="background: white;">
+        <div class="container">
+            <h2>Voice Calling Engine</h2>
+            
+            <div class="feature-section">
+                <div>
+                    <h3>Call Foundation</h3>
+                    <ul class="feature-list">
+                        <li>Concurrent call handling (100+ simultaneous)</li>
+                        <li>200+ country support with local numbers</li>
+                        <li>Dual-carrier redundancy (99.9% uptime SLA)</li>
+                        <li>Sub-200ms latency response times</li>
+                        <li>Call recording and transcription</li>
+                        <li>Multi-language support (25+ languages)</li>
+                    </ul>
+                </div>
+                <div class="feature-image">Call Architecture Diagram</div>
+            </div>
+            
+            <h3 style="margin-top: 50px;">Call Configuration</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h4>Opener Templates</h4>
+                    <p>Pre-built openers for 15+ verticals. Customize in seconds. A/B test against custom scripts.</p>
+                </div>
+                <div class="card">
+                    <h4>Natural Conversation Flow</h4>
+                    <p>Handles interruptions, overlapping speech, and pauses like a human. No robotic "uh-huh" responses.</p>
+                </div>
+                <div class="card">
+                    <h4>Custom System Prompts</h4>
+                    <p>Define exactly how your agent should sound, what it emphasizes, personality traits, and closing techniques.</p>
+                </div>
+                <div class="card">
+                    <h4>Dynamic Pitch Variation</h4>
+                    <p>Athena adapts mid-call based on prospect response. Budget talk vs ROI talk vs pain point talk.</p>
+                </div>
+                <div class="card">
+                    <h4>Conditional Logic</h4>
+                    <p>If prospect says X, go to conversation path A. If they say Y, go to path B. Fully customizable.</p>
+                </div>
+                <div class="card">
+                    <h4>Multi-Turn Conversations</h4>
+                    <p>Maintains context across 20+ exchanges. Remembers prospect objections and adapts accordingly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Intelligence Layer -->
+    <section id="intelligence" style="background: #f8fafc;">
+        <div class="container">
+            <h2>Conversational Intelligence</h2>
+            
+            <div class="feature-section">
+                <div class="feature-image">Intelligence Dashboard</div>
+                <div>
+                    <h3>In-Call Decision Making</h3>
+                    <ul class="feature-list">
+                        <li>Real-time sentiment analysis</li>
+                        <li>Budget authority detection</li>
+                        <li>Objection classification and responses</li>
+                        <li>Interest level scoring</li>
+                        <li>Decision timing assessment</li>
+                        <li>Competitive intelligence identification</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <h4>Objection Handling Engine</h4>
+                <p>Athena recognizes 40+ common objections: price, timing, competing solution, too early, not interested. Real-time response with 65% success rate at overcoming.</p>
+            </div>
+            
+            <h3 style="margin-top: 50px; margin-bottom: 25px;">Qualification Criteria</h3>
+            <div class="call-module">
+                <h4>BANT Framework (Built-in)</h4>
+                <div class="module-grid">
+                    <div class="module-item">
+                        <div class="label">Budget</div>
+                        <div class="value">Verified</div>
+                    </div>
+                    <div class="module-item">
+                        <div class="label">Authority</div>
+                        <div class="value">Detected</div>
+                    </div>
+                    <div class="module-item">
+                        <div class="label">Need</div>
+                        <div class="value">Assessed</div>
+                    </div>
+                    <div class="module-item">
+                        <div class="label">Timeline</div>
+                        <div class="value">Clarified</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-grid" style="margin-top: 35px;">
+                <div class="card">
+                    <h4>Custom Qualification</h4>
+                    <p>Define your own qualification criteria. Athena will ask and score against your exact rubric.</p>
+                </div>
+                <div class="card">
+                    <h4>CHAMP Scoring</h4>
+                    <p>Challenges, Hypothetical, Authority, Money, Priority. Alternative framework fully supported.</p>
+                </div>
+                <div class="card">
+                    <h4>Intent Signals</h4>
+                    <p>Athena detects buying intent signals mid-call. Company news mentions. Budget announcements. Timeline urgency.</p>
+                </div>
+                <div class="card">
+                    <h4>Deal Stage Assignment</h4>
+                    <p>Automatically assign prospects to correct pipeline stage based on conversation outcomes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Voice Customization -->
+    <section style="background: white;">
+        <div class="container">
+            <h2>Voice & Personality</h2>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <h4>50+ Premium Voices</h4>
+                    <p>ElevenLabs Turbo v2.5. Natural prosody, emotion, pacing. English, Spanish, French, German, Mandarin, and more.</p>
+                </div>
+                <div class="card">
+                    <h4>Accent Targeting</h4>
+                    <p>Match prospect geography. American accent for US, British for UK, native speakers for international.</p>
+                </div>
+                <div class="card">
+                    <h4>Speech Personalization</h4>
+                    <p>Adjust speaking speed, emphasis, filler words, and pacing to match your brand voice.</p>
+                </div>
+                <div class="card">
+                    <h4>Emotion Variance</h4>
+                    <p>Control tone: professional, friendly, urgent, casual. Let Athena adapt tone based on conversation context.</p>
+                </div>
+                <div class="card">
+                    <h4>Hold Music & Transfer</h4>
+                    <p>Seamless transfers to live agents. Custom hold music. "One moment" messages.</p>
+                </div>
+                <div class="card">
+                    <h4>Silence Handling</h4>
+                    <p>Intelligent handling of prospect silence. Wait vs prompt. Never interrupt. Never stay silent too long.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lead Management -->
+    <section style="background: #f8fafc;">
+        <div class="container">
+            <h2>Lead Management & Routing</h2>
+            
+            <div class="feature-section">
+                <div>
+                    <h3>Contact Importing</h3>
+                    <ul class="feature-list">
+                        <li>CSV, XLSX, JSON upload</li>
+                        <li>Salesforce API sync</li>
+                        <li>HubSpot direct integration</li>
+                        <li>Apollo.io enrichment</li>
+                        <li>Duplicate detection and deduplication</li>
+                        <li>List validation and cleaning</li>
+                    </ul>
+                </div>
+                <div class="feature-image">Contact Management UI</div>
+            </div>
+            
+            <h3 style="margin-top: 50px; margin-bottom: 25px;">Lead Routing</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h4>Smart Distribution</h4>
+                    <p>Auto-route qualified leads to available sales rep based on territory, account owner, or custom rules.</p>
+                </div>
+                <div class="card">
+                    <h4>Real-Time Push</h4>
+                    <p>Leads sync to Salesforce, HubSpot, Pipedrive immediately upon qualification. No batching. No delay.</p>
+                </div>
+                <div class="card">
+                    <h4>Lead Scoring</h4>
+                    <p>Automatic lead scoring (0-100). Send only high-score leads to sales. Lower scores to follow-up queue.</p>
+                </div>
+                <div class="card">
+                    <h4>Callback Scheduling</h4>
+                    <p>Prospect interested but not ready to talk now? Schedule automatic callback at specified date/time.</p>
+                </div>
+                <div class="card">
+                    <h4>List Segmentation</h4>
+                    <p>Create segments by company size, industry, geography. Run different agents with tailored pitches per segment.</p>
+                </div>
+                <div class="card">
+                    <h4>Do-Not-Call List</h4>
+                    <p>Automatic DNC list management. Compliance with TCPA, GDPR, and local regulations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integrations -->
+    <section id="integrations" style="background: white;">
+        <div class="container">
+            <h2>Native Integrations</h2>
+            
+            <table class="comparison-table" style="margin-top: 30px;">
+                <tr>
+                    <th>Category</th>
+                    <th>Platforms</th>
+                    <th>Real-Time Sync</th>
+                </tr>
+                <tr>
+                    <td><strong>CRM</strong></td>
+                    <td>Salesforce, HubSpot, Pipedrive, Notion, Airtable</td>
+                    <td class="check">✓</td>
+                </tr>
+                <tr>
+                    <td><strong>Enrichment</strong></td>
+                    <td>Apollo, Hunter, RocketReach, ZoomInfo, ClearBit</td>
+                    <td class="check">✓</td>
+                </tr>
+                <tr>
+                    <td><strong>Communication</strong></td>
+                    <td>Slack, Teams, Discord, Telegram, Email</td>
+                    <td class="check">✓</td>
+                </tr>
+                <tr>
+                    <td><strong>Automation</strong></td>
+                    <td>Zapier, Make, n8n, IFTTT</td>
+                    <td class="check">✓</td>
+                </tr>
+                <tr>
+                    <td><strong>Video</strong></td>
+                    <td>Calendly, Cal.com, Acuity Scheduling</td>
+                    <td class="check">✓</td>
+                </tr>
+                <tr>
+                    <td><strong>Data</strong></td>
+                    <td>Sheets, Excel, Snowflake, BigQuery</td>
+                    <td class="check">✓</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
+    <!-- Analytics -->
+    <section id="analytics" style="background: #f8fafc;">
+        <div class="container">
+            <h2>Advanced Analytics</h2>
+            
+            <h3 style="margin-bottom: 30px;">Real-Time Dashboards</h3>
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <div class="metric">5,847</div>
+                    <div class="desc">Calls this month</div>
+                </div>
+                <div class="analytics-card">
+                    <div class="metric">68%</div>
+                    <div class="desc">Answer rate</div>
+                </div>
+                <div class="analytics-card">
+                    <div class="metric">340</div>
+                    <div class="desc">Qualified leads</div>
+                </div>
+                <div class="analytics-card">
+                    <div class="metric">$0.15</div>
+                    <div class="desc">Cost per lead</div>
+                </div>
+            </div>
+            
+            <h3 style="margin: 50px 0 30px;">Advanced Reporting</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h4>Call Analytics</h4>
+                    <p>Duration, completion rate, answer rate, conversation quality score, silence detection, interruption count.</p>
+                </div>
+                <div class="card">
+                    <h4>Objection Reports</h4>
+                    <p>See most common objections, which ones were overcome, which need stronger responses.</p>
+                </div>
+                <div class="card">
+                    <h4>Agent Performance</h4>
+                    <p>Compare multiple agents side-by-side. Which pitch variant performs best? What's the optimal talk time?</p>
+                </div>
+                <div class="card">
+                    <h4>Sentiment Analysis</h4>
+                    <p>Track sentiment drift throughout calls. When do prospects become most interested? When do they disengage?</p>
+                </div>
+                <div class="card">
+                    <h4>ROI Tracking</h4>
+                    <p>Cost per call, cost per qualified lead, cost per meeting, cost per closed deal. Full funnel visibility.</p>
+                </div>
+                <div class="card">
+                    <h4>Custom Reports</h4>
+                    <p>Build your own reports. Export to CSV, PDF, or schedule daily/weekly email summaries.</p>
+                </div>
+            </div>
+            
+            <div class="highlight" style="margin-top: 40px;">
+                <h4>Word Cloud Analysis</h4>
+                <p>See the words prospects use most often. Identify pain points and opportunities from raw language patterns.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security & Compliance -->
+    <section style="background: white;">
+        <div class="container">
+            <h2>Enterprise Security & Compliance</h2>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <h4>SOC 2 Type II</h4>
+                    <p>Annual audits. Full compliance with security and availability standards.</p>
+                </div>
+                <div class="card">
+                    <h4>GDPR Compliant</h4>
+                    <p>EU data residency available. DPA and BAA included. Full data portability support.</p>
+                </div>
+                <div class="card">
+                    <h4>HIPAA Eligible</h4>
+                    <p>Healthcare compliant. Encrypted at rest and in transit. Audit trails for all actions.</p>
+                </div>
+                <div class="card">
+                    <h4>CCPA & Privacy Laws</h4>
+                    <p>Multi-state compliance. Do-not-call list management. User consent and opt-out handling.</p>
+                </div>
+                <div class="card">
+                    <h4>Encryption</h4>
+                    <p>AES-256 at rest. TLS 1.3 in transit. Key rotation. Hardware security modules for key storage.</p>
+                </div>
+                <div class="card">
+                    <h4>Access Control</h4>
+                    <p>Role-based permissions. SSO via Okta, Azure AD, Google Workspace. IP whitelisting. 2FA enforced.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Support & Documentation -->
+    <section style="background: #f8fafc;">
+        <div class="container">
+            <h2>Support & Resources</h2>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <h4>API Documentation</h4>
+                    <p>Full REST API. Webhooks. OpenAPI/Swagger specs. SDKs for Python, JavaScript, Go.</p>
+                </div>
+                <div class="card">
+                    <h4>Live Chat Support</h4>
+                    <p>Starter: Email support. Growth+: 24/7 live chat. Enterprise: Dedicated account manager.</p>
+                </div>
+                <div class="card">
+                    <h4>Knowledge Base</h4>
+                    <p>200+ articles. Video tutorials. Setup guides for all integrations. Best practices library.</p>
+                </div>
+                <div class="card">
+                    <h4>Community Forum</h4>
+                    <p>Peer support. Share prompts, strategies, and results. Monthly webinars with top users.</p>
+                </div>
+                <div class="card">
+                    <h4>Training Programs</h4>
+                    <p>Onboarding calls. Pitch optimization workshops. Advanced features certification.</p>
+                </div>
+                <div class="card">
+                    <h4>SLA & Uptime</h4>
+                    <p>99.9% uptime guarantee. Sub-second response latency. Status page with real-time metrics.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="background: linear-gradient(135deg, #f0fdfa 0%, #e8f5f3 100%); padding: 60px 20px; text-align: center;">
+        <div class="container">
+            <h2>Ready to Build Your Voice AI Future?</h2>
+            <p style="color: #4b5563; font-size: 18px; margin-bottom: 30px;">Explore the full feature set. No credit card required.</p>
+            <a href="#" class="btn btn-primary">Start Free Trial</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Athena AI. Enterprise voice automation.</p>
+        <p style="margin-top: 20px; font-size: 12px; opacity: 0.8;">Documentation: https://docs.athena.ai | Status: https://status.athena.ai</p>
+    </footer>
+</body>
+</html>
